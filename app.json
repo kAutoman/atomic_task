@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Atomic Task",
+    "slug": "att",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "scheme": "atomic",
+    "icon": "./src/assets/icons.png",
+    
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.atomic.task",
+      "googleServicesFile": "./google-services.json",
+      "permissions": ["READ_CONTACTS", "WRITE_SETTINGS"]
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+          "enableGooglePay": false
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/favicon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/atom.mp3"
+          ],
+          "mode": "production"
+        }
+      ]
+    ]
+  }
+}

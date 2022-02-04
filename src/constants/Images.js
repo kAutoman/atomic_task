@@ -1,0 +1,38 @@
+/**
+ * basic images
+ */
+export const Images = {
+    LogoMarker: require('../assets/logo-mark.png'),
+    Signature: require('../assets/signatureBg.png'),
+    PigWallet: require('../assets/la_piggy-bank.png'),
+    ExitImage: require('../assets/exit.png'),
+    RegisterImage: require('../assets/register.png'),
+    SampleAvatar1: require('../assets/avatar-1.png'),
+    SampleAvatar2: require('../assets/avatar-2.png'),
+    SampleAvatar3: require('../assets/avatar-3.png'),
+    SampleAvatar5: require('../assets/avatar-5.png'),
+    HomeImage1: require('../assets/Group.png'),
+    HomeImage2: require('../assets/home2.png'),
+    HomeCardDetail: require('../assets/MessageSent.png'),
+    GobackImage: require('../assets/outline-icon-only.png'),
+    Descubre1: require('../assets/productive.png'),
+    Descubre2: require('../assets/health.png'),
+    Descubre3: require('../assets/growth.png'),
+    DescubreList1: require('../assets/Screenshot_30.png'),
+    DescubreList2: require('../assets/News(1).png'),
+    DescubreList3: require('../assets/home2.png'),
+    Blog1Image: require('../assets/plan.png'),
+    Blog2Image: require('../assets/2minutes.png'),
+    Blog3Image: require('../assets/study.png'),
+    SaludImage1: require('../assets/Screenshot_32.png'),
+    DescubreLanding: require('../assets/Group11.png'),
+    CrecimientoImage1: require('../assets/Music-Celebrate.png'),
+    CrecimientoImage2: require('../assets/Music-Celebrate22.png'),
+    CrecimientoImage3: require('../assets/Failure.png'),
+    CrecimientoImage4: require('../assets/Failure22.png'),
+    NavBarImage: require("../assets/navbar.png"),
+    AlarmAddImage: require("../assets/outline-icon-plus.png"),
+    Custom_Image:require("../assets/custom_task.png"),
+    Deadline_Image:require("../assets/deadline.png"),
+    Deadline_Text:require("../assets/deadline_text.png")
+}
