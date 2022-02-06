@@ -78,7 +78,7 @@ const HomeScreen = ({ navigation }) => {
                                 </TouchableOpacity>
                             </Stack>
                             {/* <View style={Styles.DeadlineView}><Text style={Styles.DeadlineText} >{new Date(item.created_at.seconds * 1000).toLocaleDateString("en-US")}</Text></View> */}
-                            <View style={Styles.DeadlineView}><Text style={Styles.DeadlineText} >{new Date(item.created_at.seconds * 1000).toDateString()}</Text></View>
+                            <View style={Styles.DeadlineView}><Text style={Styles.DeadlineText} >{new Date(item.created_at).toDateString()}</Text></View>
                             
                             </Stack>
                         })

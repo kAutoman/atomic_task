@@ -31,6 +31,7 @@ import Alarms from '../screens/Logged/Alarms'
 import AlarmsAdd from '../screens/Logged/Alarms/Addalarm'
 import Confirms from "../screens/Logged/confirms"
 import ConfirmDetail from "../screens/Logged/confirms/detail"
+import ConfirmControl from "../screens/Logged/confirms/control"
 import Deadline from "../screens/Logged/Deadline/index"
 import Investline from "../screens/Logged/Descubre/invest"
 import SideMenu from './SideMenu'
@@ -159,6 +160,10 @@ const Navigator = createStackNavigator(
 		},
 		ConfirmDetailScreen: {
 			screen: ConfirmDetail,
+			navigationOptions: { headerShown: false },
+		},
+		ConfirmControlScreen: {
+			screen: ConfirmControl,
 			navigationOptions: { headerShown: false },
 		},
 		DeadlineScreen: {//need to add exit button

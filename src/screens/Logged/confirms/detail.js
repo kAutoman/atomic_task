@@ -34,27 +34,21 @@ const HomeCardDetail = ({ navigation }) => {
                     <Image source={Images.ExitImage} resizeMode="contain" />
                 </TouchableOpacity>
             </Box>
-            {
-                CardItem.type === "video" ?
-                    <Video
-                        style={{ height: 280, marginBottom: 20, alignSelf: "center", width: "80%", maxWidth: "80%", marginTop: 70, borderRadius: 15 }}
-                        source={{ uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo}` }}
-                        useNativeControls
-                        resizeMode="contain"
-                        isLooping
-                    /> :
-                    <Image size="80%" h={300} mt={70} borderRadius={15} source={{ uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
-            }
+            
             <Text color="#FFB61D" fontSize="2xl" textAlign="center">{CardItem.cardName}</Text>
-            {
-                CardItem.state === "completed" ?
-                    <Text color="white" fontSize="3xl" mt={70} textAlign="center">{"Terminada"}</Text> :
-                    <Stack space={3} mt={5}>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#22c55e"} alignSelf="center">Completa</Button>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("deny")} borderRadius={100} w="100%" bg={"#f97316"} alignSelf="center">Negar</Button>
-                    </Stack>
-            }
+            <TouchableOpacity onPress={() => navigation.navigate("ConfirmControlScreen",CardItem)}>
+                {
+                    CardItem.type === "video" ?
+                        <Video
+                            style={{ height: 280, marginBottom: 20, alignSelf: "center", width: "80%", maxWidth: "80%", marginTop: 70, borderRadius: 15 }}
+                            source={{ uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo}` }}
+                            useNativeControls
+                            resizeMode="contain"
+                            isLooping
+                        /> :
+                        <Image size="80%" h={800} mt={70} borderRadius={15} source={{ uri: `${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
+                }
+            </TouchableOpacity>
         </Stack >
     )
 }
