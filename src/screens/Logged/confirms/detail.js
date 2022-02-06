@@ -10,17 +10,6 @@ const HomeCardDetail = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const CardItem = navigation.state.params;
 
-    const _handleComplete = (state) => {
-        setLoading(true)
-        db.collection("confirmation").doc(CardItem.uid).update({
-            state
-        });
-        // db.collection("payment_history").doc(CardItem.cardId).delete();
-        // db.collection("goals").doc(CardItem.cardId).delete();
-        setLoading(false)
-        navigation.navigate("ConfirmsScreen", 321)
-    }
-
     return (
         <Stack
             flex={1}
@@ -40,13 +29,13 @@ const HomeCardDetail = ({ navigation }) => {
                 {
                     CardItem.type === "video" ?
                         <Video
-                            style={{ height: 280, marginBottom: 20, alignSelf: "center", width: "80%", maxWidth: "80%", marginTop: 70, borderRadius: 15 }}
+                            style={{ height: 280, marginBottom: 20, alignSelf: "center", width: "80%", maxWidth: "80%", borderRadius: 15 }}
                             source={{ uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo}` }}
                             useNativeControls
                             resizeMode="contain"
                             isLooping
                         /> :
-                        <Image size="80%" h={800} mt={70} borderRadius={15} source={{ uri: `${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
+                        <Image size="100%" height={500} borderRadius={15} source={{ uri: `${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
                 }
             </TouchableOpacity>
         </Stack >
