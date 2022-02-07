@@ -1,19 +1,35 @@
 import React, { useState } from 'react'
-import { Text, Stack, Button, Box, Image, useToast, HStack } from 'native-base'
+import { Text, Stack, Button, Box, Image, useToast, HStack, useColorMode } from 'native-base'
 import { db, Images, ROOT, Styles } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 import { Loading } from '../../../components';
 import { Video } from 'expo-av';
 import confirmLogo from '../../../assets/confirm_control.png';
+import { useSelector,useDispatch } from 'react-redux';
+import { setUserInfo } from '../../../redux/actions/authActions';
 
 
 const HomeCardControl = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const CardItem = navigation.state.params;
+    const { user } = useSelector((store) => store.auth)
+    const dispatch = useDispatch();
+
     const _handleComplete = (state) => {
         setLoading(true)
-        db.collection("confirmation").doc(CardItem.uid).update({
-            state
+        // db.collection("confirmation").doc(CardItem.uid).update({
+        //     state
+        // });
+
+        let coin = user.coin ? (user.coin + 5) : 5
+        db.collection("users").doc(CardItem.email).update({
+            coin
+        }).then(()=>{
+            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                let tempUser = snapshot.data();
+                tempUser.coin = coin;
+                dispatch(setUserInfo(tempUser));
+            })
         });
         // db.collection("payment_history").doc(CardItem.cardId).delete();
         // db.collection("goals").doc(CardItem.cardId).delete();
