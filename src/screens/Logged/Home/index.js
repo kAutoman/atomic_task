@@ -45,9 +45,10 @@ const HomeScreen = ({ navigation }) => {
                 }
                 right={
                     <TouchableOpacity onPress={() => navigation.navigate("PerfilScreen")}>
-                        <Avatar source={Images.SampleAvatar3} >
-                            AK
+                        <Avatar source={Images.SampleAvatar3}  >
+                           
                         </Avatar>
+                        <Text color="#fff" fontSize="md" width={20} >{user.coin ? user.coin : 0} catd</Text>
                     </TouchableOpacity>
                 }
             />
