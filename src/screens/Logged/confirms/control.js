@@ -17,10 +17,13 @@ const HomeCardControl = ({ navigation }) => {
 
     const _handleComplete = (state) => {
         setLoading(true)
+
+        //change confirmation status
         db.collection("confirmation").doc(CardItem.uid).update({
             state
         });
 
+        //increase coin
         let coin = user.coin ? (user.coin + 5) : 5
         db.collection("users").doc(CardItem.email).update({
             coin
@@ -34,6 +37,7 @@ const HomeCardControl = ({ navigation }) => {
         // db.collection("payment_history").doc(CardItem.cardId).delete();
         // db.collection("goals").doc(CardItem.cardId).delete();
         setLoading(false)
+        //goto confirms list
         navigation.navigate("ConfirmsScreen", 321)
     }
 
