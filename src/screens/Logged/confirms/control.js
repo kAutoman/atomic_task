@@ -17,9 +17,9 @@ const HomeCardControl = ({ navigation }) => {
 
     const _handleComplete = (state) => {
         setLoading(true)
-        // db.collection("confirmation").doc(CardItem.uid).update({
-        //     state
-        // });
+        db.collection("confirmation").doc(CardItem.uid).update({
+            state
+        });
 
         let coin = user.coin ? (user.coin + 5) : 5
         db.collection("users").doc(CardItem.email).update({
