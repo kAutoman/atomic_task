@@ -90,74 +90,76 @@ const App = ({ navigation }) => {
                                 if (tabstate  == 0) {
                                     if (item.state === "requested") {
                                         ci++;
-                                        return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
-                                            <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
-                                                <Avatar source={Images.SampleAvatar3} w={"14%"}>
-                                                    AK
-                                                </Avatar>
-                                                <Stack w="80%" ml="5%">
-                                                    <HStack justifyContent="space-between" alignItems="center">
-                                                        <Text bold w={'75%'} numberOfLines={1}>
-                                                            {item.username}
-                                                        </Text>
-                                                        <Text fontSize="xxs">{moment(new Date(item.created_at.seconds*1000)).endOf('day').fromNow()}</Text>
-                                                    </HStack>
-                                                    <HStack justifyContent="space-between" alignItems="center">
-                                                        <Text numberOfLines={1} w="75%" color={"dark.300"} >
-                                                            {item.cardName}
-                                                        </Text>
-                                                        <HStack alignItems="center">
-                                                            {(() => {
-                                                                if (item.state === "requested") {
-                                                                    return <Text color="red.500" fontSize="xxs" ml={-1}>solicitada</Text>;
-                                                                } else if (item.state === "repeat") {
-                                                                    return <Text color="red.500" fontSize="xxs" ml={-1}>repetir</Text>;
-                                                                } else if (item.state === 'deny') {
-                                                                    return <Text color="red.500" fontSize="xxs" ml={-1}>negar</Text>;
-                                                                }
-                                                            })()}
-                                                            <Text fontSize="xxs"> &euro;{item.amount / 100}</Text>
+                                        if (item.username.toLowerCase().search(SearchKey.toLowerCase()) > -1) {
+                                            return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
+                                                <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
+                                                    <Avatar source={Images.SampleAvatar3} w={"14%"}>
+                                                        AK
+                                                    </Avatar>
+                                                    <Stack w="80%" ml="5%">
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text bold w={'75%'} numberOfLines={1}>
+                                                                {item.username}
+                                                            </Text>
+                                                            <Text fontSize="xxs">{moment(new Date(item.created_at.seconds*1000)).endOf('day').fromNow()}</Text>
                                                         </HStack>
-                                                    </HStack>
-                                                </Stack>
-                                            </HStack>
-                                        </TouchableOpacity>
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text numberOfLines={1} w="75%" color={"dark.300"} >
+                                                                {item.cardName}
+                                                            </Text>
+                                                            <HStack alignItems="center">
+                                                                {(() => {
+                                                                    if (item.state === "requested") {
+                                                                        return <Text color="red.500" fontSize="xxs" ml={-1}>solicitada</Text>;
+                                                                    } else if (item.state === "repeat") {
+                                                                        return <Text color="red.500" fontSize="xxs" ml={-1}>repetir</Text>;
+                                                                    } else if (item.state === 'deny') {
+                                                                        return <Text color="red.500" fontSize="xxs" ml={-1}>negar</Text>;
+                                                                    }
+                                                                })()}
+                                                                <Text fontSize="xxs"> &euro;{item.amount / 100}</Text>
+                                                            </HStack>
+                                                        </HStack>
+                                                    </Stack>
+                                                </HStack>
+                                            </TouchableOpacity>
+                                        }
                                     }
                                 } else if(tabstate == 1) {
                                     if (item.state === "completed") {
-                                        
                                         ci++;
-                                        return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
-                                            <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
-                                                <Avatar source={Images.SampleAvatar3} w={"14%"}>
-                                                    AK
-                                                </Avatar>
-                                                <Stack w="80%" ml="5%">
-                                                    <HStack justifyContent="space-between" alignItems="center">
-                                                        <Text bold w={'75%'} numberOfLines={1}>
-                                                            {item.username}
-                                                        </Text>
-                                                        <Text fontSize="xxs">{moment(new Date(item.created_at.seconds*1000)).endOf('day').fromNow()}</Text>
-                                                    </HStack>
-                                                    <HStack justifyContent="space-between" alignItems="center">
-                                                        <Text numberOfLines={1} w="75%" color={"dark.300"} >
-                                                            {item.cardName}
-                                                        </Text>
-                                                        <HStack alignItems="center">
-                                                            <Text color="green.500" fontSize="xxs" ml={-1}>terminada</Text>
-                                                            <Text fontSize="xxs"> &euro;{item.amount / 100}</Text>
+                                        if (item.username.toLowerCase().search(SearchKey.toLowerCase()) > -1) {
+                                            return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
+                                                <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
+                                                    <Avatar source={Images.SampleAvatar3} w={"14%"}>
+                                                        AK
+                                                    </Avatar>
+                                                    <Stack w="80%" ml="5%">
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text bold w={'75%'} numberOfLines={1}>
+                                                                {item.username}
+                                                            </Text>
+                                                            <Text fontSize="xxs">{moment(new Date(item.created_at.seconds*1000)).endOf('day').fromNow()}</Text>
                                                         </HStack>
-                                                    </HStack>
-                                                </Stack>
-                                            </HStack>
-                                        </TouchableOpacity>
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text numberOfLines={1} w="75%" color={"dark.300"} >
+                                                                {item.cardName}
+                                                            </Text>
+                                                            <HStack alignItems="center">
+                                                                <Text color="green.500" fontSize="xxs" ml={-1}>terminada</Text>
+                                                                <Text fontSize="xxs"> &euro;{item.amount / 100}</Text>
+                                                            </HStack>
+                                                        </HStack>
+                                                    </Stack>
+                                                </HStack>
+                                            </TouchableOpacity>
+                                        }
                                     }
                                 }
                                 else if(tabstate == 2) {
                                     if (item.state === "deny") {
                                         ci++;
-                                        console.log(SearchKey);
-                                        if (item.username.search(SearchKey) > -1) {
+                                        if (item.username.toLowerCase().search(SearchKey.toLowerCase()) > -1) {
                                             return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
                                                         <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
                                                             <Avatar source={Images.SampleAvatar3} w={"14%"}>
