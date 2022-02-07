@@ -98,7 +98,7 @@ const HomeCardDetail = ({ navigation }) => {
                                 cardName: CardItem.cardName,
                                 amount: CardItem.amount,
                                 state: "requested",
-                                created_At: new Date()
+                                created_at: new Date()
                             }
                             await db.collection('confirmation').doc(insertKey).set(saveData);
                             setConfirmed(saveData);

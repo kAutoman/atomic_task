@@ -64,9 +64,7 @@ const HomeScreen = ({ navigation }) => {
                                     <Button onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold" }} alignSelf="center" borderRadius={100}>{LAYOUT.CardInfo[item.cardType][item.cardId].buttonText}</Button>
                                 </TouchableOpacity>
                                 </Stack>
-                            </Stack>
-                            
-                            
+                            </Stack>              
                         })
                     }
                     {
