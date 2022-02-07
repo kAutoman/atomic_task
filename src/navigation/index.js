@@ -15,11 +15,11 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native'
 
 Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
-    }),
+    // handleNotification: async () => ({
+    //     shouldShowAlert: true,
+    //     shouldPlaySound: false,
+    //     shouldSetBadge: false,
+    // }),
 });
 
 const BACKGROUND_FETCH_TASK = 'background-fetch';
@@ -174,10 +174,10 @@ const navigation = () => {
     }
 
     React.useEffect(() => {
-        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-            setNotification(notification);
+            // setNotification(notification);
         });
 
         Audio.requestPermissionsAsync();

@@ -57,16 +57,16 @@ export const LAYOUT = {
 		<Circle cx="12" cy="12" r="11" fill="#18DFB1" stroke="#474A57" strokeWidth="2" />
 	</G>,
 	PerfilIcon1: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
-		<Circle cx="12" cy="12" r="11" fill="#375FEE" stroke="#18191F" strokeWidth="2" />
-	</G>,
-	PerfilIcon2: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
-		<Circle cx="12" cy="12" r="11" fill="#18DFB1" stroke="#18191F" strokeWidth="2" />
-	</G>,
-	PerfilIcon3: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
 		<Circle cx="12" cy="12" r="11" fill="#FF9692" stroke="#18191F" strokeWidth="2" />
 	</G>,
+	PerfilIcon2: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
+		<Circle cx="12" cy="12" r="11" fill="#61E4C5" stroke="#18191F" strokeWidth="2" />
+	</G>,
+	PerfilIcon3: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
+		<Circle cx="12" cy="12" r="11" fill="#FFB61D" stroke="#18191F" strokeWidth="2" />
+	</G>,
 	PerfilIcon4: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
-		<Circle cx="12" cy="12" r="11" fill="#FFBD12" stroke="#18191F" strokeWidth="2" />
+		<Circle cx="12" cy="12" r="11" fill="#007AFF" stroke="#18191F" strokeWidth="2" />
 	</G>,
 	PerfilIcon5: <G width="24" height="24" viewBox="0 0 24 24" fill="none">
 		<Circle cx="12" cy="12" r="11" fill="#E43434" stroke="#18191F" strokeWidth="2" />
@@ -121,20 +121,32 @@ export const LAYOUT = {
 	TwiterIcon: <G width="36" height="36" viewBox="0 0 36 36" fill="none">
 		<Path d="M34.5 4.50007C33.0636 5.51328 31.4732 6.28823 29.79 6.79507C28.8866 5.75634 27.686 5.02011 26.3506 4.68596C25.0151 4.35181 23.6092 4.43586 22.3231 4.92675C21.037 5.41764 19.9327 6.29167 19.1595 7.43064C18.3863 8.56962 17.9815 9.91857 18 11.2951V12.7951C15.364 12.8634 12.7519 12.2788 10.3965 11.0932C8.04112 9.90769 6 8.25 4.5 6.00007C4.5 6.00007 -1.5 19.5001 12 25.5001C8.91079 27.597 5.23074 28.6485 1.5 28.5001C15 36.0001 31.5 28.5001 31.5 11.2501C31.4986 10.8322 31.4584 10.4155 31.38 10.0051C32.9109 8.49531 33.9912 6.58914 34.5 4.50007Z" stroke="#18191F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
 	</G>,
+	ShoppingBasketIcon: <G width="26" height="24" viewBox="0 0 26 24" fill="none">
+		<Path d="M10.8333 13.2501C11.2821 13.2501 11.6458 13.5859 11.6458 14.0001V16.0001C11.6458 16.4143 11.2821 16.7501 10.8333 16.7501C10.3846 16.7501 10.0208 16.4143 10.0208 16.0001V14.0001C10.0208 13.5859 10.3846 13.2501 10.8333 13.2501Z" fill="white"/>
+		<Path d="M15.9792 14.0001C15.9792 13.5859 15.6154 13.2501 15.1667 13.2501C14.7179 13.2501 14.3542 13.5859 14.3542 14.0001V16.0001C14.3542 16.4143 14.7179 16.7501 15.1667 16.7501C15.6154 16.7501 15.9792 16.4143 15.9792 16.0001V14.0001Z" fill="white"/>
+		<Path fill-rule="evenodd" clip-rule="evenodd" d="M10.4536 3.37513C10.678 3.01641 10.5449 2.55771 10.1562 2.35061C9.76763 2.1435 9.27071 2.26641 9.04635 2.62513L6.87968 6.08923C6.84722 6.14112 6.82225 6.19511 6.80444 6.25013H6.49999C4.85465 6.25013 3.52083 7.48134 3.52083 9.00013C3.52083 9.85925 3.94762 10.6264 4.61618 11.1307L5.3387 15.7154L5.82267 17.8085C6.11264 19.0626 7.22175 20.0152 8.59772 20.1919C11.5185 20.5671 14.4815 20.5671 17.4023 20.1919C18.7782 20.0152 19.8874 19.0626 20.1773 17.8085L20.6613 15.7154L21.3838 11.1307C22.0524 10.6264 22.4792 9.85925 22.4792 9.00013C22.4792 7.48134 21.1453 6.25013 19.5 6.25013H19.1955C19.1777 6.19511 19.1528 6.14112 19.1203 6.08923L16.9536 2.62513C16.7293 2.26641 16.2324 2.1435 15.8437 2.35061C15.4551 2.55771 15.322 3.01641 15.5464 3.37513L17.3446 6.25013H8.65543L10.4536 3.37513ZM19.6446 11.7469C19.5967 11.7491 19.5485 11.7501 19.5 11.7501H6.49999C6.45152 11.7501 6.40332 11.7491 6.35541 11.7469L6.93907 15.4506L7.41188 17.4954C7.55919 18.1325 8.12264 18.6165 8.82167 18.7062C11.5939 19.0623 14.4061 19.0623 17.1783 18.7062C17.8774 18.6165 18.4408 18.1325 18.5881 17.4954L19.0609 15.4506L19.6446 11.7469ZM5.14583 9.00013C5.14583 8.30977 5.75211 7.75013 6.49999 7.75013H19.5C20.2479 7.75013 20.8542 8.30977 20.8542 9.00013C20.8542 9.69048 20.2479 10.2501 19.5 10.2501H6.49999C5.75211 10.2501 5.14583 9.69048 5.14583 9.00013Z" fill="white"/>
+	</G>,
+	closebtn: <G width="16" height="16" viewBox="0 0 16 16" fill="none">
+		<Path d="M12 4L4 12" stroke="#18191F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+		<Path d="M4 4L12 12" stroke="#18191F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+	</G>,
 	StripePublicKey: "pk_test_51JJ4yML46jblOkAWYCHHyAMBK1B8r6XWJmRETaeM7Iq5B2O4Is03MFImD70DdVm5lxF78rpWfrshZPiCFNvKk0RE00LBeIjysD",//test
 	// StripePublicKey: "pk_live_51JJ4yML46jblOkAWQlDQ09As8ix7pKp0PVf9a6ZcHfSQZaexuXcfqIdJO0xIaLCrOcnAL252hKuaL85qnF1NlMUN00PQIgvgSB",//live key
 	adminInfo: {
 		email: "atomictasks@gmail.com",
 		name: "Atomic Task",
 	},
+	// navigation menu list
 	DrawerList: [
-		{ navLink: "HomeScreen", title: "Home" },
+		{ navLink: "HomeScreen", title: "Tareas" },
 		{ navLink: "PerfilScreen", title: "Perfil" },
 		{ navLink: "DescubreScreen", title: "Descubre" },
-		{ navLink: "BlogScreen", title: "Blog" },
+		// { navLink: "BlogScreen", title: "Blog" },
+
 		{ navLink: "ChatScreen", title: "Chat" },
+		{ navLink: "StoreScreen", title: "Tienda" },
 		{ navLink: "AlarmsScreen", title: "Alarmas" },		
-		{ navLink: "ValorarScreen", title: "Desafíos" },
+		//{ navLink: "ChallengeScreen", title: "Desafíos" },
 	],
 	CardInfo: {
 		product: [

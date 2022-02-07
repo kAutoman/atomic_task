@@ -18,7 +18,8 @@
         "UIBackgroundModes": [
           "audio"
         ]
-      }
+      },
+      "bundleIdentifier": "com.atomic.task"
     },
     "android": {
       "adaptiveIcon": {

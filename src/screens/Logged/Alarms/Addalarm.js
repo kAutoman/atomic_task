@@ -12,7 +12,7 @@ const AddalarmScreen = ({ navigation }) => {
     const [show, setShow] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [aday, setAday] = useState(Item ? Item.time.slice(0, 3) : moment(new Date).format("dddd"));
-    const [time, setTime] = useState(Item ? Item.time.slice(4, Item.time.length) : moment(new Date).format("hh : mm a"));
+    const [time, setTime] = useState(Item ? Item.time.slice(4, Item.time.length) : moment(new Date).format("hh : mm a"));    
     const [title, setTitle] = useState(Item ? Item.title : null);
     const [repeatState, setRepeatState] = useState(Item ? Item.repeatState : false);
     const [snooze, setsnooze] = useState(Item ? Item.snooze : true);
@@ -20,14 +20,14 @@ const AddalarmScreen = ({ navigation }) => {
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();
 
-    const SaveHandle = async () => {
+    const SaveHandle = async () => {        
         if (title) {
             const timeStamp = Math.floor(Date.now() / 1000);
             const insertKey = "_" + timeStamp;
             setLoading(true);
             if (Item) {
                 await db.collection('Malarms').doc(Item.id).update({
-                    time: aday.slice(0, 3) + " " + time,
+                    time: aday.slice(0, 3) + " " + time,                    
                     title,
                     repeatState,
                     snooze,
@@ -41,7 +41,7 @@ const AddalarmScreen = ({ navigation }) => {
             } else {
                 await db.collection('Malarms').doc(insertKey).set({
                     email: user.email,
-                    time: aday.slice(0, 3) + " " + time,
+                    time: aday.slice(0, 3) + " " + time,                                        
                     title,
                     repeatState,
                     snooze,
@@ -140,7 +140,7 @@ const AddalarmScreen = ({ navigation }) => {
                                 mode="time"
                                 value={new Date}
                                 display="default"
-                                onChange={(e, s) => { setShowTime(false); setTime(moment(s).format("hh : mm a")); }}
+                                onChange={(e, s) => { setShowTime(false); setTime(moment(s).format("hh : mm a")); setTimestamp(moment(s)); }}
                             /> : null
                     }
                 </Stack>

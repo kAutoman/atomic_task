@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Text, Stack, Button, Box, Image, HStack, Avatar, ScrollView } from 'native-base'
+import { Text, Stack, Button, Box, Image, HStack, Avatar, ScrollView, Input, Icon} from 'native-base'
 import { db, Images, Styles } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 import { Loading } from '../../../components'
+import { Feather } from "@expo/vector-icons"
+
 import moment from 'moment'
 
 const App = ({ navigation }) => {
     const [confirms, setConfirms] = useState([]);
-    const [tabstate, setTabstate] = useState(true);
+    const [tabstate, setTabstate] = useState(0);
     const [loading, setLoading] = useState(true);
+    const [SearchKey, setSearch] = useState("");    
+
     let ci = 1;
     const LoadConfirms = () => {
         db.collection("confirmation").get().then((querySnapshot) => {
@@ -37,22 +41,53 @@ const App = ({ navigation }) => {
                         <Image size="xs" source={Images.GobackImage} resizeMode="contain" />
                     </TouchableOpacity>
                 </Box>
-                <Stack
-                    pt={5}
+                <Box
+                    pt={10}
                     px={10}
                 >
                     <Text mb={3} color="black" fontSize="4xl" textAlign="center" bold>Confirms</Text>
-                    <HStack justifyContent="space-between">
-                        <Button w="48%" variant="ghost" _text={{ ...Styles.WelcomeButton, color: "black" }} onPress={() => setTabstate(true)} borderRadius={100} bg={tabstate ? "#FFB61D" : "white"} alignSelf="center">confirma</Button>
-                        <Button w="48%" variant="ghost" _text={{ ...Styles.WelcomeButton, color: "black" }} onPress={() => setTabstate(false)} borderRadius={100} bg={!tabstate ? "#FFB61D" : "white"} alignSelf="center">completa</Button>
+                    <Input
+                        InputRightElement={
+                            <Icon
+                                as={<Feather name="search" />}
+                                size="sm"
+                                mx={3}
+                                _light={{
+                                    color: "black",
+                                }}
+                                _dark={{
+                                    color: "gray.300",
+                                }}
+                            />
+                        }
+                        backgroundColor="white"
+                        borderWidth={2}
+                        borderRadius={16}
+                        borderColor="black"
+                        placeholder="Search with love ..." // mx={4}
+                        _focus={{
+                            borderColor: "black"
+                        }}
+                        _light={{
+                            placeholderTextColor: "blueGray.700",
+                        }}
+                        _dark={{
+                            placeholderTextColor: "blueGray.550",
+                        }}
+                        onChangeText={setSearch}
+                    />
+                    <HStack pt={5} justifyContent="space-between">
+                        <Button variant="ghost" _text={{ ...Styles.WelcomeButton, color: "black" }} paddingX={1} borderWidth={1} borderColor="black" onPress={() => setTabstate(0)} borderRadius={24} bg={tabstate ==0 ? "#FFB61D" : "white"} >confirmar</Button>
+                        <Button variant="ghost" _text={{ ...Styles.WelcomeButton, color: "black" }} paddingX={1} borderWidth={1} borderColor="black" onPress={() => setTabstate(1)} borderRadius={24} bg={tabstate ==1 ? "#FFB61D" : "white"} >completa</Button>
+                        <Button variant="ghost" _text={{ ...Styles.WelcomeButton, color: "black" }} paddingX={1} borderWidth={1} borderColor="black" onPress={() => setTabstate(2)} borderRadius={24} bg={tabstate ==2 ? "#FFB61D" : "white"} >baneados</Button>
                     </HStack>
-                </Stack>
+                </Box>
                 <Stack py={3} flex={1}>
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {
                             confirms.map((item, i) => {
-                                if (tabstate) {
-                                    if (item.state !== "completed") {
+                                if (tabstate  == 0) {
+                                    if (item.state === "requested") {
                                         ci++;
                                         return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
                                             <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
@@ -87,8 +122,37 @@ const App = ({ navigation }) => {
                                             </HStack>
                                         </TouchableOpacity>
                                     }
-                                } else {
+                                } else if(tabstate == 1) {
                                     if (item.state === "completed") {
+                                        ci++;
+                                        return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
+                                            <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>
+                                                <Avatar source={Images.SampleAvatar3} w={"14%"}>
+                                                    AK
+                                                </Avatar>
+                                                <Stack w="80%" ml="5%">
+                                                    <HStack justifyContent="space-between" alignItems="center">
+                                                        <Text bold w={'75%'} numberOfLines={1}>
+                                                            {item.username}
+                                                        </Text>
+                                                        <Text fontSize="xxs">{moment(new Date(item.created_At)).endOf('day').fromNow()}</Text>
+                                                    </HStack>
+                                                    <HStack justifyContent="space-between" alignItems="center">
+                                                        <Text numberOfLines={1} w="75%" color={"dark.300"} >
+                                                            {item.cardName}
+                                                        </Text>
+                                                        <HStack alignItems="center">
+                                                            <Text color="green.500" fontSize="xxs" ml={-1}>terminada</Text>
+                                                            <Text fontSize="xxs"> &euro;{item.amount / 100}</Text>
+                                                        </HStack>
+                                                    </HStack>
+                                                </Stack>
+                                            </HStack>
+                                        </TouchableOpacity>
+                                    }
+                                }
+                                else if(tabstate == 2) {
+                                    if (item.state === "deny") {
                                         ci++;
                                         return <TouchableOpacity key={i} onPress={() => navigation.navigate("ConfirmDetailScreen", item)}>
                                             <HStack p={5} bg={ci % 2 ? "#F7F7F8" : "#eefbde"}>

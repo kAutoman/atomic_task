@@ -7,17 +7,12 @@ const Welcome = ({ navigation }) => {
     const { historyState } = useSelector((store) => store.auth);
     
     useEffect(() => {
-        setTimeout( function () {
-            doSomething();
-        }, 1500)
+        
         if (historyState) {
             navigation.navigate("SignInScreen");
         }
     }, [])
 
-    function doSomething() {
-        navigation.navigate("SignatureScreen");
-    }
     
     return (
         <Stack

@@ -6,7 +6,7 @@ import { useStripe, initStripe } from '@stripe/stripe-react-native';
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
-const ChatScreen = ({ navigation }) => {
+const PaymentScreen = ({ navigation }) => {
     const { initPaymentSheet, presentPaymentSheet, retrievePaymentIntent } = useStripe();
     const [cardInfo, setCardInfo] = useState(navigation.state.params);
     const [connectState, setConnectState] = useState(false);
@@ -129,4 +129,4 @@ const ChatScreen = ({ navigation }) => {
     )
 }
 
-export default ChatScreen;
+export default PaymentScreen;

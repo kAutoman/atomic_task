@@ -26,7 +26,7 @@ const HomeCardDetail = ({ navigation }) => {
             });
             setConfirmed(tempCards);
             setLoading(false);
-        });
+        });        
     }
 
     useEffect(() => {
@@ -98,7 +98,7 @@ const HomeCardDetail = ({ navigation }) => {
                                 cardName: CardItem.cardName,
                                 amount: CardItem.amount,
                                 state: "requested",
-                                created_At: new Date().getTime()
+                                created_At: new Date()
                             }
                             await db.collection('confirmation').doc(insertKey).set(saveData);
                             setConfirmed(saveData);
@@ -141,7 +141,7 @@ const HomeCardDetail = ({ navigation }) => {
                                             isLooping
                                         />
                                         :
-                                        <Image size="80%" h={400} borderRadius={15} mt={50} sour ce={{ uri: `${ROOT.PAYMENT_URL}img/${confirmed.photo}` }} resizeMode="contain" alignSelf="center" />
+                                        <Image size="80%" h={400} borderRadius={15} mt={50} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmed.photo}` }} resizeMode="contain" alignSelf="center" />
                                 }
                                 <Text color="white" fontSize="3xl" shadow={3} textAlign="center">{(() => {
                                     if (confirmed.state === "requested") {

@@ -4,7 +4,7 @@ import { Box, Stack, ScrollView, Text, Button, Image, Icon } from 'native-base'
 import { COLOR, Images, Styles } from '../../../constants'
 import { Entypo } from '@expo/vector-icons';
 
-const DescubreScreen = ({ navigation }) => {
+const PaymentSettingScreen = ({ navigation }) => {
 
     return (
         <Box flex={1} bg={"#333333"} w='100%' pt={12}>
@@ -38,4 +38,4 @@ const DescubreScreen = ({ navigation }) => {
     )
 }
 
-export default DescubreScreen
+export default PaymentSettingScreen

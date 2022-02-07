@@ -9,7 +9,7 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { extendTheme, NativeBaseProvider } from "native-base"
 
 
-LogBox.ignoreLogs([`Setting a timer`, `Unexpected HTTP code Response`, `Can't perform a React`, `source.uri should`, `Node of type`, `Image URL`, `Please pass alt`, `VirtualizedLists should`, `The contrast ratio of`, `Online fetched source`])
+LogBox.ignoreLogs([`Setting a timer`, `Unexpected HTTP code Response`, `Can't perform a React`, `source.uri should`, `Node of type`, `Image URL`, `Please pass alt`, `VirtualizedLists should`, `The contrast ratio of`, `Online fetched source`, `interpolate() was renamed`])
 
 const theme = extendTheme({
   components: {

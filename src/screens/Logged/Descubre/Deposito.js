@@ -3,7 +3,7 @@ import { Text, Stack, Box, Image } from 'native-base'
 import { COLOR, Images, Styles } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 
-const HomeCardDetail = ({ navigation }) => {
+const DepositoScreen = ({ navigation }) => {
     const [cardInfo, setCardInfo] = useState(navigation.state.params);
     
     const NextPage = (amount) => {
@@ -46,4 +46,4 @@ const HomeCardDetail = ({ navigation }) => {
     )
 }
 
-export default HomeCardDetail;
+export default DepositoScreen;

@@ -46,6 +46,7 @@
     "react-native-user-avatar": "^1.0.7",
     "react-native-web": "~0.13.12",
     "react-native-webview": "11.2.3",
+    "react-native-weekday-picker": "^0.0.1",
     "react-native-windows": "^0.67.0",
     "react-navigation": "^4.4.4",
     "react-navigation-drawer": "^2.7.1",

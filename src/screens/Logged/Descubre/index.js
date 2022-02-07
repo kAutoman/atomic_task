@@ -49,7 +49,7 @@ const DescubreScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </HStack>
                 <Stack flex={1} justifyContent="center">
-                    <Button _text={Styles.WelcomeButton} onPress={()=>navigation.navigate("AddalarmScreen")} borderRadius={16} w="100%" bg={"#1947E5"} alignSelf="center">CREAR NUEVA META</Button>
+                    <Button _text={Styles.WelcomeButton} onPress={()=>navigation.navigate("CreateTaskScreen")} borderRadius={16} w="100%" bg={"#1947E5"} alignSelf="center">CREAR NUEVA META</Button>
                 </Stack>
             </Stack>
         </Box>

@@ -7,9 +7,9 @@ import { Entypo } from '@expo/vector-icons';
 const PerfilScreen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false)
-    const PerfilIcons = [LAYOUT.PerfilIcon2, LAYOUT.PerfilIcon3, LAYOUT.PerfilIcon4, LAYOUT.PerfilIcon1, LAYOUT.PerfilIcon5,];
-    const Texts = ["Password", "Normas", "Valorar nuestro trabajo", "Cerrar sesion"];
-    const Links = ["ChangePassScreen", "NormasScreen", "Realimentación", "LogoutScreen"];
+    const PerfilIcons = [LAYOUT.PerfilIcon1, LAYOUT.PerfilIcon2, LAYOUT.PerfilIcon3, LAYOUT.PerfilIcon4, LAYOUT.PerfilIcon5,];
+    const Texts = ["Normas", "Cambiar contraseña",  "Valorar nuestro trabajo", "Historial de compras",  "Cerrar sesion"];
+    const Links = ["NormasScreen", "ChangePassScreen", "Realimentación", "ShopHistoryScreen", "LogoutScreen"];
 
     const LoadExchangeInfo = () => {
         setLoading(true)
@@ -21,7 +21,7 @@ const PerfilScreen = ({ navigation }) => {
     }, [navigation])
 
     return (
-        <Box flex={1} pt={12} bg={"#fff"} w='100%'>
+        <Box flex={1} pt={12} bg={"#231F20"} w='100%'>
             <Stack
                 flex={1}
             >
@@ -32,11 +32,11 @@ const PerfilScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </Box>
                 <Stack flex={1} justifyContent="center" px={10}>
-                    <Stack alignItems="center" style={Styles.PaymentBlog} shadow={6} bg={COLOR.black}>
+                    <Stack alignItems="center" style={Styles.PaymentBlog} shadow={6} bg={"#FA6E5A"}>
                         <Text style={{fontSize: 24, textAlign: "center", fontWeight: "bold", color: COLOR.white}}>Tu fianza actual es</Text>
                         <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.white}} >&euro;25</Text>
                     </Stack>
-                    <Stack borderWidth={2} p={5} borderRadius={16}>
+                    <Stack borderWidth={2} p={5} borderRadius={16} bg={"#FFFFFF"}>
                         {
                             Texts.map((item, i) => {
                                 return item === "Valorar nuestro trabajo" ?

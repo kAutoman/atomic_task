@@ -4,8 +4,7 @@ import { Box, Stack, ScrollView, Text, Avatar, Button, Image } from 'native-base
 import { Headers, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
 import { useSelector } from 'react-redux'
-import { color } from 'react-native-reanimated'
-import { styles } from 'styled-system'
+
 
 const HomeScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
@@ -21,10 +20,10 @@ const HomeScreen = ({ navigation }) => {
             });
             setCards(tempCards);
         });
-        db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
+        db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {            
             let tempCards = [];
-            querySnapshot.forEach((doc) => {
-                tempCards.push({ ...doc.data(), uid: doc.id });
+            querySnapshot.forEach((doc) => {                
+                tempCards.push({ ...doc.data(), uid: doc.id });                
             });
             setCustomcards(tempCards);
             setLoading(false)
@@ -55,7 +54,8 @@ const HomeScreen = ({ navigation }) => {
             <Stack flex={1} px={10}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <Text color="white" fontSize="3xl" bold textAlign="center">METAS ACTUALES</Text>
-                    <Button colorScheme="blue" onPress={() => navigation.navigate("AddalarmScreen")} _text={{ fontWeight: "bold" }} bg={"#1947E5"} my={3}>CREAR NUEVA META</Button>
+                    {/* create a task menu */}
+                    <Button colorScheme="blue" onPress={() => navigation.navigate("CreateTaskScreen")} _text={{ fontWeight: "bold" }} bg={"#1947E5"} my={3}>CREAR NUEVA META</Button>
                     {
                         cards.map((item, i) => {
                             return <Stack key={i} ><Stack bg={COLOR.white} p={5} my={3} borderRadius={16}>
@@ -70,18 +70,19 @@ const HomeScreen = ({ navigation }) => {
                         })
                     }
                     {
-                        customcards.map((item, i) => {
-                            return <Stack key={i}><Stack bg={COLOR.white} p={5} mt="5" borderRadius={16}>
-                                <TouchableOpacity onPress={() => { navigation.navigate("HomeCardDetailScreen", item) }}>
-                                    <Image source={Images.Custom_Image} resizeMode="contain" mt={-3} />
-                                    <Button onPress={() => { navigation.navigate("HomeCardDetailScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold" }} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
-                                </TouchableOpacity>
-                            </Stack>
-                            {/* <View style={Styles.DeadlineView}><Text style={Styles.DeadlineText} >{new Date(item.created_at.seconds * 1000).toLocaleDateString("en-US")}</Text></View> */}
-                            <View style={Styles.DeadlineView}><Text style={Styles.DeadlineText} >{new Date(item.created_at).toDateString()}</Text></View>
-                            
+                        customcards.map((item, i) => {                            
+                            return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
+                                    <TouchableOpacity onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                        <Image source={Images.Custom_Image} resizeMode="contain" />
+                                        <Button mb={5} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold"}} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={Styles.ComprarButton} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                        <Text mb={3} color="white" textAlign="center" bold>{item.deadline && new Date(item.deadline.seconds * 1000).toDateString()}</Text>
+                                    </TouchableOpacity>
+                                </Stack>
                             </Stack>
                         })
+                    
                     }
                     <Box h={5}></Box>
                 </ScrollView>

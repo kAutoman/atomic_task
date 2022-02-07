@@ -24,16 +24,22 @@ import DescubreDetail from '../screens/Logged/Descubre/detail'
 import Crecimiento from '../screens/Logged/Descubre/Crecimiento'
 import Deposito from '../screens/Logged/Descubre/Deposito'
 import Payment from '../screens/Logged/Descubre/Payment'
-import Addalarm from '../screens/Logged/Descubre/Addalarm'
+import CreateTask from '../screens/Logged/Descubre/CreateTask'
 import PaymentSetting from '../screens/Logged/Descubre/PaymentSetting'
 import CrecimientoDetail from '../screens/Logged/Descubre/CrecimientoDetail'
 import Alarms from '../screens/Logged/Alarms'
 import AlarmsAdd from '../screens/Logged/Alarms/Addalarm'
+import Challenge from '../screens/Logged/Challenge'
+import Challenge1 from '../screens/Logged/Challenge/challenge1'
+import Challenge2 from '../screens/Logged/Challenge/challenge2'
 import Confirms from "../screens/Logged/confirms"
 import ConfirmDetail from "../screens/Logged/confirms/detail"
 import ConfirmControl from "../screens/Logged/confirms/control"
+// import ConfirmDetail2 from "../screens/Logged/confirms/detail2"
 import Deadline from "../screens/Logged/Deadline/index"
 import Investline from "../screens/Logged/Descubre/invest"
+import StoreIndex from "../screens/Logged/Store/index"
+import StoreDetail from "../screens/Logged/Store/detail"
 import SideMenu from './SideMenu'
 import { LAYOUT } from "../constants"
 
@@ -46,7 +52,7 @@ const Navigator = createStackNavigator(
 			screen: Home,
 			navigationOptions: { headerShown: false },
 		},
-		HomeCardDetailScreen: {//error
+		HomeCardDetailScreen: {//error upload image
 			screen: HomeCardDetail,
 			navigationOptions: { headerShown: false },
 		},
@@ -131,7 +137,11 @@ const Navigator = createStackNavigator(
 			navigationOptions: { headerShown: false },
 		},
 		AddalarmScreen: {
-			screen: Addalarm,
+			screen: AlarmsAdd,
+			navigationOptions: { headerShown: false },
+		},
+    	CreateTaskScreen: {
+			screen: CreateTask,
 			navigationOptions: { headerShown: false },
 		},
 		AccountScreen: {
@@ -166,6 +176,10 @@ const Navigator = createStackNavigator(
 			screen: ConfirmControl,
 			navigationOptions: { headerShown: false },
 		},
+    	// ConfirmDetailScreen2: {
+		// 	screen: ConfirmDetail2,
+		// 	navigationOptions: { headerShown: false },
+		// },
 		DeadlineScreen: {//need to add exit button
 			screen: Deadline,
 			navigationOptions: { headerShown: false },
@@ -174,6 +188,26 @@ const Navigator = createStackNavigator(
 			screen: Investline,
 			navigationOptions: { headerShown: false },
 		},
+		ChallengeScreen: {
+			screen: Challenge,
+			navigationOptions: { headerShown: false },
+		},
+		Challenge1Screen: {
+			screen: Challenge1,
+			navigationOptions: { headerShown: false },
+		},
+		Challenge2Screen: {
+			screen: Challenge2,
+			navigationOptions: { headerShown: false },
+		},
+		StoreScreen: {
+			screen: StoreIndex,
+			navigationOptions: { headerShown: false },
+		},
+		StoreDetailScreen: {
+			screen: StoreDetail,
+			navigationOptions: { headerShown: false },
+		}
 	},
 	{
 		initialRouteName: 'HomeScreen'

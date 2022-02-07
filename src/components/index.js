@@ -20,6 +20,23 @@ export const Headers = ({ title = "", left = null, right = null }) => {
   )
 }
 
+export const StoreHeaders = ({ title = "", left = null, right = null }) => {
+  return (
+    <HStack
+      h={55}
+      px={7}
+      mt={12}
+      bg="#FA6E5A"
+      alignItems="center"
+      justifyContent='space-between'
+    >
+      <View alignItems='flex-start' w={10}>{left}</View>
+      <Text fontSize='lg' bold color={COLOR.white}>{title}</Text>
+      <View alignItems='flex-end' w={10}>{right}</View>
+    </HStack>
+  )
+}
+
 export const Footers = ({ routeName }) => {
   return (
     <HStack bg={COLOR.white} borderTopWidth={1} alignItems="center" safeAreaBottom shadow={3}>

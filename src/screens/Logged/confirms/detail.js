@@ -35,7 +35,7 @@ const HomeCardDetail = ({ navigation }) => {
                             resizeMode="contain"
                             isLooping
                         /> :
-                        <Image size="100%" height={500} borderRadius={15} source={{ uri: `${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
+                        <Image size="100%" height={500} borderRadius={15} source={{ uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo}` }} resizeMode="contain" alignSelf="center" />
                 }
             </TouchableOpacity>
         </Stack >

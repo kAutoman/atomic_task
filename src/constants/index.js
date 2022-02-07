@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native"
+import { ColorAndroid } from "react-native/Libraries/StyleSheet/PlatformColorValueTypesAndroid"
+import { padding } from "styled-system"
 import { COLOR } from "./Color"
 export * from './Color'
 export * from './Images'
@@ -43,6 +45,10 @@ export const Styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: "bold",
     },
+    AcceptChallegeButton: {
+        fontSize: 22,
+        fontWeight: "bold",
+    },
     PaymentBlog: {
         width: "100%",
         padding: 15,
@@ -65,5 +71,90 @@ export const Styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center", 
         height: 50
-    }    
+    }    ,
+    
+    ChallengeNoButton: {
+        borderRadius: 12,        
+        backgroundColor: "#C4C4C4",
+        width:50,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center"
+        
+    },
+    ChallengeNoButtonSelected: {
+        borderRadius: 12,        
+        backgroundColor: "#25D482",
+        width:50,
+        height:50,
+        alignItems:"center",
+        justifyContent:"center"
+        
+    },
+    ChallengeBtnContainer: {
+        paddingTop:20,        
+        paddingHorizontal:20,        
+        flex: 1,
+        flexDirection: 'row',
+        flexWrap: "wrap",
+        alignItems: 'center',
+        justifyContent: "space-evenly",
+
+    },
+    Challenge21Button: {
+        borderRadius: 12,
+        backgroundColor: COLOR.base,        
+        alignItems:"center",
+        justifyContent:"center",
+        padding:30,
+    },
+    Challenge21Item: {        
+        backgroundColor: COLOR.base,
+        alignItems:"center",
+        justifyContent:"center",
+        padding:10,
+        width:300,
+        height:50,
+    },
+    ChallengeItemContainer: {         
+        flex: 1,
+        flexDirection: 'column',        
+        alignItems: 'center',                
+        justifyContent: "space-evenly",
+        height:"60%",
+    },
+    ChallengeCheckBox: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    ContainerStore: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: 10
+
+    },
+    ComprarButton: {             
+        borderBottomLeftRadius:16,   
+        borderBottomRightRadius:16,   
+        backgroundColor: "black",
+        justifyContent: "center",
+        marginTop:5,
+        height: 50
+    },
+    TouchButton: {
+        alignItems: "center",
+        backgroundColor: "white",
+        paddingHorizontal: 10,
+        borderRadius:44,
+        flexDirection:"row",
+        borderWidth:1,
+        
+
+    },
+    weekdayPicker:{
+        padding:10
+    },
+    dayPicker:{
+        margin:5
+    }
 })
