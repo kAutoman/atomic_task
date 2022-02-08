@@ -89,17 +89,41 @@ const HomeCardDetail = ({ navigation }) => {
                             querySnapshot.forEach((doc) => {
                                 userInfo = doc.data();
                             });
-                            let saveData = {
-                                email: user.email,
-                                username: userInfo.name,
-                                photo: response.data,
-                                type: photo.photo.type,
-                                cardId: CardItem.uid,
-                                cardName: CardItem.cardName,
-                                amount: CardItem.amount,
-                                state: "requested",
-                                created_at: new Date()
+                            let saveData;
+                            if (CardItem.repeatState) {
+                                let day = [];
+                                Object.entries(CardItem.repeatDays).forEach( (value) => {
+                                    day.push(value[1]);
+                                });
+                                saveData = {
+                                    email: user.email,
+                                    username: userInfo.name,
+                                    photo: response.data,
+                                    type: photo.photo.type,
+                                    cardId: CardItem.uid,
+                                    cardName: CardItem.cardName,
+                                    amount: CardItem.amount,
+                                    day,
+                                    state: "requested",
+                                    repeatState : true,
+                                    created_at: new Date()
+                                }
+                            } 
+                            else {
+                                saveData = {
+                                    email: user.email,
+                                    username: userInfo.name,
+                                    photo: response.data,
+                                    type: photo.photo.type,
+                                    cardId: CardItem.uid,
+                                    cardName: CardItem.cardName,
+                                    amount: CardItem.amount,
+                                    state: "requested",
+                                    created_at: new Date(),
+                                    repeatState : false,
+                                }
                             }
+                        
                             await db.collection('confirmation').doc(insertKey).set(saveData);
                             setConfirmed(saveData);
                         });
@@ -113,7 +137,7 @@ const HomeCardDetail = ({ navigation }) => {
             return Toast.show({ title: "Please select Photo.", placement: 'bottom', status: 'error', w: 400 })
         }
     }
-
+    
     return (
         <Stack
             flex={1}
@@ -131,6 +155,7 @@ const HomeCardDetail = ({ navigation }) => {
                         confirmed ?
                             <>
                                 {
+                                    
                                     confirmed.type === "video" ?
                                         <Video
                                             ref={video}

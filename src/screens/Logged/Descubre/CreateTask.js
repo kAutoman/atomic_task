@@ -31,7 +31,7 @@ const CreateTaskScreen = ({ navigation }) => {
     });
     
     const RepeatDaysHandle = (repeatDays) => {
-        console.log(repeatDays);     
+        console.log(repeatDays);
         setWeekDays(repeatDays);
     }
     const SaveHandle = async () => {        
@@ -111,11 +111,15 @@ const CreateTaskScreen = ({ navigation }) => {
                         <Text fontSize="lg" color="black" bold>Repetir</Text>
                         <Switch colorScheme="yellow" size="lg" isChecked={repeatState} onChange={() => { setRepeatState(!repeatState) }} />
                     </HStack>
+                    {
+                        repeatState &&
+                            <WeekdayPicker
+                                days={repeatDays}
+                                onChange={RepeatDaysHandle}
+                            ></WeekdayPicker>
+                            
+                    }
                     
-                    <WeekdayPicker
-                        days={repeatDays}
-                        onChange={RepeatDaysHandle}
-                    ></WeekdayPicker>
                     
                     {/* <HStack space={3} justifyContent="space-between" alignItems="center">
                         <Text fontSize="lg" color="black" bold>Notificaciones</Text>

@@ -71,7 +71,7 @@ export const Styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center", 
         height: 50
-    }    ,
+    },
     
     ChallengeNoButton: {
         borderRadius: 12,        

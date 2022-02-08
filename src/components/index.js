@@ -6,7 +6,7 @@ import { COLOR, Images, LAYOUT } from "../constants"
 export const Headers = ({ title = "", left = null, right = null }) => {
   return (
     <HStack
-      h={55}
+      h={65}
       px={7}
       mt={12}
       bg={COLOR.base}

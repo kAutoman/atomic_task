@@ -76,11 +76,11 @@ const StoreScreen = ({ navigation }) => {
                     onChangeText={setSearch}
                 />
                 <View style={{flexDirection:"row", justifyContent:"center", padding:12}} >
-                    <TouchableOpacity onPress={navigation.navigate("StoreDetail")}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("Services")}>
                         <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Servicios</Text>                        
                     </TouchableOpacity>
                     <Text mb={3} color="#FFB61D" fontSize="3xl" textAlign="center" px="3" bold>|</Text>
-                    <TouchableOpacity onPress={navigation.openDrawer}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("Products")}>
                         <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Productos</Text>                        
                     </TouchableOpacity>
                 </View>

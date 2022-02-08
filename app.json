@@ -34,7 +34,7 @@
       ]
     },
     "web": {
-      "favicon": "./src/assets/favicon.png"
+      "favicon": "./src/assets/icon.png"
     },
     "plugins": [
       [
@@ -46,10 +46,10 @@
       [
         "expo-notifications",
         {
-          "icon": "./src/assets/favicon.png",
+          "icon": "./src/assets/icon.png",
           "color": "#ffffff",
           "sounds": [
-            "./assets/atom.mp3"
+            "./src/assets/atom.mp3"
           ],
           "mode": "production"
         }

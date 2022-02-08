@@ -23,17 +23,20 @@ const HomeCardControl = ({ navigation }) => {
             state
         });
 
-        //increase coin
-        let coin = user.coin ? (user.coin + 5) : 5
-        db.collection("users").doc(CardItem.email).update({
-            coin
-        }).then(()=>{
-            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
-                let tempUser = snapshot.data();
-                tempUser.coin = coin;
-                dispatch(setUserInfo(tempUser));
-            })
-        });
+        if (state === 'completed') {
+            //increase coin
+            let coin = user.coin ? (user.coin + 5) : 5
+            db.collection("users").doc(CardItem.email).update({
+                coin
+            }).then(()=>{
+                db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                    let tempUser = snapshot.data();
+                    tempUser.coin = coin;
+                    dispatch(setUserInfo(tempUser));
+                })
+            });    
+        }
+        
         // db.collection("payment_history").doc(CardItem.cardId).delete();
         // db.collection("goals").doc(CardItem.cardId).delete();
         setLoading(false)
