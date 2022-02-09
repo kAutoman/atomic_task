@@ -42,7 +42,7 @@ const HomeCardDetail = ({ navigation }) => {
                     resizeMode="contain"
                     isLooping
                 /> :
-                <Image width="50%" style={{margin:0}} key={temp} height={260} source={{ uri: `${ROOT.PAYMENT_URL}img/${temp}` }} resizeMode="contain" alignSelf="center" />)
+                <Image width={255} height={255} style={{margin:0}} key={temp} source={{ uri: `${ROOT.PAYMENT_URL}img/${temp}` }} resizeMode="contain" alignSelf="center" />)
             }   
            
         }
