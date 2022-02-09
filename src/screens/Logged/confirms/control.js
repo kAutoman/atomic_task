@@ -18,6 +18,7 @@ const HomeCardControl = ({ navigation }) => {
     const _handleComplete = (state) => {
         setLoading(true)
 
+        
         //change confirmation status
         db.collection("confirmation").doc(CardItem.uid).update({
             state

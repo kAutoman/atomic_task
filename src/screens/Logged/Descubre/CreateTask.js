@@ -35,7 +35,17 @@ const CreateTaskScreen = ({ navigation }) => {
         setWeekDays(repeatDays);
     }
     const SaveHandle = async () => {        
+        //validate repeat days
+        let noSelected = true;
+        Object.entries(repeatDays).forEach( (value) => {
+            if (value[1] === 1) {
+                noSelected = false;
+            }
+        });
         if (title) {
+            if ((noSelected === true) && (repeatState === true)) {
+                return Toast.show({ title: 'por favor seleccione cualquier día!', placement: 'bottom', status: 'error', w: 400 })
+            }
             const timeStamp = Math.floor(Date.now() / 1000);
             const insertKey = "_" + timeStamp;
             setLoading(true)
