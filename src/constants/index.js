@@ -152,12 +152,13 @@ export const Styles = StyleSheet.create({
     TouchButton: {
         alignItems: "center",
         backgroundColor: "white",
-        paddingHorizontal: 10,
+        paddingVertical:0,
+        paddingHorizontal:10,
         borderRadius:44,
         flexDirection:"row",
         borderWidth:1,
-        
-
+        paddingTop:10,
+        flexWrap:"nowrap"
     },
     weekdayPicker:{
         padding:10

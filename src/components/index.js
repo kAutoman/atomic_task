@@ -26,6 +26,7 @@ export const StoreHeaders = ({ title = "", left = null, right = null, color= "#F
       h={55}
       px={7}
       mt={12}
+      mb={2}
       bg={color}
       alignItems="center"
       justifyContent='space-between'

@@ -77,11 +77,11 @@ const StoreScreen = ({ navigation }) => {
                 />
                 <View style={{flexDirection:"row", justifyContent:"center", padding:12}} >
                     <TouchableOpacity onPress={()=>navigation.navigate("ServicesScreen")}>
-                        <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Servicios</Text>                        
+                        <Text color="white" fontSize="3xl" textAlign="center" bold>Servicios</Text>                        
                     </TouchableOpacity>
-                    <Text mb={3} color="#FFB61D" fontSize="3xl" textAlign="center" px="3" bold>|</Text>
+                    <Text color="#FFB61D" fontSize="3xl" textAlign="center" px="3" bold>|</Text>
                     <TouchableOpacity onPress={()=>navigation.navigate("ProductsScreen")}>
-                        <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Productos</Text>                        
+                        <Text color="white" fontSize="3xl" textAlign="center" bold>Productos</Text>                        
                     </TouchableOpacity>
                 </View>
             </Stack >
@@ -90,18 +90,18 @@ const StoreScreen = ({ navigation }) => {
                     {/* create a services items */}                                
                     {
                         services.map((item, i) => {                            
-                            return <Stack key={i}><Stack bg={COLOR.white} mt="3" borderRadius={16}>
-                                        <TouchableOpacity onPress={() => { navigation.navigate("StoreDetailScreen", { ...item, itemName: item.name }) }}>
-                                            <View style={{padding:15}}>                                            
-                                            <Image source={{uri:item.img}} 
-                                             style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
-                                             onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                            <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>
-                                            <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + item.unit}</Text>
+                            return <Stack key={i}><Stack bg={COLOR.white} borderRadius={16}>
+                                        <TouchableOpacity onPress={() => { navigation.navigate("CompareServiceScreen", { ...item, itemName: item.name }) }}>
+                                            <View style={{padding:25}}>                                            
+                                                <Image source={{uri:item.img}} 
+                                                style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
+                                                onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
+                                                <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>
+                                                <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + item.unit}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={Styles.ComprarButton} onPress={navigation.navigate("CompareScreen")}>
-                                            <Text mb={3} color="white" fontSize="24px" textAlign="center" bold>Comprar</Text>
+                                        <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareServiceScreen")}>
+                                            <Text mb={6} mt={6} color="white" fontSize="35px" textAlign="center" bold>Comprar</Text>
                                         </TouchableOpacity>
                                     </Stack>
                             </Stack>

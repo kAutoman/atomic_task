@@ -41,7 +41,7 @@ const ProductsScreen = ({ navigation }) => {
                 }       
                 right={
                     <TouchableOpacity onPress={() => navigation.navigate("PerfilScreen")}>
-                        <Icon viewBox="0 0 26 24" size="md">{LAYOUT.ShoppingBasketIcon}</Icon>
+                        <Icon viewBox="0 0 26 24" size="md" width={40} height={40}>{LAYOUT.ShoppingBasketIcon}</Icon>
                     </TouchableOpacity>
                 }         
             />
@@ -95,21 +95,21 @@ const ProductsScreen = ({ navigation }) => {
                     {/* create a services items */}                                
                     {
                         services.map((item, i) => {                            
-                            return <Stack key={i}><Stack bg={COLOR.white} mt="3" borderRadius={16}>
-                                        <TouchableOpacity onPress={() => {  }}>
-                                            <View style={{padding:15}}>                                            
-                                            <Image source={{uri:item.img}} 
-                                            style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
-                                            onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                            <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>    
-                                            <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + item.unit}</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={Styles.ProductComprarButton} onPress={() => navigation.navigate("CompareProductsScreen")}>
-                                            <Text mb={3} color="white" fontSize="24px" textAlign="center" bold>Comprar</Text>
-                                        </TouchableOpacity>
+                            return <Stack key={i}><Stack bg={COLOR.white} borderRadius={16}>
+                                                <TouchableOpacity onPress={() => { navigation.navigate("CompareProductsScreen", { ...item, itemName: item.name }) }}>
+                                                    <View style={{padding:25}}>                                            
+                                                        <Image source={{uri:item.img}} 
+                                                        style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
+                                                        onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
+                                                        <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>
+                                                        <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + ' ' + item.unit}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareProductsScreen")}>
+                                                    <Text mb={6} mt={6} color="white" fontSize="35px" textAlign="center" bold>Comprar</Text>
+                                                </TouchableOpacity>
+                                            </Stack>
                                     </Stack>
-                            </Stack>
                         })
                     }
                     <Box h={5}></Box>
