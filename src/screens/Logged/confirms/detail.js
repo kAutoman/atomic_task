@@ -42,8 +42,8 @@ const HomeCardDetail = ({ navigation }) => {
                     resizeMode="contain"
                     isLooping
                 /> :
-                <Image width={255} height={255} style={{margin:0}} key={temp} source={{ uri: `${ROOT.PAYMENT_URL}img/${temp}` }} resizeMode="contain" alignSelf="center" />)
-            }   
+                <Image width={255} height={CardItem.photo.length === 2 ? 400: 255} style={{margin:0}} key={temp} source={{ uri: `${ROOT.PAYMENT_URL}img/${temp}` }} resizeMode="contain" alignSelf="center" />)
+            }
            
         }
         

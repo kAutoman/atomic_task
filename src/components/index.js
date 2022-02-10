@@ -20,13 +20,13 @@ export const Headers = ({ title = "", left = null, right = null }) => {
   )
 }
 
-export const StoreHeaders = ({ title = "", left = null, right = null }) => {
+export const StoreHeaders = ({ title = "", left = null, right = null, color= "#FA6E5A" }) => {
   return (
     <HStack
       h={55}
       px={7}
       mt={12}
-      bg="#FA6E5A"
+      bg={color}
       alignItems="center"
       justifyContent='space-between'
     >

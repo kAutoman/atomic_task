@@ -32,16 +32,20 @@ import AlarmsAdd from '../screens/Logged/Alarms/Addalarm'
 import Challenge from '../screens/Logged/Challenge'
 import Challenge1 from '../screens/Logged/Challenge/challenge1'
 import Challenge2 from '../screens/Logged/Challenge/challenge2'
-import Confirms from "../screens/Logged/confirms"
-import ConfirmDetail from "../screens/Logged/confirms/detail"
-import ConfirmControl from "../screens/Logged/confirms/control"
+import Confirms from "../screens/Logged/Confirms"
+import ConfirmDetail from "../screens/Logged/Confirms/detail"
+import ConfirmControl from "../screens/Logged/Confirms/control"
 // import ConfirmDetail2 from "../screens/Logged/confirms/detail2"
 import Deadline from "../screens/Logged/Deadline/index"
 import Investline from "../screens/Logged/Descubre/invest"
 import StoreIndex from "../screens/Logged/Store/index"
 import StoreDetail from "../screens/Logged/Store/detail"
+import ProductsScreen from "../screens/Logged/Store/products"
+import ServicesScreen from "../screens/Logged/Store/services"
 import SideMenu from './SideMenu'
 import { LAYOUT } from "../constants"
+import CompareServiceScreen from '../screens/Logged/Store/compareService'
+import CompareProductsScreen from '../screens/Logged/Store/compareProducts'
 
 /**
  * Home Navigator
@@ -207,7 +211,23 @@ const Navigator = createStackNavigator(
 		StoreDetailScreen: {
 			screen: StoreDetail,
 			navigationOptions: { headerShown: false },
-		}
+		},
+		ServicesScreen: {
+			screen: ServicesScreen,
+			navigationOptions: { headerShown: false },
+		},
+		ProductsScreen: {
+			screen: ProductsScreen,
+			navigationOptions: { headerShown: false },
+		},
+		CompareServiceScreen : {
+			screen : CompareServiceScreen,
+			navigationOptions : {headerShown: false}
+		},
+		CompareProductsScreen : {
+			screen : CompareProductsScreen,
+			navigationOptions : {headerShown: false}
+		},
 	},
 	{
 		initialRouteName: 'HomeScreen'

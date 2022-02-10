@@ -75,17 +75,17 @@ const StoreDetailScreen = ({ navigation }) => {
                     }}
                     onChangeText={setSearch}
                 />
-                <Text mb={3} color="white" fontSize="48" textAlign="center" bold>Servicios</Text>
+                <Text mb={3} color="white" fontSize="48px" textAlign="center" bold>Servicios</Text>
                 <View style={{flexDirection:"row",  justifyContent:"space-between", padding:12}} >
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Cursos</Text>
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Cursos</Text>
                         <Icon viewBox="0 4 12 12" size="5" >{LAYOUT.closebtn}</Icon>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Suscripciones</Text>                        
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Suscripciones</Text>                        
                     </TouchableOpacity>
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Libros</Text>                        
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Libros</Text>                        
                     </TouchableOpacity>
                 </View>
             </Stack >
@@ -98,14 +98,14 @@ const StoreDetailScreen = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => {  }}>
                                             <View style={{padding:15}}>                                            
                                             <Image source={{uri:item.img}} 
-                                             style={{backgroundColor:"#F2C94C", width:300, height:245}}
+                                             style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
                                              onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                            <Text color="black" fontSize="21" textAlign="left" >{item.name}</Text>    
-                                            <Text color="black" fontSize="21" textAlign="left" bold>{item.price + item.unit}</Text>
+                                            <Text color="black" fontSize="21px" textAlign="left" >{item.name}</Text>    
+                                            <Text color="black" fontSize="21px" textAlign="left" bold>{item.price + item.unit}</Text>
                                             </View>
                                         </TouchableOpacity>
                                         <TouchableOpacity style={Styles.ComprarButton} onPress={navigation.openDrawer}>
-                                            <Text mb={3} color="white" fontSize="24" textAlign="center" bold>Comprar</Text>
+                                            <Text mb={3} color="white" fontSize="24px" textAlign="center" bold>Comprar</Text>
                                         </TouchableOpacity>
                                     </Stack>
                             </Stack>

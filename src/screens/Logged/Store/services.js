@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { View, TouchableOpacity, LayoutAnimation } from 'react-native'
-import { Box, Stack, ScrollView, Text, Input, Icon, Button, Image } from 'native-base'
-import { Headers, Loading } from '../../../components'
+import { View, TouchableOpacity} from 'react-native'
+import { Box, Stack, ScrollView, Text, Input, Icon, Image } from 'native-base'
+import { StoreHeaders, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
 import { useSelector } from 'react-redux'
 import { Feather } from "@expo/vector-icons"
-import { flexDirection } from 'styled-system'
 
-const StoreScreen = ({ navigation }) => {
+const ServicesScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth)
     const [services, setServiceItems] = useState([]);
     const [SearchKey, setSearch] = useState("");    
+    const StoreItem = navigation.state.params;
     const LoadExchangeInfo = () => {        
-        setLoading(true)        
+        setLoading(true);
         db.collection("services").get().then((querySnapshot) => {
             let tempCards = [];
             querySnapshot.forEach((doc) => {
@@ -25,26 +25,26 @@ const StoreScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
+        console.log("storedetail----------------"+ navigation.state.params);
         LoadExchangeInfo()
     }, [navigation.state.params])
 
     return (
-        <Box flex={1} bg={COLOR.base} w='100%'>
+        <Box flex={1} bg="#FA6E5A" w='100%'>
             {loading && <Loading />}
-            <Headers
+            <StoreHeaders                
                 left={
-                    <TouchableOpacity onPress={navigation.openDrawer}>
-                        <Image size="xs" source={Images.NavBarImage} />
+                    <TouchableOpacity onPress={()=>navigation.goBack()}>
+                        <Image size="xs" source={Images.GobackImage} />
                     </TouchableOpacity>
                 }       
                 right={
-                    <TouchableOpacity onPress={() => {}}>
+                    <TouchableOpacity onPress={() => navigation.navigate("PerfilScreen")}>
                         <Icon viewBox="0 0 26 24" size="md">{LAYOUT.ShoppingBasketIcon}</Icon>
                     </TouchableOpacity>
                 }         
             />
-            <Stack flex={1} px={10}>
-                <Text mb={3} color="#FFB61D" fontSize="5xl" textAlign="center" bold>Tienda</Text>
+            <Stack flex={1} px={10}>                
                 <Input
                     InputRightElement={
                         <Icon
@@ -75,13 +75,17 @@ const StoreScreen = ({ navigation }) => {
                     }}
                     onChangeText={setSearch}
                 />
-                <View style={{flexDirection:"row", justifyContent:"center", padding:12}} >
-                    <TouchableOpacity onPress={()=>navigation.navigate("ServicesScreen")}>
-                        <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Servicios</Text>                        
+                <Text mb={3} color="white" fontSize="48px" mt={30} textAlign="center" bold>Servicios</Text>
+                <View style={{flexDirection:"row",  justifyContent:"space-between", padding:12}} >
+                    <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Cursos</Text>
+                        <Icon viewBox="0 4 12 12" size="5" >{LAYOUT.closebtn}</Icon>
                     </TouchableOpacity>
-                    <Text mb={3} color="#FFB61D" fontSize="3xl" textAlign="center" px="3" bold>|</Text>
-                    <TouchableOpacity onPress={()=>navigation.navigate("ProductsScreen")}>
-                        <Text mb={3} color="white" fontSize="3xl" textAlign="center" bold>Productos</Text>                        
+                    <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Suscripciones</Text>                        
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
+                        <Text mb={3} color="black" fontSize="18px" textAlign="center" bold>Libros</Text>                        
                     </TouchableOpacity>
                 </View>
             </Stack >
@@ -91,16 +95,16 @@ const StoreScreen = ({ navigation }) => {
                     {
                         services.map((item, i) => {                            
                             return <Stack key={i}><Stack bg={COLOR.white} mt="3" borderRadius={16}>
-                                        <TouchableOpacity onPress={() => { navigation.navigate("StoreDetailScreen", { ...item, itemName: item.name }) }}>
+                                        <TouchableOpacity onPress={() => {  }}>
                                             <View style={{padding:15}}>                                            
                                             <Image source={{uri:item.img}} 
                                              style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
                                              onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                            <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>
+                                            <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>    
                                             <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + item.unit}</Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={Styles.ComprarButton} onPress={navigation.navigate("CompareScreen")}>
+                                        <TouchableOpacity style={Styles.ComprarButton} onPress={() => navigation.navigate("CompareServiceScreen")}>
                                             <Text mb={3} color="white" fontSize="24px" textAlign="center" bold>Comprar</Text>
                                         </TouchableOpacity>
                                     </Stack>
@@ -114,4 +118,4 @@ const StoreScreen = ({ navigation }) => {
     )
 }
 
-export default StoreScreen
+export default ServicesScreen

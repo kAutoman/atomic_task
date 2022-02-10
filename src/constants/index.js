@@ -141,6 +141,14 @@ export const Styles = StyleSheet.create({
         marginTop:5,
         height: 50
     },
+    ProductComprarButton: {             
+        borderBottomLeftRadius:16,   
+        borderBottomRightRadius:16,   
+        backgroundColor: "black",
+        justifyContent: "center",
+        marginTop:5,
+        height: 50
+    },
     TouchButton: {
         alignItems: "center",
         backgroundColor: "white",
