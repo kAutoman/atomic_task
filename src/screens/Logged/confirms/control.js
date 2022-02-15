@@ -23,6 +23,19 @@ const HomeCardControl = ({ navigation }) => {
         db.collection("confirmation").doc(CardItem.uid).update({
             state
         });
+        // let updateState = 1;
+        // if (state === 'completed') {
+        //     updateState = 2;
+        // }
+        // else if (state === 'repeat') {
+        //     updateState = 3;   
+        // }
+        // else if (state === 'deny') {
+        //     updateState = 4;
+        // }
+        // db.collection("goals").where('user','==',CardItem.email).update({
+        //     state : updateState   
+        // });
 
         if (state === 'completed') {
             //increase coin
@@ -43,6 +56,13 @@ const HomeCardControl = ({ navigation }) => {
         setLoading(false)
         //goto confirms list
         navigation.navigate("ConfirmsScreen", 321)
+    }
+
+    const displayRepeatBtn = () => {
+        console.log(CardItem.repeatState);
+        if (CardItem.repeatState){
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>;
+        }
     }
 
     return (
@@ -67,7 +87,9 @@ const HomeCardControl = ({ navigation }) => {
                     <Text color="white" fontSize="3xl" mt={70} textAlign="center">{"Terminada"}</Text> :
                     <Stack space={3} mt={5}>
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#22c55e"} alignSelf="center">Completa</Button>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>
+                        { 
+                            displayRepeatBtn()
+                        }
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("deny")} borderRadius={100} w="100%" bg={"#f97316"} alignSelf="center">Negar</Button>
                     </Stack>
             }

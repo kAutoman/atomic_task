@@ -46,11 +46,10 @@ const CreateTaskScreen = ({ navigation }) => {
     const SaveHandle = async () => {        
         //validate repeat days
         let noSelected = true;
-        Object.entries(repeatDays).forEach( (value) => {
-            if (value[1] === 1) {
-                noSelected = false;
-            }
-        });
+        if(repeatDays.length > 0){
+            noSelected = false;
+        }
+    
         if (title) {
             if ((noSelected === true) && (repeatState === true)) {
                 return Toast.show({ title: 'por favor seleccione cualquier día!', placement: 'bottom', status: 'error', w: 400 })
@@ -139,7 +138,7 @@ const CreateTaskScreen = ({ navigation }) => {
                             <DayPicker
                               weekdays={repeatDays}
                               setWeekdays={RepeatDaysHandle}
-                              activeColor='violet'
+                              activeColor='#04ef52'
                               textColor='white'
                               inactiveColor='grey'
                             />

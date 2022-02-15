@@ -59,18 +59,21 @@ const HomeScreen = ({ navigation }) => {
                     <Button colorScheme="blue" onPress={() => navigation.navigate("CreateTaskScreen")} _text={{ fontWeight: "bold" }} bg={"#1947E5"} my={3}>CREAR NUEVA META</Button>
                     {
                         cards.map((item, i) => {
-                            return <Stack key={i} ><Stack bg={COLOR.white} p={5} my={3} borderRadius={16}>
-                                <TouchableOpacity onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }}>
-                                    {LAYOUT.CardInfo[item.cardType][item.cardId].CardImg}
-                                    <Button onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold" }} alignSelf="center" borderRadius={100}>{LAYOUT.CardInfo[item.cardType][item.cardId].buttonText}</Button>
-                                </TouchableOpacity>
-                                </Stack>
-                            </Stack>              
+                            // if(item.state == 1 || item.state == 1){
+                                return <Stack key={i} ><Stack bg={COLOR.white} p={5} my={3} borderRadius={16}>
+                                    <TouchableOpacity onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }}>
+                                        {LAYOUT.CardInfo[item.cardType][item.cardId].CardImg}
+                                        <Button onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold" }} alignSelf="center" borderRadius={100}>{LAYOUT.CardInfo[item.cardType][item.cardId].buttonText}</Button>
+                                    </TouchableOpacity>
+                                    </Stack>
+                                </Stack>       
+                            // }       
                         })
                     }
                     {
-                        customcards.map((item, i) => {                            
-                            return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
+                        customcards.map((item, i) => {  
+                            // if(item.state == 0 || item.state == 1){
+                                return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
                                     <TouchableOpacity onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Image source={Images.Custom_Image} resizeMode="contain" />
                                         <Button mb={5} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold"}} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
@@ -80,6 +83,7 @@ const HomeScreen = ({ navigation }) => {
                                     </TouchableOpacity>
                                 </Stack>
                             </Stack>
+                            // }                          
                         })
                     
                     }
