@@ -6,7 +6,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
 import { useSelector } from 'react-redux';
-import WeekdayPicker from "react-native-weekday-picker"
+// import WeekdayPicker from "react-native-weekday-picker"
+import { DayPicker } from 'react-native-picker-weekday';
 
 
 const CreateTaskScreen = ({ navigation }) => {
@@ -19,10 +20,11 @@ const CreateTaskScreen = ({ navigation }) => {
     const [title, setTitle] = useState();
     const [repeatState, setRepeatState] = useState(false);
     // const [repeatDays, setWeekDays] = useState({ 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 });
+    const [repeatDays, setWeekDays] = useState([]);
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();    
-    let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
+    // let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
     
 
 
@@ -30,11 +32,9 @@ const CreateTaskScreen = ({ navigation }) => {
         console.log("CreateTaskScreen::::::" + JSON.stringify(repeatDays));        
     });
     
-    const RepeatDaysHandle = (tmp) => {
-        // console.log(repeatDays);
-        // setWeekDays(repeatDays);
-        console.log(tmp);
-        repeatDays = tmp;
+    const RepeatDaysHandle = (repeatDays) => {
+        console.log(repeatDays);
+        setWeekDays(repeatDays);
     }
 
     var modifiers = {
@@ -132,10 +132,17 @@ const CreateTaskScreen = ({ navigation }) => {
                     </HStack>
                     {
                         repeatState &&
-                            <WeekdayPicker
-                                days={repeatDays}
-                                onChange={RepeatDaysHandle}
-                            ></WeekdayPicker>
+                            // <WeekdayPicker
+                            //     days={repeatDays}
+                            //     onChange={RepeatDaysHandle}
+                            // ></WeekdayPicker>
+                            <DayPicker
+                              weekdays={repeatDays}
+                              setWeekdays={RepeatDaysHandle}
+                              activeColor='violet'
+                              textColor='white'
+                              inactiveColor='grey'
+                            />
 
                     }
                     

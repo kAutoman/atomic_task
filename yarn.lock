@@ -10840,6 +10840,11 @@
     "lodash" "^4.17.21"
     "prop-types" "^15.5.10"
 
+"react-native-picker-weekday@^1.1.2":
+  "integrity" "sha512-klJPZ/CZ/Q4iVqJKs1QFTetoHTrOV3jRE199MM4/vn1TtNM7ezpHctGLkK9SYFDeORYH1M1VrEgme0jy9vn8FQ=="
+  "resolved" "https://registry.npmjs.org/react-native-picker-weekday/-/react-native-picker-weekday-1.1.2.tgz"
+  "version" "1.1.2"
+
 "react-native-qrcode-svg@^6.1.1":
   "integrity" "sha512-98cc8fkl61g2V5cesmxjlMr1WaJZcB6dyeN8T9d/shIWtJxU8KRCinNCZNBlIvO9fxbIpo5SgK+pqSItK0+vow=="
   "resolved" "https://registry.npmjs.org/react-native-qrcode-svg/-/react-native-qrcode-svg-6.1.1.tgz"
