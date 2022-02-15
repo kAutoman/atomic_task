@@ -6,8 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "build:android":"expo build:android",
-    "build:ios":"expo build:ios"
+    "build:android": "expo build:android",
+    "build:ios": "expo build:ios"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.0",
@@ -32,6 +32,7 @@
     "immer": "^9.0.5",
     "moment": "^2.29.1",
     "native-base": "^3.0.3",
+    "prettier": "^2.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "^0.63.4",

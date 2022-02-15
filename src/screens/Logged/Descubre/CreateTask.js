@@ -14,15 +14,15 @@ const CreateTaskScreen = ({ navigation }) => {
     const [show, setShow] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [aday, setAday] = useState(Item ? Item.time.slice(0, 3) : moment(new Date).format("dddd"));
-    const [time, setTime] = useState(moment(new Date).format("YYYY/MM/DD hh:mm A"));
+    const [time, setTime] = useState(moment(new Date).add(1, 'day').format("YYYY/MM/DD hh:mm A"));
     const [val_timestamp, setTimestamp] = useState(false);
     const [title, setTitle] = useState();
     const [repeatState, setRepeatState] = useState(false);
-    const [repeatDays, setWeekDays] = useState({ 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 });
+    // const [repeatDays, setWeekDays] = useState({ 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 });
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();    
-    // let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
+    let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
     
 
 
@@ -30,10 +30,19 @@ const CreateTaskScreen = ({ navigation }) => {
         console.log("CreateTaskScreen::::::" + JSON.stringify(repeatDays));        
     });
     
-    const RepeatDaysHandle = (repeatDays) => {
-        console.log(repeatDays);
-        setWeekDays(repeatDays);
+    const RepeatDaysHandle = (tmp) => {
+        // console.log(repeatDays);
+        // setWeekDays(repeatDays);
+        console.log(tmp);
+        repeatDays = tmp;
     }
+
+    var modifiers = {
+      'weekend': function(weekday) {
+        return weekday == 0 || weekday == 6;
+      }
+    }
+
     const SaveHandle = async () => {        
         //validate repeat days
         let noSelected = true;
@@ -86,7 +95,7 @@ const CreateTaskScreen = ({ navigation }) => {
                     <Text style={{fontSize:27}} color="black" bold>Crear una tarea</Text>                    
                     <View>
                     </View>
-                </HStack>                
+                </HStack>             
                 <Stack p={7} space={5}>
                     <Stack space={3}>
                         <Text fontSize="lg" style={{textAlign:"center"}} color="black" bold>Fijar fecha limite</Text>
@@ -127,7 +136,7 @@ const CreateTaskScreen = ({ navigation }) => {
                                 days={repeatDays}
                                 onChange={RepeatDaysHandle}
                             ></WeekdayPicker>
-                            
+
                     }
                     
                     
