@@ -35,5 +35,7 @@ export const Images = {
     AlarmAddImage: require("../assets/outline-icon-plus.png"),
     Custom_Image:require("../assets/custom_task.png"),
     Deadline_Image:require("../assets/deadline.png"),
-    Deadline_Text:require("../assets/deadline_text.png")
+    Deadline_Text:require("../assets/deadline_text.png"),
+    TrashImage:require("../assets/trash.png"),
+    DelayImage:require("../assets/delay.png"),
 }

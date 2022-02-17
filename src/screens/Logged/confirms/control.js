@@ -11,7 +11,9 @@ import { setUserInfo } from '../../../redux/actions/authActions';
 
 const HomeCardControl = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
-    const CardItem = navigation.state.params;
+    const {item,tempIdx} = navigation.state.params;
+    const CardItem = item;
+    const ClickedPhotoIndex = tempIdx;
     const { user } = useSelector((store) => store.auth)
     const dispatch = useDispatch();
 
@@ -23,19 +25,23 @@ const HomeCardControl = ({ navigation }) => {
         db.collection("confirmation").doc(CardItem.uid).update({
             state
         });
-        // let updateState = 1;
-        // if (state === 'completed') {
-        //     updateState = 2;
-        // }
-        // else if (state === 'repeat') {
-        //     updateState = 3;   
-        // }
-        // else if (state === 'deny') {
-        //     updateState = 4;
-        // }
-        // db.collection("goals").where('user','==',CardItem.email).update({
-        //     state : updateState   
-        // });
+        let updateState = 1;
+        if (state === 'completed') {
+            updateState = 2;
+        }
+        else if (state === 'repeat') {
+            updateState = 3;   
+        }
+        else if (state === 'deny') {
+            updateState = 4;
+        }
+        db.collection("goals").where('cardName','==',CardItem.cardName).get().then(querySnapshot => {
+            let updateId;
+            querySnapshot.forEach((doc) => {
+                updateId = doc.id;
+            });
+            db.collection("goals").doc(updateId).update({state : updateState});
+        });
 
         if (state === 'completed') {
             //increase coin
@@ -50,6 +56,14 @@ const HomeCardControl = ({ navigation }) => {
                 })
             });    
         }
+
+        if (state === 'repeat') {
+            let confirmedTasks = CardItem.confirmedTasks ? CardItem.confirmedTasks : [];
+            confirmedTasks.push(ClickedPhotoIndex);
+            db.collection("confirmation").doc(CardItem.uid).update({
+                confirmedTasks
+            });
+        }
         
         // db.collection("payment_history").doc(CardItem.cardId).delete();
         // db.collection("goals").doc(CardItem.cardId).delete();
@@ -59,7 +73,6 @@ const HomeCardControl = ({ navigation }) => {
     }
 
     const displayRepeatBtn = () => {
-        console.log(CardItem.repeatState);
         if (CardItem.repeatState){
             return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>;
         }
@@ -79,7 +92,7 @@ const HomeCardControl = ({ navigation }) => {
                 </TouchableOpacity>
             </Box>
             
-            <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={confirmLogo} resizeMode="contain" alignSelf="center" />
+            <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`}} resizeMode="contain" alignSelf="center" />
                         
             <Text color="#FFB61D" fontSize="2xl" textAlign="center">{CardItem.cardName}</Text>
             {

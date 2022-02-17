@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Video } from 'expo-av';
 import { style } from 'styled-system';
+import moment from 'moment';
 
 
 const HomeCardDetail = ({ navigation }) => {
@@ -19,6 +20,8 @@ const HomeCardDetail = ({ navigation }) => {
     const [confirmed, setConfirmed] = useState(false);
     const video = React.useRef(null);
     const [isRepeat, setRepeatStatus] = useState(false);
+    const [deadline,setDeadLine] = useState('');
+    let intervalInstance;
 
     const checkCard = () => {        
         db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {            
@@ -33,6 +36,10 @@ const HomeCardDetail = ({ navigation }) => {
 
     useEffect(() => {
         checkCard();
+        calcDeadLine();
+        return () => {
+            clearInterval(intervalInstance);
+        }
     }, [navigation])
 
     const pickImage = async () => {
@@ -84,12 +91,24 @@ const HomeCardDetail = ({ navigation }) => {
         let i=0;
         if (confirmed) {
             let length = confirmed.photo.length;
-            return <Image size="80%" h={400} mt={70} key={i}  source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmed.photo[length-1]}` }} resizeMode="contain" alignSelf="center" />;
+            return <Image size="100%" h={500} mt={70} key={i}  source={Images.DelayImage} resizeMode="contain" alignSelf="center" />;
         }
         else {
-            return <Image size="80%" h={400} borderRadius={15} key={i} mt={50} source={photo.photo} resizeMode="contain" alignSelf="center" />
+            return <Image size="100%" h={500} borderRadius={15} key={i} mt={50} source={photo.photo} resizeMode="contain" alignSelf="center" />
         }
        
+    }
+
+    const getDeadLine = () => {
+        let date1 = moment(CardItem.deadline.toDate());
+        let date2 = moment();
+        let diff = moment.duration(date1.diff(date2));
+        
+        setDeadLine(diff.get("days") + 'd '+diff.get("hours") +"h "+ diff.get("minutes") +"m "+ diff.get("seconds") + 's ');
+    }
+
+    const calcDeadLine = () => {
+        intervalInstance = setInterval(getDeadLine,1000)    
     }
 
     const Save = () => {
@@ -188,7 +207,7 @@ const HomeCardDetail = ({ navigation }) => {
     return (
         <Stack
             flex={1}
-            bg={"#000000"}
+            bg={confirmed ? "#fff" : "#000"}
             p={7}
         >
             {loading ? <Loading /> :
@@ -217,20 +236,10 @@ const HomeCardDetail = ({ navigation }) => {
                                         renderPhotos()
                                 }
                                 </ScrollView>
-                                <Text color="white" fontSize="3xl" shadow={3} textAlign="center">{(() => {
+                               
+                                <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight:50}} bold>{(() => {
                                     if (confirmed.state === "requested") {
-                                        return "solicitada";
-                                    } else if (confirmed.state === "repeat") {
-                                        return "repetir";
-                                    } else if (confirmed.state === 'deny') {
-                                        return "negar";
-                                    } else if (confirmed.state === 'completed') {
-                                        return "Felicidades";
-                                    }
-                                })()}</Text>
-                                <Text color="#FFB61D" fontSize="2xl" textAlign="center">{(() => {
-                                    if (confirmed.state === "requested") {
-                                        return "por favor espere hasta aceptar";
+                                        return "Espera para iniciar la confirmación";
                                     } else if (confirmed.state === "repeat") {
                                         return "La tarea se repite";
                                     } else if (confirmed.state === 'deny') {
@@ -240,7 +249,12 @@ const HomeCardDetail = ({ navigation }) => {
                                     }
                                 })()}</Text>
                                 {
-                                    confirmed.state === "repeat" ?
+                                    ((confirmed.state === "requested") && confirmed.repeatState) ? 
+                                        <Text color="#000" fontSize="4xl" textAlign="center" style={{lineHeight:50}} bold>{deadline}</Text>:null
+                                }
+                                
+                                {
+                                    confirmed.state === "repeat"?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler} borderRadius={100} bg={"#FFB61D"} alignSelf="center">Reenviar</Button> : null
                                 }
                             </> :

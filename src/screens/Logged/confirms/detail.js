@@ -5,18 +5,44 @@ import { TouchableOpacity,StyleSheet, SafeAreaView,FlatList,ScrollView,Dimension
 import { Loading } from '../../../components';
 import { Video } from 'expo-av';
 import { useSelector } from 'react-redux';
-import GridImageView from 'react-native-grid-image-viewer';
+import PhotoGrid from '../../../components/PhotoGrid';
 
 const styles = StyleSheet.create({
     container: {
       display:"flex",
-      flexWrap:"wrap",
       marginTop:10,
     },
     scrollView: {
         backgroundColor: 'pink',
     },
-  });
+    GridViewBlockStyle: {
+      justifyContent: 'center',
+      flex:1,
+      alignItems: 'center',
+      height: 250,
+      margin: 0,
+    },
+    GridViewInsideTextItemStyle: {
+       color: '#fff',
+       padding: 10,
+       fontSize: 18,
+       justifyContent: 'center',
+    },
+ 
+    GridViewInsideTextItemStyle: {
+       color: '#fff',
+       padding: 10,
+       fontSize: 18,
+       justifyContent: 'center',
+    },
+    MainContainer :{
+        justifyContent: 'center',
+        flex:1,
+        margin: 10,
+        paddingTop: (Platform.OS) === 'ios' ? 20 : 0
+    },
+ 
+});
 
 const HomeCardDetail = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
@@ -39,22 +65,36 @@ const HomeCardDetail = ({ navigation }) => {
     const {width, height} = Dimensions.get("window");
 
 
-    const renderImages = (item) => {
+    const renderImages = (confirmItem) => {
         var result = [];
-        if (!item.repeatState) {
-            result.push(<Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${item.photo[0]}` }} resizeMode="contain" alignSelf="center" />);
+        if (!confirmItem.repeatState) {
+            result.push(<Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmItem.photo[0]}` }} resizeMode="contain" alignSelf="center" />);
         }
         else {
-            for(let temp of item.photo){
-                result.push(<Image width="100%" height={400} style={{margin:5}} key={temp} source={{ uri: `${ROOT.PAYMENT_URL}img/${temp}` }} resizeMode="contain" alignSelf="center" />);
-            }
-            // let photoArr = [];
-            // for(let temp of item.photo){
-            //     let tmp = `${ROOT.PAYMENT_URL}img/${temp}`;
-            //     photoArr.push(tmp);
-            // }
-
-            // result.push(<GridImageView data={photoArr} />)
+            let photoArr = [];
+        
+            confirmItem.photo.forEach((temp,index)=> {
+                let tmp = {};
+                tmp.uri = `${ROOT.PAYMENT_URL}img/${temp}`;
+                tmp.idx = index;
+                if (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1) {
+                    photoArr.push(tmp);
+                }
+                
+            });
+        
+        
+            result.push(<FlatList
+                 data={ photoArr }
+                 renderItem={({item,index}) => {
+                    let tempUri = item.uri;
+                    let tempIdx = item.idx;
+                    return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
+                        <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="cover" />
+                    </TouchableOpacity>
+                 }}
+                 numColumns={2}
+            />)
         }
         return result;
     }
@@ -63,11 +103,11 @@ const HomeCardDetail = ({ navigation }) => {
         let result = [];
         for(let temp of confirms) {
             result.push(<Text color="#000" fontSize="2xl" textAlign="center">{temp.cardName}</Text>);
-            result.push(<TouchableOpacity onPress={() => navigation.navigate("ConfirmControlScreen",temp)} style={{marginBottom:200}}>
+            result.push(
                  <View style={styles.container}>
                         {renderImages(temp)}
                  </View>
-             </TouchableOpacity>);
+             );
         }
         return result;
     }

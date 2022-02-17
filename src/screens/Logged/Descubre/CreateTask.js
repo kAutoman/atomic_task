@@ -150,14 +150,16 @@ const CreateTaskScreen = ({ navigation }) => {
                         <Text fontSize="lg" color="black" bold>Notificaciones</Text>
                         <Switch colorScheme="yellow" size="lg" isChecked={notificationState} onChange={() => { setNotificationState(!notificationState) }} />
                     </HStack> */}
-                    
-                    <Button disabled={loading} mt={10} _text={{ fontWeight: "bold", color: "white" }} onPress={SaveHandle} borderRadius={16} bg={COLOR.base} variant="ghost">
-                        {
-                            loading ?
-                                <Spinner size="sm" />
-                                : "Guardar"
-                        }
-                    </Button>
+                    {
+                        (!repeatState || (repeatDays.length > 0)) &&
+                        <Button disabled={loading} mt={10} _text={{ fontWeight: "bold", color: "white" }} onPress={SaveHandle} borderRadius={16} bg={COLOR.base} variant="ghost">
+                            {
+                                loading ?
+                                    <Spinner size="sm" />
+                                    : "Guardar"
+                            }
+                        </Button>
+                    }
                 </Stack>
                 <Stack py={3} flex={1}>                    
                     {
