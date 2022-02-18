@@ -4,6 +4,7 @@ import { Box, Stack, ScrollView, Text, Avatar, Button, Image } from 'native-base
 import { Headers, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
 import { useSelector } from 'react-redux'
+import moment from 'moment'
 
 
 const HomeScreen = ({ navigation }) => {
@@ -30,8 +31,9 @@ const HomeScreen = ({ navigation }) => {
         });
     }
 
+    // console.log(moment() < moment().add(1,'days'));
+
     const deleteGoal = (item) => {
-        console.log(item);
         db.collection("goals").doc(item.uid).delete();
         db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {            
             querySnapshot.forEach((doc) => {                
@@ -39,6 +41,26 @@ const HomeScreen = ({ navigation }) => {
             });
             LoadExchangeInfo();
         });
+    }
+
+    const determineDetail = (item) => {
+        console.log(item.cardName);
+        let todayDayIndex = parseInt(moment().format('d'))+1;
+        let isGoalDay = false;
+        if (item.repeatDays.indexOf(todayDayIndex) > -1) {
+            isGoalDay = true;
+        }
+
+
+        if(new Date() > new Date(item.deadline.toDate())){
+            return 'outdated';
+        }
+        else if(!isGoalDay) {
+            return 'outdated';
+        }
+        else {
+            return 'normal';
+        }
     }
 
     useEffect(() => {
@@ -86,14 +108,14 @@ const HomeScreen = ({ navigation }) => {
 
                             // if(item.state == 0 || item.state == 1){
                                 return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
-                                    <TouchableOpacity onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                    <TouchableOpacity onPress={() => { determineDetail(item) === 'normal' ? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Image source={Images.Custom_Image} resizeMode="contain" />
                                         <Button mb={5} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold"}} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{zIndex:1,position:"absolute",top:10,right:10}} onPress={() => {deleteGoal(item)}}>
                                         <Image mb={3} width={30} height={30} style={((new Date() < new Date(item.deadline.toDate())) && (item.state !== 4)) && {display:"none"}} source={Images.TrashImage} resizeMode="contain" />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={Styles.ComprarButton} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                    <TouchableOpacity style={Styles.ComprarButton} onPress={() => { determineDetail(item) === 'normal' ? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Text mb={3} color="white" textAlign="center" bold>{item.deadline && new Date(item.deadline.seconds * 1000).toDateString()}</Text>
                                     </TouchableOpacity>
                                   

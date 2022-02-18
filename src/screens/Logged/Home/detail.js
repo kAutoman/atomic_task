@@ -23,7 +23,7 @@ const HomeCardDetail = ({ navigation }) => {
     const [deadline,setDeadLine] = useState('');
     let intervalInstance;
 
-    const checkCard = () => {        
+    const checkCard = () => {
         db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {            
             let tempCards = null;
             querySnapshot.forEach((doc) => {
@@ -100,7 +100,7 @@ const HomeCardDetail = ({ navigation }) => {
     }
 
     const getDeadLine = () => {
-        let date1 = moment(CardItem.deadline.toDate());
+        let date1 = moment(moment().add(1,'days').format('YYYY-MM-DD 00:00:00'));
         let date2 = moment();
         let diff = moment.duration(date1.diff(date2));
         
@@ -147,6 +147,7 @@ const HomeCardDetail = ({ navigation }) => {
                                         tempCards.uid = doc.id
                                     });
                                     tempCards.photo.push(response.data);
+                                    tempCards.type = photo.photo.type,
                                     tempCards.state = "requested";
                                     db.collection("confirmation").doc(tempCards.uid).update(tempCards);
                                     setConfirmed(tempCards);

@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
       flex:1,
       alignItems: 'center',
       height: 250,
+      width:"100%",
       margin: 0,
     },
     GridViewInsideTextItemStyle: {
@@ -77,7 +78,7 @@ const HomeCardDetail = ({ navigation }) => {
                 let tmp = {};
                 tmp.uri = `${ROOT.PAYMENT_URL}img/${temp}`;
                 tmp.idx = index;
-                if (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1) {
+                if (!confirmItem.confirmedTasks || (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1)) {
                     photoArr.push(tmp);
                 }
                 
@@ -89,9 +90,25 @@ const HomeCardDetail = ({ navigation }) => {
                  renderItem={({item,index}) => {
                     let tempUri = item.uri;
                     let tempIdx = item.idx;
-                    return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
-                        <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="cover" />
-                    </TouchableOpacity>
+                    if (confirmItem.type === 'image') {
+                        return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
+                                    <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="cover" />
+                                </TouchableOpacity>    
+                    }
+                    else {
+                        console.log(tempUri);
+                        return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
+                                    <Video
+                                        style={styles.GridViewBlockStyle}
+                                        key={tempIdx} 
+                                        source={{ uri: tempUri }}
+                                        useNativeControls
+                                        resizeMode="cover"
+                                        isLooping
+                                    />
+                                </TouchableOpacity>       
+                    }
+                    
                  }}
                  numColumns={2}
             />)

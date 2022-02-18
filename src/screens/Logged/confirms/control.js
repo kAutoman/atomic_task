@@ -43,9 +43,22 @@ const HomeCardControl = ({ navigation }) => {
             db.collection("goals").doc(updateId).update({state : updateState});
         });
 
-        if (state === 'completed') {
+        if ((state === 'completed') || (state === 'repeat')) {
             //increase coin
             let coin = user.coin ? (user.coin + 5) : 5
+            db.collection("users").doc(CardItem.email).update({
+                coin
+            }).then(()=>{
+                db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                    let tempUser = snapshot.data();
+                    tempUser.coin = coin;
+                    dispatch(setUserInfo(tempUser));
+                })
+            });    
+        }
+         if (state === 'deny') {
+            //decrease coin
+            let coin = user.coin ? (user.coin - 5) : -5
             db.collection("users").doc(CardItem.email).update({
                 coin
             }).then(()=>{
@@ -78,6 +91,8 @@ const HomeCardControl = ({ navigation }) => {
         }
     }
 
+    console.log(`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`);
+
     return (
         <Stack
             flex={1}
@@ -91,9 +106,18 @@ const HomeCardControl = ({ navigation }) => {
                     <Image source={Images.ExitImage} resizeMode="contain" />
                 </TouchableOpacity>
             </Box>
-            
-            <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`}} resizeMode="contain" alignSelf="center" />
-                        
+            {CardItem.type == 'image'?
+                <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`}} resizeMode="contain" alignSelf="center" />:
+                  <Video           
+                    source={{
+                      uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`,
+                    }}
+                    useNativeControls
+                    resizeMode="contain"
+                    isLooping
+                    style={{height:500,width:"100%"}}  
+                  />
+            }       
             <Text color="#FFB61D" fontSize="2xl" textAlign="center">{CardItem.cardName}</Text>
             {
                 CardItem.state === "completed" ?
