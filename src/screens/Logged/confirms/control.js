@@ -35,6 +35,9 @@ const HomeCardControl = ({ navigation }) => {
         else if (state === 'deny') {
             updateState = 4;
         }
+        else if (state === 'continue') {
+            updateState = 5;
+        }
         db.collection("goals").where('cardName','==',CardItem.cardName).get().then(querySnapshot => {
             let updateId;
             querySnapshot.forEach((doc) => {
@@ -43,7 +46,7 @@ const HomeCardControl = ({ navigation }) => {
             db.collection("goals").doc(updateId).update({state : updateState});
         });
 
-        if ((state === 'completed') || (state === 'repeat')) {
+        if ((state === 'completed') || (state === 'continue')) {
             //increase coin
             let coin = user.coin ? (user.coin + 5) : 5
             db.collection("users").doc(CardItem.email).update({
@@ -70,7 +73,7 @@ const HomeCardControl = ({ navigation }) => {
             });    
         }
 
-        if (state === 'repeat') {
+        if (state === 'continue') {
             let confirmedTasks = CardItem.confirmedTasks ? CardItem.confirmedTasks : [];
             confirmedTasks.push(ClickedPhotoIndex);
             db.collection("confirmation").doc(CardItem.uid).update({
@@ -85,13 +88,12 @@ const HomeCardControl = ({ navigation }) => {
         navigation.navigate("ConfirmsScreen", 321)
     }
 
-    const displayRepeatBtn = () => {
-        if (CardItem.repeatState){
-            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>;
+    const renderContinueButton = () => {
+        if(CardItem.repeatState){
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>
         }
     }
 
-    console.log(`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`);
 
     return (
         <Stack
@@ -124,8 +126,9 @@ const HomeCardControl = ({ navigation }) => {
                     <Text color="white" fontSize="3xl" mt={70} textAlign="center">{"Terminada"}</Text> :
                     <Stack space={3} mt={5}>
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#22c55e"} alignSelf="center">Completa</Button>
-                        { 
-                            displayRepeatBtn()
+                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("continue")} borderRadius={100} w="100%" bg={"#00A1E0"} alignSelf="center">Continuar</Button>
+                        {
+                            renderContinueButton()
                         }
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("deny")} borderRadius={100} w="100%" bg={"#f97316"} alignSelf="center">Negar</Button>
                     </Stack>

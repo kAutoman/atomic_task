@@ -44,7 +44,6 @@ const HomeScreen = ({ navigation }) => {
     }
 
     const determineDetail = (item) => {
-        console.log(item.cardName);
         let todayDayIndex = parseInt(moment().format('d'))+1;
         let isGoalDay = false;
         if (item.repeatDays.indexOf(todayDayIndex) > -1) {
@@ -55,9 +54,9 @@ const HomeScreen = ({ navigation }) => {
         if(new Date() > new Date(item.deadline.toDate())){
             return 'outdated';
         }
-        else if(!isGoalDay) {
-            return 'outdated';
-        }
+        // else if(!isGoalDay) {
+        //     return 'outdated';
+        // }
         else {
             return 'normal';
         }

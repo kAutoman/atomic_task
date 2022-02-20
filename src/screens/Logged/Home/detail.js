@@ -21,6 +21,7 @@ const HomeCardDetail = ({ navigation }) => {
     const video = React.useRef(null);
     const [isRepeat, setRepeatStatus] = useState(false);
     const [deadline,setDeadLine] = useState('');
+    const [totalDeadline,setTotalDeadLine] = useState('');
     let intervalInstance;
 
     const checkCard = () => {
@@ -91,7 +92,7 @@ const HomeCardDetail = ({ navigation }) => {
         let i=0;
         if (confirmed) {
             let length = confirmed.photo.length;
-            return <Image size="100%" h={500} mt={70} key={i}  source={Images.DelayImage} resizeMode="contain" alignSelf="center" />;
+            return <Image size="100%" h={400} mt={70} key={i}  source={Images.DelayImage} resizeMode="contain" alignSelf="center" />;
         }
         else {
             return <Image size="100%" h={500} borderRadius={15} key={i} mt={50} source={photo.photo} resizeMode="contain" alignSelf="center" />
@@ -100,11 +101,17 @@ const HomeCardDetail = ({ navigation }) => {
     }
 
     const getDeadLine = () => {
-        let date1 = moment(moment().add(1,'days').format('YYYY-MM-DD 00:00:00'));
+        // let date1 = moment(moment().add(1,'days').format('YYYY-MM-DD 00:00:00'));
         let date2 = moment();
-        let diff = moment.duration(date1.diff(date2));
+        // let diff = moment.duration(date1.diff(date2));
         
-        setDeadLine(diff.get("days") + 'd '+diff.get("hours") +"h "+ diff.get("minutes") +"m "+ diff.get("seconds") + 's ');
+        setDeadLine(date2.format('HH') + 'h ' +  date2.format('mm')+ 'm ' + date2.format('ss') + 's ' );
+
+        let date3 = moment(CardItem.created_at.toDate());
+        
+        let diff1 = moment.duration(date2.diff(date3));
+        
+        setTotalDeadLine(diff1.get("days") + 'd '+diff1.get("hours") +"h "+ diff1.get("minutes") +"m "+ diff1.get("seconds") + 's ');
     }
 
     const calcDeadLine = () => {
@@ -138,15 +145,23 @@ const HomeCardDetail = ({ navigation }) => {
                                 userInfo = doc.data();
                             });
                         
-                            if (isRepeat) {
-                        
+                            if (isRepeat) { //when repeat button has clicked
+                                
                                 db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {            
                                     let tempCards = null;
                                     querySnapshot.forEach((doc) => {
                                         tempCards = doc.data();
                                         tempCards.uid = doc.id
                                     });
-                                    tempCards.photo.push(response.data);
+                                    if(tempCards.state === 'continue') {
+                                        //push photo
+                                        tempCards.photo.push(response.data);    
+                                    }
+                                    else {
+                                        //replace last photo
+                                        tempCards.photo[tempCards.photo.length-1] = response.data;
+                                    }
+                                    
                                     tempCards.type = photo.photo.type,
                                     tempCards.state = "requested";
                                     db.collection("confirmation").doc(tempCards.uid).update(tempCards);
@@ -221,7 +236,7 @@ const HomeCardDetail = ({ navigation }) => {
                     {
                         confirmed ?
                             <>
-                                <ScrollView style={{display:"flex"}}>
+                                
                                 {
                                     
                                     confirmed.type === "video" ?
@@ -236,14 +251,18 @@ const HomeCardDetail = ({ navigation }) => {
                                         :
                                         renderPhotos()
                                 }
-                                </ScrollView>
                                
-                                <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight:50}} bold>{(() => {
-                                    if (confirmed.state === "requested") {
+                               
+                                <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight:50,marginTop:40}} bold>{(() => {
+                                    if ((confirmed.state === "requested") && !confirmed.repeatState) {
                                         return "Espera para iniciar la confirmación";
                                     } else if (confirmed.state === "repeat") {
                                         return "La tarea se repite";
-                                    } else if (confirmed.state === 'deny') {
+                                    } 
+                                    else if (confirmed.state === "continue") {
+                                        return "La tarea se continúa";
+                                    }
+                                    else if (confirmed.state === 'deny') {
                                         return "la tarea fue denegada";
                                     } else if (confirmed.state === 'completed') {
                                         return "La tarea se completó";
@@ -251,12 +270,21 @@ const HomeCardDetail = ({ navigation }) => {
                                 })()}</Text>
                                 {
                                     ((confirmed.state === "requested") && confirmed.repeatState) ? 
-                                        <Text color="#000" fontSize="4xl" textAlign="center" style={{lineHeight:50}} bold>{deadline}</Text>:null
+                                        <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight:50}} bold>Fetcha de expiracion {'\n' + deadline } </Text>:null
+                                }
+
+                                {
+                                    ((confirmed.state === "requested") && confirmed.repeatState) ? 
+                                        <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight:50}} bold>Siguiente confirmacion {'\n' + totalDeadline } </Text>:null
                                 }
                                 
                                 {
                                     confirmed.state === "repeat"?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler} borderRadius={100} bg={"#FFB61D"} alignSelf="center">Reenviar</Button> : null
+                                }
+                                {
+                                    confirmed.state === "continue"?
+                                        <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler} borderRadius={100} bg={"#00A1E0"} alignSelf="center">Continuar</Button> : null
                                 }
                             </> :
                             photo ? <>

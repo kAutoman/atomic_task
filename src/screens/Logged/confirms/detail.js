@@ -81,7 +81,6 @@ const HomeCardDetail = ({ navigation }) => {
                 if (!confirmItem.confirmedTasks || (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1)) {
                     photoArr.push(tmp);
                 }
-                
             });
         
         

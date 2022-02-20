@@ -89,7 +89,7 @@ const App = ({ navigation }) => {
                         {
                             confirms.map((item, i) => {
                                 if (tabstate  == 0) {
-                                    if (item.state === "requested" || (item.state === 'repeat' && (item.photo.length !== item.confirmedTasks.length)) ) {
+                                    if (item.state === "requested" || (item.state === 'continue' && (item.photo.length !== item.confirmedTasks.length)) ) {
                                         ci++;
                                         if (emailList.indexOf(item.email) === -1) {
                                             emailList.push(item.email);
