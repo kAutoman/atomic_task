@@ -101,17 +101,18 @@ const HomeCardDetail = ({ navigation }) => {
     }
 
     const getDeadLine = () => {
-        // let date1 = moment(moment().add(1,'days').format('YYYY-MM-DD 00:00:00'));
+        let date1 = moment(moment().add(1,'days').format('YYYY-MM-DD 00:00:00'));
         let date2 = moment();
-        // let diff = moment.duration(date1.diff(date2));
+        let diff = moment.duration(date1.diff(date2));
         
-        setDeadLine(date2.format('HH') + 'h ' +  date2.format('mm')+ 'm ' + date2.format('ss') + 's ' );
+        // setDeadLine(date2.format('HH') + 'h ' +  date2.format('mm')+ 'm ' + date2.format('ss') + 's ' );
+        setTotalDeadLine(diff.get("days") + 'd '+diff.get("hours") +"h "+ diff.get("minutes") +"m "+ diff.get("seconds") + 's ');
 
         let date3 = moment(CardItem.created_at.toDate());
         
         let diff1 = moment.duration(date2.diff(date3));
-        
-        setTotalDeadLine(diff1.get("days") + 'd '+diff1.get("hours") +"h "+ diff1.get("minutes") +"m "+ diff1.get("seconds") + 's ');
+
+        setDeadLine(diff1.get("days") + 'd '+diff1.get("hours") +"h "+ diff1.get("minutes") +"m "+ diff1.get("seconds") + 's ');
     }
 
     const calcDeadLine = () => {

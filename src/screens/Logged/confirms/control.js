@@ -4,7 +4,6 @@ import { db, Images, ROOT, Styles } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 import { Loading } from '../../../components';
 import { Video } from 'expo-av';
-import confirmLogo from '../../../assets/confirm_control.png';
 import { useSelector,useDispatch } from 'react-redux';
 import { setUserInfo } from '../../../redux/actions/authActions';
 
@@ -90,7 +89,7 @@ const HomeCardControl = ({ navigation }) => {
 
     const renderContinueButton = () => {
         if(CardItem.repeatState){
-            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("continue")} borderRadius={100} w="100%" bg={"#00A1E0"} alignSelf="center">Continuar</Button>
         }
     }
 
@@ -126,10 +125,10 @@ const HomeCardControl = ({ navigation }) => {
                     <Text color="white" fontSize="3xl" mt={70} textAlign="center">{"Terminada"}</Text> :
                     <Stack space={3} mt={5}>
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#22c55e"} alignSelf="center">Completa</Button>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("continue")} borderRadius={100} w="100%" bg={"#00A1E0"} alignSelf="center">Continuar</Button>
                         {
                             renderContinueButton()
                         }
+                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("repeat")} borderRadius={100} w="100%" bg={"#FFB61D"} alignSelf="center">Repetir</Button>
                         <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("deny")} borderRadius={100} w="100%" bg={"#f97316"} alignSelf="center">Negar</Button>
                     </Stack>
             }

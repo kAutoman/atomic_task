@@ -69,7 +69,10 @@ const HomeCardDetail = ({ navigation }) => {
     const renderImages = (confirmItem) => {
         var result = [];
         if (!confirmItem.repeatState) {
-            result.push(<Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmItem.photo[0]}` }} resizeMode="contain" alignSelf="center" />);
+            result.push(
+                <TouchableOpacity onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
+                    <Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmItem.photo[0]}` }} resizeMode="contain" alignSelf="center" />
+                </TouchableOpacity>);
         }
         else {
             let photoArr = [];

@@ -3,8 +3,9 @@ import { View, TouchableOpacity } from 'react-native'
 import { Box, Stack, ScrollView, Text, Avatar, Button, Image } from 'native-base'
 import { Headers, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import moment from 'moment'
+import {setUserInfo} from "../../../redux/actions/authActions";
 
 
 const HomeScreen = ({ navigation }) => {
@@ -12,6 +13,7 @@ const HomeScreen = ({ navigation }) => {
     const { user } = useSelector((store) => store.auth)
     const [cards, setCards] = useState([]);
     const [customcards, setCustomcards] = useState([]);
+    const dispatch = useDispatch();
     const LoadExchangeInfo = () => {
         setLoading(true)
         db.collection("payment_history").where("email", "==", user.email).get().then((querySnapshot) => {
@@ -29,6 +31,12 @@ const HomeScreen = ({ navigation }) => {
             setCustomcards(tempCards);
             setLoading(false)
         });
+
+        db.collection("users").doc(user.email).get().then((snapshot)=>{
+            let tempUser = snapshot.data();
+            dispatch(setUserInfo(tempUser));
+        })
+
     }
 
     // console.log(moment() < moment().add(1,'days'));
