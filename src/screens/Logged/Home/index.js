@@ -23,10 +23,10 @@ const HomeScreen = ({ navigation }) => {
             });
             setCards(tempCards);
         });
-        db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {            
+        db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
             let tempCards = [];
-            querySnapshot.forEach((doc) => {                
-                tempCards.push({ ...doc.data(), uid: doc.id });                
+            querySnapshot.forEach((doc) => {
+                tempCards.push({ ...doc.data(), uid: doc.id });
             });
             setCustomcards(tempCards);
             setLoading(false)
@@ -39,12 +39,10 @@ const HomeScreen = ({ navigation }) => {
 
     }
 
-    // console.log(moment() < moment().add(1,'days'));
-
     const deleteGoal = (item) => {
         db.collection("goals").doc(item.uid).delete();
-        db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {            
-            querySnapshot.forEach((doc) => {                
+        db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
                 doc.ref.delete();
             });
             LoadExchangeInfo();
@@ -53,9 +51,12 @@ const HomeScreen = ({ navigation }) => {
 
     const determineDetail = (item) => {
         let todayDayIndex = parseInt(moment().format('d'))+1;
-        let isGoalDay = false;
-        if (item.repeatDays.indexOf(todayDayIndex) > -1) {
-            isGoalDay = true;
+        // let isGoalDay = false;
+        // if (item.repeatDays.indexOf(todayDayIndex) > -1) {
+        //     isGoalDay = true;
+        // }
+        if (item.repeatState && (moment(item.created_at.toDate()).add(1,'days').set({hour:0,minute:0,second:0,millisecond:0}) < moment())) {
+          return 'outdated';
         }
 
 
@@ -86,7 +87,7 @@ const HomeScreen = ({ navigation }) => {
                 right={
                     <TouchableOpacity onPress={() => navigation.navigate("PerfilScreen")}>
                         <Avatar source={Images.SampleAvatar3}  >
-                           
+
                         </Avatar>
                         <Text color="#fff" fontSize="md" width={20} >{user.coin ? user.coin : 0} catd</Text>
                     </TouchableOpacity>
@@ -106,12 +107,12 @@ const HomeScreen = ({ navigation }) => {
                                         <Button onPress={() => { navigation.navigate("HomeCardDetailScreen", { ...item, cardName: LAYOUT.CardInfo[item.cardType][item.cardId].buttonText }) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold" }} alignSelf="center" borderRadius={100}>{LAYOUT.CardInfo[item.cardType][item.cardId].buttonText}</Button>
                                     </TouchableOpacity>
                                     </Stack>
-                                </Stack>       
-                            // }       
+                                </Stack>
+                            // }
                         })
                     }
                     {
-                        customcards.map((item, i) => {  
+                        customcards.map((item, i) => {
 
                             // if(item.state == 0 || item.state == 1){
                                 return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
@@ -125,12 +126,12 @@ const HomeScreen = ({ navigation }) => {
                                     <TouchableOpacity style={Styles.ComprarButton} onPress={() => { determineDetail(item) === 'normal' ? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Text mb={3} color="white" textAlign="center" bold>{item.deadline && new Date(item.deadline.seconds * 1000).toDateString()}</Text>
                                     </TouchableOpacity>
-                                  
+
                                 </Stack>
                             </Stack>
-                            // }                          
+                            // }
                         })
-                    
+
                     }
                     <Box h={5}></Box>
                 </ScrollView>
