@@ -51,9 +51,10 @@ export const Styles = StyleSheet.create({
     },
     PaymentBlog: {
         width: "100%",
-        padding: 15,
+        paddingVertical: 15,
+        paddingHorizontal: 0,
         borderWidth: 2,
-        borderRadius: 10,
+        borderRadius: 30,
         alignSelf: "center",
         marginVertical: 15
     },

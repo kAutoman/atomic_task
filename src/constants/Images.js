@@ -38,4 +38,5 @@ export const Images = {
     Deadline_Text:require("../assets/deadline_text.png"),
     TrashImage:require("../assets/trash.png"),
     DelayImage:require("../assets/delay.png"),
+    AlertImage:require("../assets/Vector.png"),
 }

@@ -34,24 +34,33 @@ const HomeScreen = ({ navigation }) => {
 
         db.collection("users").doc(user.email).get().then((snapshot)=>{
             let tempUser = snapshot.data();
-           db.collection("confirmation").where("email", "==", user.email).get().then((querySnapshot) => {
-                let tempCards = [];
+            db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
+                let oppotunity = 0;
                 let currentBond = 0;
                 
                 querySnapshot.forEach((doc) => {
                     if(doc.data().state !== 'deny'){
-                        currentBond += doc.data().amount;
+                        currentBond += doc.data().amount ? doc.data().amount : 0;
                     }
                     else {
-                        currentBond -= doc.data().amount;
+                        currentBond -= doc.data().amount ? doc.data().amount : 0;
+                    }
+                
+                    if((doc.data().state === 4) || (new Date() > new Date(doc.data().deadline.toDate()))){
+                        oppotunity++;
+                    }
+                    else if(!doc.data().amount){
+                        oppotunity--;
                     }
                 });
+                tempUser.oppotunity = oppotunity;
                 tempUser.currentBond = currentBond;
                 dispatch(setUserInfo(tempUser));
             });
         })
 
     }
+
 
     const deleteGoal = (item) => {
         db.collection("goals").doc(item.uid).delete();

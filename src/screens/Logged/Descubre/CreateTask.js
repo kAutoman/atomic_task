@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, Stack, Button, Box, Image, Icon, Input, HStack, View, Switch, useToast, Spinner, Center } from 'native-base'
-import { COLOR, Images, Styles } from '../../../constants'
+import { COLOR, Images, Styles,db } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { DayPicker } from 'react-native-picker-weekday';
 
 
 const CreateTaskScreen = ({ navigation }) => {
-    const [Item, setItem] = useState(navigation.state.params);
+    const [Item, setItem] = useState(navigation.state.params.time ? navigation.state.params.time: '');
     const [show, setShow] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [aday, setAday] = useState(Item ? Item.time.slice(0, 3) : moment(new Date).format("dddd"));
@@ -24,6 +24,9 @@ const CreateTaskScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();    
+
+    const mode = navigation.state.params; 
+    console.log(mode);
     // let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
     
 
@@ -56,19 +59,26 @@ const CreateTaskScreen = ({ navigation }) => {
             }
             const timeStamp = Math.floor(Date.now() / 1000);
             const insertKey = "_" + timeStamp;
-            setLoading(true)
-            navigation.navigate("DepositoScreen", {
-                user: user.email,
-                time,
-                created_at: new Date(),
-                deadline: new Date(time),
-                repeatState,
-                repeatDays,
-                payment: 0,
-                state: 1,
-                fullName: "Personalizada", 
-                cardName: title
-            });
+            setLoading(true);
+            let insertRecord = {
+                    user: user.email,
+                    time,
+                    created_at: new Date(),
+                    deadline: new Date(time),
+                    repeatState,
+                    repeatDays,
+                    payment: 0,
+                    state: 1,
+                    fullName: "Personalizada", 
+                    cardName: title
+                };
+            if(mode === 'bonusMode'){
+                await db.collection('goals').doc(insertKey).set(insertRecord);
+                navigation.navigate("HomeScreen", insertRecord);
+            }
+            else {
+                navigation.navigate("DepositoScreen", insertRecord);
+            }
             setLoading(false)
         } else {
             return Toast.show({ title: 'por favor ingrese el meta nombre!', placement: 'bottom', status: 'error', w: 400 })

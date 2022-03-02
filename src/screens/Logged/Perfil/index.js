@@ -22,8 +22,6 @@ const PerfilScreen = ({ navigation }) => {
         LoadExchangeInfo()
     }, [navigation])
 
-    console.log(user);
-
     return (
         <Box flex={1} pt={12} bg={"#231F20"} w='100%'>
             <Stack
@@ -38,8 +36,16 @@ const PerfilScreen = ({ navigation }) => {
                 <Stack flex={1} justifyContent="center" px={10}>
                     <Stack alignItems="center" style={Styles.PaymentBlog} shadow={6} bg={"#FA6E5A"}>
                         <Text style={{fontSize: 24, textAlign: "center", fontWeight: "bold", color: COLOR.white}}>Tu fianza actual es</Text>
-                        <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.white}} >&euro;{user.currentBond/100}</Text>
+                        <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.white}} >{user.currentBond/100}&euro;</Text>
                     </Stack>
+                    {
+                        user.oppotunity > 0 &&
+                        <Stack alignItems="center" style={Styles.PaymentBlog} shadow={6} bg={"white"}>
+                            <TouchableOpacity onPress={() => navigation.navigate("CreateTaskScreen",'bonusMode')}>
+                                <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.black}}>Reinicio : {user.oppotunity} <Image size="xs" source={Images.AlertImage} style={{marginLeft:0}} resizeMode="contain" /></Text>
+                            </TouchableOpacity>
+                        </Stack>
+                    }
                     <Stack borderWidth={2} p={5} borderRadius={16} bg={"#FFFFFF"}>
                         {
                             Texts.map((item, i) => {
