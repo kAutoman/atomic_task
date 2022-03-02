@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+import { useSelector } from 'react-redux';
 import {Box, Stack, Text, HStack, Icon, Link, Image} from 'native-base'
 import { Loading } from '../../../components'
 import {COLOR, Images, LAYOUT, Styles} from '../../../constants'
@@ -15,10 +16,13 @@ const PerfilScreen = ({ navigation }) => {
         setLoading(true)
         setLoading(false)
     }
+    const { user } = useSelector((store) => store.auth)
 
     useEffect(() => {
         LoadExchangeInfo()
     }, [navigation])
+
+    console.log(user);
 
     return (
         <Box flex={1} pt={12} bg={"#231F20"} w='100%'>
@@ -34,7 +38,7 @@ const PerfilScreen = ({ navigation }) => {
                 <Stack flex={1} justifyContent="center" px={10}>
                     <Stack alignItems="center" style={Styles.PaymentBlog} shadow={6} bg={"#FA6E5A"}>
                         <Text style={{fontSize: 24, textAlign: "center", fontWeight: "bold", color: COLOR.white}}>Tu fianza actual es</Text>
-                        <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.white}} >&euro;25</Text>
+                        <Text style={{fontSize: 36, textAlign: "center", fontWeight: "bold", color: COLOR.white}} >&euro;{user.currentBond/100}</Text>
                     </Stack>
                     <Stack borderWidth={2} p={5} borderRadius={16} bg={"#FFFFFF"}>
                         {

@@ -27,7 +27,6 @@ const CompareServicesScreen = ({ navigation }) => {
             setLoading(false);
         });
     }
-
     useEffect(() => {
         console.log("storedetail----------------"+ navigation.state.params);
         LoadExchangeInfo()
@@ -83,11 +82,8 @@ const CompareServicesScreen = ({ navigation }) => {
                                             </TouchableOpacity>  
                                         </Box>
                                     </Stack>
-                                ) :
-                                <></>
+                                ) : null
                             }
-                            
-                           
                         </View>
                 
                 </Stack>

@@ -37,7 +37,12 @@ const HomeCardDetail = ({navigation}) => {
     }
 
     useEffect(() => {
-        checkCard();
+        if (!isExpired()){
+            checkCard();
+        }
+        else{
+            setLoading(false);
+        }
         calcDeadLine();
         return () => {
             clearInterval(intervalInstance);
@@ -103,29 +108,28 @@ const HomeCardDetail = ({navigation}) => {
     }
 
     const isExpired = () => {
-        let todayDayIndex = parseInt(moment().format('d'))+1;
         
         if (CardItem.repeatState && (moment(CardItem.created_at.toDate()).add(1,'days').set({hour:0,minute:0,second:0,millisecond:0}) < moment())) {
-          return false;
+          return true;
         }
 
 
         if(new Date() > new Date(CardItem.deadline.toDate())){
-            return false;
+            return true;
         }
        
         else {
-            return true;
+            return false;
         }
     }
 
     const getDeadLine = () => {
         let todayWeekDayIdx = moment().day()+1;
-        console.log(todayWeekDayIdx);
+
     
         let nextDayIndex=-1;
         let newDays = [];
-        console.log(CardItem.repeatDays);
+
         for(let repeatDay of CardItem.repeatDays){
             if (repeatDay > todayWeekDayIdx) {
                 newDays.push(repeatDay);
@@ -143,7 +147,7 @@ const HomeCardDetail = ({navigation}) => {
             CardItem.repeatDays.sort(function(a, b){return a - b});
             nextDayIndex = CardItem.repeatDays[0];
         }
-        console.log(nextDayIndex);
+
          //get diff days
          let diffDays = -1;
          if (todayWeekDayIdx < nextDayIndex) {
@@ -273,8 +277,7 @@ const HomeCardDetail = ({navigation}) => {
     }
 
     return (
-        isExpired() ? 
-        (<Stack
+       <Stack
             flex={1}
             bg={confirmed ? "#fff" : "#000"}
             p={7}
@@ -287,7 +290,7 @@ const HomeCardDetail = ({navigation}) => {
                         </TouchableOpacity>
                     </Box>
                     {
-                        confirmed ?
+                        (confirmed ?
                             <>
 
                                 {
@@ -388,12 +391,12 @@ const HomeCardDetail = ({navigation}) => {
                                         <Button _text={Styles.WelcomeButton} onPress={pickImage} borderRadius={100}
                                                 bg={"#FFB61D"} alignSelf="center">Enviar confirmación</Button>
                                     </Stack>
-                                </>
+                                </>)
                     }
                 </>
             }
-        </Stack>):<Deadline/>
-    )  
+        </Stack>
+    )
 }
 
 export default HomeCardDetail;
