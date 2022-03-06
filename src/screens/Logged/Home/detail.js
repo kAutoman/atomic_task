@@ -113,9 +113,10 @@ const HomeCardDetail = ({navigation}) => {
           return true;
         }
 
-
-        if(new Date() > new Date(CardItem.deadline.toDate())){
-            return true;
+        if(CardItem.deadline){
+            if(new Date() > new Date(CardItem.deadline.toDate())){
+                return true;
+            }
         }
        
         else {

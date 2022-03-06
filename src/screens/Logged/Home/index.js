@@ -46,7 +46,7 @@ const HomeScreen = ({ navigation }) => {
                         currentBond -= doc.data().amount ? doc.data().amount : 0;
                     }
                 
-                    if((doc.data().state === 4) || (new Date() > new Date(doc.data().deadline.toDate()))){
+                    if(doc.data().state === 2){
                         oppotunity++;
                     }
                     else if(!doc.data().amount){

@@ -39,4 +39,8 @@ export const Images = {
     TrashImage:require("../assets/trash.png"),
     DelayImage:require("../assets/delay.png"),
     AlertImage:require("../assets/Vector.png"),
+    BotImage:require("../assets/bx_bot.png"),
+    EditImage : require("../assets/edit_outline.png"),
+    TrashOutline : require("../assets/trash_outline.png"),
+    SortImage : require("../assets/sort_icon.png"),
 }

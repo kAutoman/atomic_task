@@ -11,7 +11,13 @@ import { DayPicker } from 'react-native-picker-weekday';
 
 
 const CreateTaskScreen = ({ navigation }) => {
-    const [Item, setItem] = useState(navigation.state.params.time ? navigation.state.params.time: '');
+    const temp = '';
+    if (navigation.state.params){
+        if(navigation.state.params.time){
+            temp = navigation.state.params.time;
+        }
+    }
+    const [Item, setItem] = useState(temp);
     const [show, setShow] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [aday, setAday] = useState(Item ? Item.time.slice(0, 3) : moment(new Date).format("dddd"));

@@ -35,7 +35,6 @@ import Challenge2 from '../screens/Logged/Challenge/challenge2'
 import Confirms from "../screens/Logged/Confirms"
 import ConfirmDetail from "../screens/Logged/Confirms/detail"
 import ConfirmControl from "../screens/Logged/Confirms/control"
-// import ConfirmDetail2 from "../screens/Logged/confirms/detail2"
 import Deadline from "../screens/Logged/Deadline/index"
 import Investline from "../screens/Logged/Descubre/invest"
 import StoreIndex from "../screens/Logged/Store/index"
@@ -46,6 +45,8 @@ import SideMenu from './SideMenu'
 import { LAYOUT } from "../constants"
 import CompareServiceScreen from '../screens/Logged/Store/compareService'
 import CompareProductsScreen from '../screens/Logged/Store/compareProducts'
+import QuestionsScreen from '../screens/Logged/Bot/Questions'
+import EditQuestionScreen from '../screens/Logged/Bot/EditQuestion'
 
 /**
  * Home Navigator
@@ -227,6 +228,14 @@ const Navigator = createStackNavigator(
 		CompareProductsScreen : {
 			screen : CompareProductsScreen,
 			navigationOptions : {headerShown: false}
+		},
+		QuestionsScreen : {
+			screen : QuestionsScreen,
+			navigationOptions : {headerShown : false}
+		},
+		EditQuestionScreen : {
+			screen : EditQuestionScreen,
+			navigationOptions : {headerShown : false}
 		},
 	},
 	{

@@ -25,11 +25,18 @@ export default ({ }) => {
             }
             {
               user.email === "atomictasks@gmail.com" ?
-                <TouchableOpacity onPress={() => navigate("ConfirmsScreen")}>
-                  <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
-                    <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Confirms"} </Text>
-                  </HStack>
-                </TouchableOpacity>
+                  <>
+                    <TouchableOpacity onPress={() => navigate("ConfirmsScreen")}>
+                      <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                        <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Confirms"} </Text>
+                      </HStack>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigate("QuestionsScreen")}>
+                      <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                        <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Bot"} </Text>
+                      </HStack>
+                    </TouchableOpacity>
+                  </>
                 : null
             }
           </Stack>

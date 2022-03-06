@@ -14,12 +14,15 @@ const ChatScreen = ({ navigation }) => {
 
     const sendMessage = () => {
         if (message != '') {
-            const data = { message, sender: user.email, senderName: user.displayName, receiver: selectedUser.email, createdAt: new Date().valueOf(), state: false }
+        
+            console.log(user.name)
+            const data = { message, sender: user.email, senderName: user.name, receiver: selectedUser.email, createdAt: new Date().valueOf(), state: false }
             database.ref(`private-message`).push(data).then(e => {
                 setMessage('')
             }).catch(error => {
                 console.log(error)
             })
+    
         }
     }
 
@@ -29,7 +32,7 @@ const ChatScreen = ({ navigation }) => {
                 setMessageList(snapshot.val());
             }
         })
-    }
+    }   
 
     const _handleShow = () => {
         for (const key in messageList) {
@@ -60,10 +63,10 @@ const ChatScreen = ({ navigation }) => {
         <Box flex={1} bg={"#fff"} pt={12}>
             <Stack
                 flex={1}
-
             >
                 <HStack
-                    h={65}
+                    h={
+                        65}
                     px={7}
                     alignItems="center"
                     borderBottomWidth={2}

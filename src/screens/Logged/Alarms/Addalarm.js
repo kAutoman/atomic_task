@@ -117,7 +117,7 @@ const AddalarmScreen = ({ navigation }) => {
                     </HStack>
                     <Button mt={40} disabled={Loading} _text={{ fontWeight: "bold", color: "white" }} onPress={SaveHandle} borderRadius={16} bg={COLOR.base} variant="ghost">
                         {
-                            Loading ? <Spinner size="sm"></Spinner> : "Save"
+                            Loading ? <Spinner size="sm"/> : "Save"
                         }
 
                     </Button>
