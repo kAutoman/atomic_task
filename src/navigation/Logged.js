@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Home from '../screens/Logged/Home'
 import Chat from '../screens/Logged/Chat'
 import ChatRoom from '../screens/Logged/Chat/room'
+import ChatBot from '../screens/Logged/ChatBot'
 import Descubre from '../screens/Logged/Descubre'
 import DescubreLanding from '../screens/Logged/Descubre/Landing'
 import SaludList from '../screens/Logged/Descubre/Salud'
@@ -87,6 +88,10 @@ const Navigator = createStackNavigator(
 		},
 		ChatScreen: {
 			screen: Chat,
+			navigationOptions: { headerShown: false },
+		},
+		ChatBotScreen: {
+			screen: ChatBot,
 			navigationOptions: { headerShown: false },
 		},
 		ChatRoomScreen: {

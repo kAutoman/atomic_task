@@ -144,3 +144,19 @@ export const PrivateMessage = ({ item, user, userData }) => {
     return <View />
   }
 }
+
+export const ChatBotMessage = ({ message }) => {
+       return  <HStack px={2} my={1} space={5} mt={10}>
+          <Box w={"12%"}>
+            <Avatar source={Images.BotAvatar} bg="white" width={75} height={75}>
+              AK
+            </Avatar>
+          </Box>
+          <Box p={3} bg="black" maxW="75%" borderWidth={2} borderRadius={16}>
+            <Text color="white" bold>
+              {message}
+            </Text>
+          </Box>
+        </HStack>
+   
+}

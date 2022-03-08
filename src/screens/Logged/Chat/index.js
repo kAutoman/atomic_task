@@ -15,7 +15,6 @@ const ChatScreen = ({ navigation }) => {
     const LoadUsers = () => {
         if (user.email === LAYOUT.adminInfo.email) {
             db.collection("users").get().then((querySnapshot) => {
-                console.log("doc.data()");
                 let users = [];
                 querySnapshot.forEach((doc) => {
                     if (doc.id !== LAYOUT.adminInfo.email) {
