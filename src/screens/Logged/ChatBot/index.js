@@ -78,7 +78,7 @@ const ChatBotScreen = ({ navigation }) => {
                        <Stack px={25} mt={45}>
                         <Box borderRadius={20} width="100%" bg="#FA6E5A" >
                             <TouchableOpacity onPress={() => navigation.goBack()}>
-                                <Text fontSize='2xl' py={4}  bold alignSelf="center" color="white" numberOfLines={1}>Esta respuesta me ha ayudado</Text>
+                                <Text fontSize='2xl' py={4}  bold alignSelf="center" color="white" numberOfLines={2}>Esta respuesta me ha ayudado</Text>
                             </TouchableOpacity>
                         </Box>
 
