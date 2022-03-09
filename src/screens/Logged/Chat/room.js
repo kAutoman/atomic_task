@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import moment from 'moment';
 import { Text, Stack, Box, Image, Icon, Input, HStack, View } from 'native-base'
 import { COLOR, database, Images, LAYOUT } from '../../../constants'
 import { AppState, ScrollView, TouchableOpacity } from 'react-native'
@@ -14,9 +15,7 @@ const ChatScreen = ({ navigation }) => {
 
     const sendMessage = () => {
         if (message != '') {
-        
-            console.log(user.name)
-            const data = { message, sender: user.email, senderName: user.name, receiver: selectedUser.email, createdAt: new Date().valueOf(), state: false }
+            const data = { message, sender: user.email, senderName: user.name, receiver: selectedUser.email, createdAt: moment().utc(false).format('YYYY-MM-DD HH:mm:ss'), state: false }
             database.ref(`private-message`).push(data).then(e => {
                 setMessage('')
             }).catch(error => {
@@ -32,7 +31,7 @@ const ChatScreen = ({ navigation }) => {
                 setMessageList(snapshot.val());
             }
         })
-    }   
+    }
 
     const _handleShow = () => {
         for (const key in messageList) {

@@ -44,4 +44,6 @@ export const Images = {
     TrashOutline : require("../assets/trash_outline.png"),
     SortImage : require("../assets/sort_icon.png"),
     BotAvatar : require("../assets/bot_avatar.png"),
+    WarningIcon : require("../assets/warning.png"),
+    TrashFillIcon : require("../assets/trash_fill.png"),
 }

@@ -71,7 +71,7 @@ const navigation = () => {
                 var data = snapshot.val();
                 for (const key in data) {
                     if (data[key].receiver === user.email && data[key].state === false) {
-                        database.ref(`private-message`).child(key).update({ state: true }).then(async () => {
+                        
                             console.log(user.email, data[key].message, "===> background")
                             await Notifications.scheduleNotificationAsync({
                                 content: {
@@ -81,7 +81,7 @@ const navigation = () => {
                                 },
                                 trigger: { seconds: 1 },
                             });
-                        });
+                        
                     }
                 }
             }
@@ -92,7 +92,7 @@ const navigation = () => {
         console.log("background fetch");
         await database.ref(`private-message`).off('value');
 
-        database.ref(`private-message`).on('value', _handleNotification)
+        // database.ref(`private-message`).on('value', _handleNotification)
 
         db.collection("Malarms").where("email", "==", user.email).get().then((querySnapshot) => {
             let tempAlarms = [];
@@ -206,7 +206,7 @@ const navigation = () => {
                 }
             }, 1000);
 
-            database.ref(`private-message`).on('value', _handleNotification)
+            // database.ref(`private-message`).on('value', _handleNotification)
         }
 
         return async () => {
