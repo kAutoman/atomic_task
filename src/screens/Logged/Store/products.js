@@ -13,8 +13,8 @@ const ProductsScreen = ({ navigation }) => {
     const [SearchKey, setSearch] = useState("");    
     const StoreItem = navigation.state.params;
     const LoadExchangeInfo = () => {        
-        setLoading(true);
-        db.collection("services").get().then((querySnapshot) => {
+        setLoading(true)        
+        db.collection("Stocks").where("type", "==", 'fisico').get().then((querySnapshot) => {
             let tempCards = [];
             querySnapshot.forEach((doc) => {
                 tempCards.push({ ...doc.data(), uid: doc.id });
@@ -25,7 +25,6 @@ const ProductsScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        console.log("storedetail----------------"+ navigation.state.params);
         LoadExchangeInfo()
     }, [navigation.state.params])
 
@@ -40,7 +39,7 @@ const ProductsScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 }       
                 right={
-                    <TouchableOpacity onPress={() => navigation.navigate("PerfilScreen")}>
+                    <TouchableOpacity onPress={() => {}}>
                         <Icon viewBox="0 0 26 24" size="md" width={40} height={40}>{LAYOUT.ShoppingBasketIcon}</Icon>
                     </TouchableOpacity>
                 }         
@@ -76,37 +75,42 @@ const ProductsScreen = ({ navigation }) => {
                     }}
                     onChangeText={setSearch}
                 />
-                <Text mb={3} mt={7} color="white" fontSize="48" textAlign="center" bold>Productos</Text>
-                <View style={{flexDirection:"row",  justifyContent:"space-between", padding:12}} >
+                <Text mb={3} mt={7} color="white" fontSize={48} textAlign="center" bold>Productos</Text>
+                {/* <View style={{flexDirection:"row",  justifyContent:"space-between", padding:12}} >
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Cursos</Text>
+                        <Text mb={3} color="black" fontSize={18} textAlign="center" bold>Cursos</Text>
                         <Icon viewBox="0 4 12 12" size="5" >{LAYOUT.closebtn}</Icon>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Suscripciones</Text>                        
+                        <Text mb={3} color="black" fontSize={18} textAlign="center" bold>Suscripciones</Text>                        
                     </TouchableOpacity>
                     <TouchableOpacity onPress={navigation.openDrawer} style={Styles.TouchButton}>
-                        <Text mb={3} color="black" fontSize="18" textAlign="center" bold>Libros</Text>                        
+                        <Text mb={3} color="black" fontSize={18} textAlign="center" bold>Libros</Text>                        
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </Stack >
             <Stack flex={2} px={10}>
                 <ScrollView showsVerticalScrollIndicator={false}>                
                     {/* create a services items */}                                
                     {
-                        services.map((item, i) => {                            
+                        services.map((item, i) => {    
+                            if (SearchKey) {
+                                if(item.title.toLowerCase().search(SearchKey.toLowerCase()) === -1){
+                                    return null;
+                                }
+                            }                          
                             return <Stack key={i}><Stack bg={COLOR.white} borderRadius={16}>
-                                                <TouchableOpacity onPress={() => { navigation.navigate("CompareProductsScreen", { ...item, itemName: item.name }) }}>
+                                                <TouchableOpacity onPress={() => { navigation.navigate("CompareProductsScreen", { ...item}) }}>
                                                     <View style={{padding:25}}>                                            
-                                                        <Image source={{uri:item.img}} 
+                                                        <Image source={item.image} 
                                                         style={{backgroundColor:"#F2C94C", width:"100%", height:245}}
                                                         onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                                        <Text color="black" fontSize="28px" textAlign="left" bold>{item.name}</Text>
-                                                        <Text color="black" fontSize="32px" textAlign="left" bold>{item.price + ' ' + item.unit}</Text>
+                                                        <Text color="black" fontSize={28} textAlign="left" bold>{item.title}</Text>
+                                                        <Text color="black" fontSize={32} textAlign="left" bold>{item.price} catd</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareProductsScreen")}>
-                                                    <Text mb={6} mt={6} color="white" fontSize="35px" textAlign="center" bold>Comprar</Text>
+                                                    <Text mb={6} mt={6} color="white" fontSize={35} textAlign="center" bold>Comprar</Text>
                                                 </TouchableOpacity>
                                             </Stack>
                                     </Stack>

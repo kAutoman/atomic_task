@@ -3,39 +3,87 @@ import { View, TouchableOpacity,Dimensions} from 'react-native'
 import { Box, Stack, ScrollView, Text, Input, Icon, Image,Button } from 'native-base'
 import { StoreHeaders, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
-import { useSelector } from 'react-redux'
-import { Feather } from "@expo/vector-icons"
+import { useSelector,useDispatch } from 'react-redux'
+import { setUserInfo } from '../../../redux/actions/authActions';
 
 const CompareServicesScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth)
-    const [services, setServiceItems] = useState([]);
     const [SearchKey, setSearch] = useState("");    
     const StoreItem = navigation.state.params;
     const [isVisible, setModalStatus] = useState(false); 
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-    const LoadExchangeInfo = () => {        
-        setLoading(true);
-        db.collection("services").get().then((querySnapshot) => {
-            let tempCards = [];
-            querySnapshot.forEach((doc) => {
-                tempCards.push({ ...doc.data(), uid: doc.id });
-            });
-            setServiceItems(tempCards);
-            setLoading(false);
-        });
+    const [msg, setMsg] = useState('quieres confirmar la compra');
+    const [confirmBtnStatus,setConfirmBtnStatus] = useState("confirm");
+    const dispatch = useDispatch();
+
+    const generateUUID = (digits) => {
+        let str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXZ';
+        let uuid = [];
+        for (let i = 0; i < digits; i++) {
+            uuid.push(str[Math.floor(Math.random() * str.length)]);
+        }
+        return uuid.join('');
     }
 
     useEffect(() => {
         console.log("storedetail----------------"+ navigation.state.params);
-        LoadExchangeInfo()
     }, [navigation.state.params])
+
+    const _handlePurchase = () => {
+        if(confirmBtnStatus === 'confirm'){
+            const myCoin = user.coin;
+            if (StoreItem.price > myCoin) {
+                setMsg("Saldo insuficiente");
+                setConfirmBtnStatus('return');
+            }
+            else {
+                setLoading(true);
+                    //decrease coin
+                    let coin = user.coin - StoreItem.price;
+                    db.collection("users").doc(user.email).update({
+                        coin
+                    }).then(()=>{
+                        db.collection("users").doc(user.email).get().then((snapshot)=>{
+                            let tempUser = snapshot.data();
+                            tempUser.coin = coin;
+                            dispatch(setUserInfo(tempUser));
+                        });
+
+                        let insertKey = generateUUID(10);
+                    
+                        db.collection('purchaseHistory').doc(insertKey).set({
+                            title: StoreItem.title,
+                            subtitle:StoreItem.subtitle,
+                            brand:StoreItem.brand,
+                            price : StoreItem.price,
+                            image : StoreItem.image,
+                            type : StoreItem.type,
+                        }).then(() => {
+                            setLoading(false);
+                            setModalStatus(false);
+                            navigation.navigate("MarketManageScreen",1);
+                            Toast.show({ title: 'Purchased Successfully.', placement: 'bottom', status: 'success' })
+                        }).catch(e => console.log(e))
+                    });
+            }
+        }
+        else {
+            setModalStatus(false);
+        }
+    }
+
+    const _handleConfirm = () => {
+        setMsg('quieres confirmar la compra');
+        setConfirmBtnStatus('confirm');
+        setModalStatus(true);
+    }
 
     return (
         <Box flex={1} bg="#FA6E5A" w='100%'>
             {loading && <Loading />}
-            <StoreHeaders                
+            <StoreHeaders
                 left={
                     <TouchableOpacity onPress={()=>navigation.goBack()}>
                         <Image resizeMode='stretch' source={Images.GobackImage} height={42} width={48}/>
@@ -45,23 +93,21 @@ const CompareServicesScreen = ({ navigation }) => {
             />
             
             <Stack>
-                <Stack mt="3" borderRadius={16}>
+                <Stack borderRadius={16}>
                     
                         <View style={{padding:20,height:100}}> 
-                            {
-                                services.map((item, i) => {  
-                                    return <Image source={{uri:item.img}} 
-                                    style={{width:"100%", height:400}}
-                                    key={i}
-                                    onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderRadius={16} />
-                                })
-                            }
-                            <Text color="white" fontSize="40px" textAlign="center" bold>Suscripcion de Spotify</Text>    
-                            <Text color="white" fontSize="28px" textAlign="center" >Al canjear este servicio tendras acceso premium durante un mes en Spotify</Text>                                      
+                            <Image source={StoreItem.image} 
+                                    style={{width:"100%", height:300}}
+                                    onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) }
+                                    resizeMode='contain' 
+                                    borderRadius={16} 
+                            />
+                            <Text color="white" fontSize="40px" textAlign="center" bold>{StoreItem.title}</Text>    
+                            <Text color="white" fontSize="28px" textAlign="center" height={200}>{StoreItem.subtitle}</Text>                                      
                             <View style={{marginTop:50,marginLeft:20,display:"flex",flexWrap:"wrap",alignItems:"center"}}>
-                                <Text color="white" w="40%" fontSize="40px" textAlign="left" bold>200 catd</Text>    
+                                <Text color="white" fontSize="40px" textAlign="left" bold>{StoreItem.price}catd</Text>    
                                 <TouchableOpacity>
-                                    <Button size="sm" ml={15} w={180} h={60} alignSelf="center" borderRadius={16} onPress={()=>{setModalStatus(true)}}  variant="solid" backgroundColor="black">
+                                    <Button size="sm" ml={15} w={200} h={60} alignSelf="center" borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
                                         <Text fontSize="28px" color="white" bold>Comprar &gt;</Text>
                                     </Button>
                                 </TouchableOpacity>
@@ -73,8 +119,8 @@ const CompareServicesScreen = ({ navigation }) => {
                                             <TouchableOpacity onPress={()=>setModalStatus(false)}>
                                                 <Image source={Images.ExitImage} resizeMode="contain" />
                                             </TouchableOpacity>          
-                                            <Text mt={10} fontSize="42px" textAlign="center" bold color="black" mb={10}>quieres confirmar la compra</Text>
-                                            <TouchableOpacity mt={20} onPress={()=>setModalStatus(false)}>
+                                            <Text mt={10} fontSize="42px" textAlign="center" bold color="black" mb={10}>{msg}</Text>
+                                            <TouchableOpacity mt={20} onPress={()=>_handlePurchase()}>
                                                 <View backgroundColor="black"  borderRadius={20} borderWidth={2} padding={2} >
                                                     <Text fontSize="50px" color="white" paddingLeft={5} paddingRight={5}>Confirmar</Text>
                                                 </View>

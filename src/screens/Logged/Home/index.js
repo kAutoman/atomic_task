@@ -32,6 +32,8 @@ const HomeScreen = ({ navigation }) => {
             setLoading(false)
         });
 
+        //calculate bond and update to db
+
         db.collection("users").doc(user.email).get().then((snapshot)=>{
             let tempUser = snapshot.data();
             db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
@@ -55,6 +57,7 @@ const HomeScreen = ({ navigation }) => {
                 });
                 tempUser.oppotunity = oppotunity;
                 tempUser.currentBond = currentBond;
+                db.collection("users").doc(user.email).update(tempUser);
                 dispatch(setUserInfo(tempUser));
             });
         })

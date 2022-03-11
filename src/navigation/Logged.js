@@ -39,7 +39,6 @@ import ConfirmControl from "../screens/Logged/Confirms/control"
 import Deadline from "../screens/Logged/Deadline/index"
 import Investline from "../screens/Logged/Descubre/invest"
 import StoreIndex from "../screens/Logged/Store/index"
-import StoreDetail from "../screens/Logged/Store/detail"
 import ProductsScreen from "../screens/Logged/Store/products"
 import ServicesScreen from "../screens/Logged/Store/services"
 import SideMenu from './SideMenu'
@@ -214,10 +213,6 @@ const Navigator = createStackNavigator(
 		},
 		StoreScreen: {
 			screen: StoreIndex,
-			navigationOptions: { headerShown: false },
-		},
-		StoreDetailScreen: {
-			screen: StoreDetail,
 			navigationOptions: { headerShown: false },
 		},
 		ServicesScreen: {
