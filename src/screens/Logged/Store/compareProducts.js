@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity,Dimensions} from 'react-native'
-import { Box, Stack, ScrollView, Text, Input, Icon, Image,Button } from 'native-base'
+import { Box, Stack,HStack, ScrollView, Text, Input, Toast, Icon, Image,Button } from 'native-base'
 import { StoreHeaders, Loading } from '../../../components'
 import { COLOR, db, Images, LAYOUT, Styles } from '../../../constants'
 import { useSelector,useDispatch } from 'react-redux'
@@ -28,17 +28,6 @@ const CompareServicesScreen = ({ navigation }) => {
         return uuid.join('');
     }
 
-    const LoadExchangeInfo = () => {        
-        setLoading(true);
-        db.collection("services").get().then((querySnapshot) => {
-            let tempCards = [];
-            querySnapshot.forEach((doc) => {
-                tempCards.push({ ...doc.data(), uid: doc.id });
-            });
-            setServiceItems(tempCards);
-            setLoading(false);
-        });
-    }
     useEffect(() => {
         console.log("storedetail----------------"+ navigation.state.params);
     }, [navigation.state.params])
@@ -72,10 +61,11 @@ const CompareServicesScreen = ({ navigation }) => {
                             price : StoreItem.price,
                             image : StoreItem.image,
                             type : StoreItem.type,
+                            email : user.email,
                         }).then(() => {
                             setLoading(false);
                             setModalStatus(false);
-                            navigation.navigate("MarketManageScreen",1);
+                            navigation.navigate("ShopHistoryScreen",1);
                             Toast.show({ title: 'Purchased Successfully.', placement: 'bottom', status: 'success' })
                         }).catch(e => console.log(e))
                     });
@@ -116,14 +106,14 @@ const CompareServicesScreen = ({ navigation }) => {
                             />
                             <Text color="white" fontSize="40px" textAlign="center" bold>{StoreItem.title}</Text>    
                             <Text color="white" fontSize="28px" textAlign="center" height={200}>{StoreItem.subtitle}</Text>                                      
-                            <View style={{marginTop:50,marginLeft:20,display:"flex",flexWrap:"wrap",alignItems:"center"}}>
-                                <Text color="white" fontSize="40px" textAlign="left" bold>{StoreItem.price}catd</Text>    
+                            <HStack style={{marginTop:50,marginLeft:20,alignItems:"center"}}>
+                                <Text color="white" flex={1} fontSize="40px" textAlign="left" bold>{StoreItem.price}catd</Text>    
                                 <TouchableOpacity>
-                                    <Button size="sm" ml={15} w={200} h={60} alignSelf="center" borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
+                                    <Button size="sm" w={200} h={60} borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
                                         <Text fontSize="28px" color="white" bold>Comprar &gt;</Text>
                                     </Button>
                                 </TouchableOpacity>
-                            </View>
+                            </HStack>
 
                             {
                                 isVisible ? (

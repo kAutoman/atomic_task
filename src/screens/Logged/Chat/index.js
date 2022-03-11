@@ -41,7 +41,16 @@ const ChatScreen = ({ navigation }) => {
                 }
 
             }
+        });
+        await database.ref(`private-message`).orderByChild('receiver').equalTo(param).on('value', async snapshot => {
+            if (snapshot.val()) {
+                let message = snapshot.val();
+                for(let key in message) {
+                    // console.log(`private-message/${key}`);
+                    database.ref(`private-message/${key}`).remove();
+                }
 
+            }
         });
         setUserList([]);
         setLatestMessage([]);

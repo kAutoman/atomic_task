@@ -17,7 +17,7 @@ const ShopHistoryScreen = ({ navigation }) => {
     const [code, setCode] = useState('');
     const LoadExchangeInfo = () => {        
         setLoading(true)        
-        db.collection("purchaseHistory").get().then((querySnapshot) => {
+        db.collection("purchaseHistory").where("email", "==", user.email).get().then((querySnapshot) => {
             let tempCards = [];
             querySnapshot.forEach((doc) => {
                 tempCards.push({ ...doc.data(), uid: doc.id });

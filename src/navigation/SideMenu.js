@@ -15,17 +15,22 @@ export default ({ }) => {
         <Stack flex={1} pt={20}>
           <Stack flex={1}>
             {
-              LAYOUT.DrawerList.map((item, key) => (
-                <TouchableOpacity key={key} onPress={() => navigate(item.navLink)}>
-                  <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
-                    <Text color={COLOR.black} pl={4} fontSize={30} bold> {item.title} </Text>
-                  </HStack>
-                </TouchableOpacity>
-              ))
+              LAYOUT.DrawerList.map((item, key) => {
+                  return <TouchableOpacity key={key} onPress={() => navigate(item.navLink)}>
+                              <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                                <Text color={COLOR.black} pl={4} fontSize={30} bold> {item.title} </Text>
+                              </HStack>
+                          </TouchableOpacity>
+              })
             }
             {
-              user.email === "atomictasks@gmail.com" ?
+              user.email === LAYOUT.adminInfo.email ?
                   <>
+                    <TouchableOpacity onPress={() => navigate("ChatScreen")}>
+                      <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                        <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Chat"} </Text>
+                      </HStack>
+                    </TouchableOpacity>
                     <TouchableOpacity onPress={() => navigate("ConfirmsScreen")}>
                       <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
                         <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Confirms"} </Text>
@@ -42,7 +47,11 @@ export default ({ }) => {
                       </HStack>
                     </TouchableOpacity>
                   </>
-                : null
+                : <TouchableOpacity onPress={() => navigate("ChatBotScreen")}>
+                    <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                      <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Chat"} </Text>
+                    </HStack>
+                  </TouchableOpacity>
             }
           </Stack>
           <Stack mb={10}>
