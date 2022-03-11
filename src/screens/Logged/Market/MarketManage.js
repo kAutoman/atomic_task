@@ -111,6 +111,11 @@ const MarketManageScreen = ({ navigation }) => {
                                     return null;
                                 }
                             }
+                            if (SearchKey) {
+                                if(stock.title.toLowerCase().search(SearchKey.toLowerCase()) === -1){
+                                    return null;
+                                }
+                            }
                             return <Stack my={3} key={index} bg="#FFB61D"  style={{borderRadius:10}}>
                                         <HStack alignItems="center" p={4}>
                                             <Text color="black" fontSize="3xl" flex={1} bold numberOfLines={2}>{stock.title}</Text>
