@@ -49,6 +49,7 @@ import QuestionsScreen from '../screens/Logged/Bot/Questions'
 import EditQuestionScreen from '../screens/Logged/Bot/EditQuestion'
 import MarketManageScreen from '../screens/Logged/Market/MarketManage'
 import EditStockScreen from '../screens/Logged/Market/EditStock'
+import ShopHistoryScreen from '../screens/Logged/Store/history'
 
 /**
  * Home Navigator
@@ -247,6 +248,10 @@ const Navigator = createStackNavigator(
 			screen : EditStockScreen,
 			navigationOptions : {headerShown : false}
 		},
+		ShopHistoryScreen : {
+			screen : ShopHistoryScreen,
+			navigationOptions : {headerShown : false}
+		}
 	},
 	{
 		initialRouteName: 'HomeScreen'

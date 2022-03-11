@@ -3,13 +3,13 @@ import { View, Center, HStack, Icon, Pressable, Text, Spinner, Avatar, Box } fro
 import { navigate } from "../redux/services"
 import { COLOR, Images, LAYOUT } from "../constants"
 
-export const Headers = ({ title = "", left = null, right = null }) => {
+export const Headers = ({ title = "",bg= null, left = null, right = null }) => {
   return (
     <HStack
       h={65}
       px={7}
       mt={12}
-      bg={COLOR.base}
+      bg={bg ? bg :COLOR.base}
       alignItems="center"
       justifyContent='space-between'
     >

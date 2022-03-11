@@ -47,4 +47,5 @@ export const Images = {
     WarningIcon : require("../assets/warning.png"),
     TrashFillIcon : require("../assets/trash_fill.png"),
     NoImage : require("../assets/no_image.png"),
+    ClipboardImage : require("../assets/clipboard.png"),
 }
