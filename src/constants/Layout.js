@@ -141,11 +141,10 @@ export const LAYOUT = {
 		{ navLink: "HomeScreen", title: "Tareas" },
 		{ navLink: "PerfilScreen", title: "Perfil" },
 		{ navLink: "DescubreScreen", title: "Descubre" },
-		// { navLink: "BlogScreen", title: "Blog" },
-
+		{ navLink: "AlarmsScreen", title: "Alarmas" },
 		{ navLink: "ChatBotScreen", title: "Chat" },
 		{ navLink: "StoreScreen", title: "Tienda" },
-		{ navLink: "AlarmsScreen", title: "Alarmas" },		
+		// { navLink: "BlogScreen", title: "Blog" },
 		//{ navLink: "ChallengeScreen", title: "Desafíos" },
 	],
 	CardInfo: {

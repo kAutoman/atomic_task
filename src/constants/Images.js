@@ -46,4 +46,5 @@ export const Images = {
     BotAvatar : require("../assets/bot_avatar.png"),
     WarningIcon : require("../assets/warning.png"),
     TrashFillIcon : require("../assets/trash_fill.png"),
+    NoImage : require("../assets/no_image.png"),
 }

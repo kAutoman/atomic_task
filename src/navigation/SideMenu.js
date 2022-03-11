@@ -36,6 +36,11 @@ export default ({ }) => {
                         <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Bot"} </Text>
                       </HStack>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigate("MarketManageScreen")}>
+                      <HStack alignItems='center' px={5} py={3} borderBottomWidth={1} borderColor="gray.200">
+                        <Text color={COLOR.black} pl={4} fontSize={30} bold> {"Market"} </Text>
+                      </HStack>
+                    </TouchableOpacity>
                   </>
                 : null
             }

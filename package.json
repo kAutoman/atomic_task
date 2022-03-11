@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.13.0",
     "@react-native-community/datetimepicker": "3.2.0",
-    "@react-native-picker/picker": "1.9.11",
+    "@react-native-picker/picker": "^1.9.11",
     "@stripe/stripe-react-native": "0.1.1",
     "axios": "^0.21.1",
     "expo": "~41.0.1",
@@ -28,7 +28,7 @@
     "expo-linear-gradient": "~9.1.0",
     "expo-notifications": "^0.12.3",
     "expo-updates": "~0.5.4",
-    "firebase": "8.2.3",
+    "firebase": "^8.2.3",
     "firebase-tools": "^9.17.0",
     "immer": "^9.0.5",
     "moment": "^2.29.1",

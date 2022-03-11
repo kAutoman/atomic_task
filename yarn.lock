@@ -2853,7 +2853,7 @@
   "resolved" "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
   "version" "0.1.11"
 
-"@react-native-picker/picker@>= 1.0", "@react-native-picker/picker@1.9.11":
+"@react-native-picker/picker@^1.9.11", "@react-native-picker/picker@>= 1.0":
   "integrity" "sha512-E7whvvMIl9Ln1sxgug7OAEVWQ69n82iV0d2OWWp5VV52+RW3azKh1IFm4rxdW5/oByMfl7FFL0eHNelGgY4BMQ=="
   "resolved" "https://registry.npmjs.org/@react-native-picker/picker/-/picker-1.9.11.tgz"
   "version" "1.9.11"
@@ -6586,7 +6586,7 @@
     "winston-transport" "^4.4.0"
     "ws" "^7.2.3"
 
-"firebase@8.2.3":
+"firebase@^8.2.3":
   "integrity" "sha512-WdbcGSiLxiW/kGZT+EyqD9z3Md7kR35+k9qMjDn/twiIrm6Hh7Qi/Z69cqxhKW6+4uK5ghXIF28CjK67OyD9Qw=="
   "resolved" "https://registry.npmjs.org/firebase/-/firebase-8.2.3.tgz"
   "version" "8.2.3"
@@ -7229,9 +7229,9 @@
     "toidentifier" "1.0.0"
 
 "http-parser-js@>=0.5.1":
-  "integrity" "sha512-t7hjvef/5HEK7RWTdUzVUhl8zkEu+LlaE0IYzdMuvbSDipxBRpOn4Uhw8ZyECEa808iVT8XCjzo6xmYt4CiLZg=="
-  "resolved" "https://registry.npmjs.org/http-parser-js/-/http-parser-js-0.5.3.tgz"
-  "version" "0.5.3"
+  "integrity" "sha512-vDlkRPDJn93swjcjqMSaGSPABbIarsr1TLAui/gLDXzV5VsJNdXNzMYDyNBLQkjWQCJ1uizu8T2oDMhmGt0PRA=="
+  "resolved" "https://registry.npmjs.org/http-parser-js/-/http-parser-js-0.5.6.tgz"
+  "version" "0.5.6"
 
 "http-proxy-agent@^4.0.0", "http-proxy-agent@^4.0.1":
   "integrity" "sha512-k0zdNgqWTGA6aeIRVpvfVob4fL52dTfaehylg0Y4UvSySvOq/Y+BOyPrgpUrA7HylqvU8vIZGsRuXmspskV0Tg=="
@@ -12999,7 +12999,12 @@
   "resolved" "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.1.tgz"
   "version" "1.0.1"
 
-"uuid@^3.0.0", "uuid@^3.3.2", "uuid@^3.4.0":
+"uuid@^3.0.0":
+  "integrity" "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
+  "resolved" "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
+  "version" "3.4.0"
+
+"uuid@^3.3.2", "uuid@^3.4.0":
   "integrity" "sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A=="
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-3.4.0.tgz"
   "version" "3.4.0"

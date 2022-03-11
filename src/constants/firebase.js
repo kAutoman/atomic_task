@@ -26,6 +26,6 @@ const auth = firebase.auth();
 
 const storage = firebase.storage();
 
-let database = firebase.database()
-
+let database = firebase.database();
+let uploadBytes = {};
 export { db, auth, storage, database };

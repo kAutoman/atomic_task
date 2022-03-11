@@ -48,6 +48,8 @@ import CompareServiceScreen from '../screens/Logged/Store/compareService'
 import CompareProductsScreen from '../screens/Logged/Store/compareProducts'
 import QuestionsScreen from '../screens/Logged/Bot/Questions'
 import EditQuestionScreen from '../screens/Logged/Bot/EditQuestion'
+import MarketManageScreen from '../screens/Logged/Market/MarketManage'
+import EditStockScreen from '../screens/Logged/Market/EditStock'
 
 /**
  * Home Navigator
@@ -240,6 +242,14 @@ const Navigator = createStackNavigator(
 		},
 		EditQuestionScreen : {
 			screen : EditQuestionScreen,
+			navigationOptions : {headerShown : false}
+		},
+		MarketManageScreen : {
+			screen : MarketManageScreen,
+			navigationOptions : {headerShown : false}
+		},
+		EditStockScreen : {
+			screen : EditStockScreen,
 			navigationOptions : {headerShown : false}
 		},
 	},

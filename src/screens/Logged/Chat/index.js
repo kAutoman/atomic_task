@@ -133,7 +133,7 @@ const ChatScreen = ({ navigation }) => {
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {
                             userList.map((item, i) => {
-                                if ((user.email !== LAYOUT.adminInfo.email) || latestMessage[item.email]) {
+                                // if ((user.email !== LAYOUT.adminInfo.email) || latestMessage[item.email]) {
                                     let offSet = moment().utcOffset() * 4;
                                     let latestMsgTime;
                                     if (latestMessage[item.email]) {
@@ -184,7 +184,7 @@ const ChatScreen = ({ navigation }) => {
                                                 </HStack>
                                             </TouchableOpacity>   
                                     
-                                }
+                                // }
                             })
                         }
                     </ScrollView>
