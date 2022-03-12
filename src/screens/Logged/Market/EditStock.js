@@ -57,16 +57,22 @@ const QuestionsScreeen = ({ navigation }) => {
 
 
     const openImagePickerAsync = async () => {
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        // let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     
-        if (permissionResult.granted === false) {
-          alert("Permission to access camera roll is required!");
-          return;
-        }
+        // if (permissionResult.granted === false) {
+        //   alert("Permission to access camera roll is required!");
+        //   return;
+        // }
         // Pick the photo
-        const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        // const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        //     allowsEditing: true,
+        //     aspect: [1, 1]
+        // });
+        let pickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
-            aspect: [1, 1]
+            aspect: [4, 4],
+            quality: 1,
         });
 
         const imageUrl = await uploadImageAsync(pickerResult.uri);

@@ -1,11 +1,10 @@
 import React, { useEffect,useState } from 'react'
 import { Text, Stack, Button, Box, Image, useToast, HStack, View } from 'native-base'
-import { db, Images, ROOT, Styles } from '../../../constants'
+import { db, Images, ROOT, generateUUID } from '../../../constants'
 import { TouchableOpacity,StyleSheet, SafeAreaView,FlatList,ScrollView,Dimensions } from 'react-native'
 import { Loading } from '../../../components';
 import { Video } from 'expo-av';
 import { useSelector } from 'react-redux';
-import PhotoGrid from '../../../components/PhotoGrid';
 
 const styles = StyleSheet.create({
     container: {
@@ -70,7 +69,7 @@ const HomeCardDetail = ({ navigation }) => {
         var result = [];
         if (!confirmItem.repeatState) {
             result.push(
-                <TouchableOpacity onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
+                <TouchableOpacity  key={generateUUID(10)} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
                     <Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmItem.photo[0]}` }} resizeMode="contain" alignSelf="center" />
                 </TouchableOpacity>);
         }
@@ -89,17 +88,17 @@ const HomeCardDetail = ({ navigation }) => {
         
             result.push(<FlatList
                  data={ photoArr }
+                 key={generateUUID(10)}
                  renderItem={({item,index}) => {
                     let tempUri = item.uri;
                     let tempIdx = item.idx;
                     if (confirmItem.type === 'image') {
-                        return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
+                        return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
                                     <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="cover" />
                                 </TouchableOpacity>    
                     }
                     else {
-                        console.log(tempUri);
-                        return <TouchableOpacity style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
+                        return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
                                     <Video
                                         style={styles.GridViewBlockStyle}
                                         key={tempIdx} 
@@ -121,9 +120,9 @@ const HomeCardDetail = ({ navigation }) => {
     const getConfirmDetails = () => {
         let result = [];
         for(let temp of confirms) {
-            result.push(<Text color="#000" fontSize="2xl" textAlign="center">{temp.cardName}</Text>);
+            result.push(<Text color="#000" key={generateUUID(10)} fontSize="2xl" textAlign="center">{temp.cardName}</Text>);
             result.push(
-                 <View style={styles.container}>
+                 <View style={styles.container} key={generateUUID(10)}>
                         {renderImages(temp)}
                  </View>
              );
