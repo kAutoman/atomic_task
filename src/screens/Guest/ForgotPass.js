@@ -7,6 +7,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { auth, COLOR, ROOT, db } from '../../constants'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import axios from 'axios'
+import firebase from 'firebase';
 
 const ForgotPassScreen = ({ navigation }) => {
 
@@ -19,28 +20,39 @@ const ForgotPassScreen = ({ navigation }) => {
 
     const sendCode = () => {
         if (email) {
-            db.collection("users").where("email", "==", email).get().then(async (querySnapshot) => {
-                let tempCards = null;
-                querySnapshot.forEach((doc) => {
-                    tempCards = { ...doc.data(), uid: doc.id };
-                });
-                if (tempCards) {
-                    var mailBox = {
-                        to: email,
-                        name: tempCards.name,
-                        password: tempCards.password
-                    }
-                    axios.post(`${ROOT.PAYMENT_URL}forgot_password`, mailBox).then(({ data }) => {
-                        if (data === "success") {
-                            return Toast.show({ title: "Please check your mailbox", placement: 'bottom', status: 'success', w: 400 });
-                        } else {
-                            return Toast.show({ title: "Network error", placement: 'bottom', status: 'warning', w: 400 });
-                        }
-                    })
-                } else {
-                    return Toast.show({ title: "Email does not exist!", placement: 'bottom', status: 'error', w: 400 })
-                }
+            firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                return Toast.show({ title: "Password reset message has sent! Please check your email.", placement: 'bottom', status: 'success', w: 400 })
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                return Toast.show({ title: errorMessage, placement: 'bottom', status: 'error', w: 400 })
+                // ..
             });
+            // db.collection("users").where("email", "==", email).get().then(async (querySnapshot) => {
+            //     let tempCards = null;
+            //     querySnapshot.forEach((doc) => {
+            //         tempCards = { ...doc.data(), uid: doc.id };
+            //     });
+            //     if (tempCards) {
+            //         var mailBox = {
+            //             to: email,
+            //             name: tempCards.name,
+            //             password: tempCards.password
+            //         }
+            //         axios.post(`${ROOT.PAYMENT_URL}forgot_password`, mailBox).then(({ data }) => {
+            //             if (data === "success") {
+            //                 return Toast.show({ title: "Please check your mailbox", placement: 'bottom', status: 'success', w: 400 });
+            //             } else {
+            //                 console.log(data);
+            //                 return Toast.show({ title: "Network error", placement: 'bottom', status: 'warning', w: 400 });
+            //             }
+            //         })
+            //     } else {
+            //         return Toast.show({ title: "Email does not exist!", placement: 'bottom', status: 'error', w: 400 })
+            //     }
+            // });
         } else {
             return Toast.show({ title: "Please Input your email correctly!", placement: 'bottom', status: 'error', w: 400 })
         }

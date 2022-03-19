@@ -9,7 +9,6 @@ import {useEffect} from 'react';
 import {Video} from 'expo-av';
 import {style} from 'styled-system';
 import moment from 'moment';
-import Deadline from "../Deadline/index";
 
 
 const HomeCardDetail = ({navigation}) => {
@@ -31,6 +30,7 @@ const HomeCardDetail = ({navigation}) => {
             querySnapshot.forEach((doc) => {
                 tempCards = doc.data();
             });
+            
             setConfirmed(tempCards);
             setLoading(false);
         });
@@ -96,6 +96,7 @@ const HomeCardDetail = ({navigation}) => {
     const renderPhotos = () => {
         let temp = [];
         let i = 0;
+        console.log(confirmed)
         if (confirmed) {
             let length = confirmed.photo.length;
             return <Image size="100%" h={400} mt={70} key={i} source={Images.DelayImage} resizeMode="contain"
@@ -108,7 +109,13 @@ const HomeCardDetail = ({navigation}) => {
     }
 
     const isExpired = () => {
+
+        //when task status is denied show denied screen
+        if(CardItem.state === 4) {
+            return false;
+        }
         
+        //when 
         if (CardItem.repeatState && (moment(CardItem.created_at.toDate()).add(1,'days').set({hour:0,minute:0,second:0,millisecond:0}) < moment())) {
           return true;
         }
@@ -118,10 +125,10 @@ const HomeCardDetail = ({navigation}) => {
                 return true;
             }
         }
+        
        
-        else {
-            return false;
-        }
+        return false;
+        
     }
 
     const getDeadLine = () => {
@@ -136,11 +143,12 @@ const HomeCardDetail = ({navigation}) => {
                 newDays.push(repeatDay);
             }
         }
+        
         newDays.sort(function(a, b){return a - b});
         if (newDays.length > 0) {
-            nextDayIndex = newDays[0]+1;
+            nextDayIndex = newDays[0];
         }
-        
+    
         //if the end of week
         if (nextDayIndex === -1) {
             //get first day index of next week
@@ -320,38 +328,38 @@ const HomeCardDetail = ({navigation}) => {
 
                                 <Text color="#000" fontSize="3xl" textAlign="center"
                                       style={{lineHeight: 50, marginTop: 40}} bold>{(() => {
-                                    if ((confirmed.state === "requested") && !confirmed.repeatState) {
+                                    if ((CardItem.state === 1) && !CardItem.repeatState) {
                                         return "Espera para iniciar la confirmación";
-                                    } else if (confirmed.state === "repeat") {
+                                    } else if (CardItem.state === 3) {
                                         return "La tarea se repite";
-                                    } else if (confirmed.state === "continue") {
+                                    } else if (CardItem.state === 5) {
                                         return "La tarea se continúa";
-                                    } else if (confirmed.state === 'deny') {
+                                    } else if (CardItem.state === 4) {
                                         return "la tarea fue denegada";
-                                    } else if (confirmed.state === 'completed') {
+                                    } else if (CardItem.state === 2) {
                                         return "La tarea se completó";
                                     }
                                 })()}</Text>
                                 {
-                                    ((confirmed.state === "requested") && confirmed.repeatState) ?
+                                    ((CardItem.state === 1) && CardItem.repeatState) ?
                                         <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight: 50}}
                                               bold>Fetcha de expiracion {'\n' + deadline} </Text> : null
                                 }
 
                                 {
-                                    ((confirmed.state === "requested") && confirmed.repeatState) ?
+                                    ((CardItem.state === 1) && CardItem.repeatState) ?
                                         <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight: 50}}
                                               bold>Siguiente confirmacion {'\n' + totalDeadline} </Text> : null
                                 }
 
                                 {
-                                    confirmed.state === "repeat" ?
+                                    CardItem.state === 3 ?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler}
                                                 borderRadius={100} bg={"#FFB61D"}
                                                 alignSelf="center">Reenviar</Button> : null
                                 }
                                 {
-                                    confirmed.state === "continue" ?
+                                    CardItem.state === 5 ?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler}
                                                 borderRadius={100} bg={"#00A1E0"}
                                                 alignSelf="center">Continuar</Button> : null

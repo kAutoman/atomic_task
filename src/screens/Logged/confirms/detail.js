@@ -76,6 +76,7 @@ const HomeCardDetail = ({ navigation }) => {
         else {
             let photoArr = [];
         
+            console.log(confirmItem.photo);
             confirmItem.photo.forEach((temp,index)=> {
                 let tmp = {};
                 tmp.uri = `${ROOT.PAYMENT_URL}img/${temp}`;
@@ -86,6 +87,7 @@ const HomeCardDetail = ({ navigation }) => {
             });
         
         
+        
             result.push(<FlatList
                  data={ photoArr }
                  key={generateUUID(10)}
@@ -94,7 +96,7 @@ const HomeCardDetail = ({ navigation }) => {
                     let tempIdx = item.idx;
                     if (confirmItem.type === 'image') {
                         return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
-                                    <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="cover" />
+                                    <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="contain" />
                                 </TouchableOpacity>    
                     }
                     else {

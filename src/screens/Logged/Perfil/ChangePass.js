@@ -13,7 +13,7 @@ const ChangePassScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const [currentPass, setCurrentPass] = useState()
     const [newPass, setNewPass] = useState()
-    const [passConfirm, setPassConfirm] = useState()
+    const [passConfirm, setPassConfirm] = useState();
 
     const Save = async () => {
         if (currentPass && newPass && passConfirm) {
@@ -22,7 +22,7 @@ const ChangePassScreen = ({ navigation }) => {
                 snapshot.forEach(doc => {
                     if (doc.id.toLowerCase() === user.email) {
                         let userInfo = doc.data();
-                        if (userInfo.password === currentPass) {
+                        if (user.password === currentPass) {
                             if (newPass === passConfirm) {
                                 auth.currentUser.updatePassword(newPass);
                                 db.collection("users").doc(user.email).update({

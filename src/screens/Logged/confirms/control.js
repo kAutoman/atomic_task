@@ -45,22 +45,9 @@ const HomeCardControl = ({ navigation }) => {
             db.collection("goals").doc(updateId).update({state : updateState});
         });
 
-        if ((state === 'completed') || (state === 'continue')) {
+        if (state === 'completed') {
             //increase coin
             let coin = user.coin ? (user.coin + 5) : 5
-            db.collection("users").doc(CardItem.email).update({
-                coin
-            }).then(()=>{
-                db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
-                    let tempUser = snapshot.data();
-                    tempUser.coin = coin;
-                    dispatch(setUserInfo(tempUser));
-                })
-            });    
-        }
-         if (state === 'deny') {
-            //decrease coin
-            let coin = user.coin ? (user.coin - 5) : -5
             db.collection("users").doc(CardItem.email).update({
                 coin
             }).then(()=>{

@@ -41,7 +41,7 @@ const PerfilScreen = ({ navigation }) => {
                             </Text>
                             <HStack alignItems="center" justifyContent="space-between" px={5} py={2}>
                                 <HStack alignItems="center" space={3}>
-                                    <Icon size="sm" as={<Ionicons name="heart-outline" />} />
+                                    {/* <Icon size="sm" as={<Ionicons name="heart-outline" />} /> */}
                                     <Text bold>Like</Text>
                                 </HStack>
                                 <Text>|</Text>
