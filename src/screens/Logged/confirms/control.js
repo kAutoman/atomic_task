@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Text, Stack, Button, Box, Image, useToast, HStack, useColorMode } from 'native-base'
 import { db, Images, ROOT, Styles } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
@@ -15,14 +15,29 @@ const HomeCardControl = ({ navigation }) => {
     const ClickedPhotoIndex = tempIdx;
     const { user } = useSelector((store) => store.auth)
     const dispatch = useDispatch();
+    const [goalItem,setGoal] = useState({});
+
+    const getGoal = () => {
+        db.collection("goals").where('cardName','==',CardItem.cardName).get().then(querySnapshot => {
+            let goal;
+            querySnapshot.forEach((doc) => {
+                goal = doc.data();
+                goal.id = doc.id;
+            });
+            setGoal(goal);
+        });
+    }
 
     const _handleComplete = (state) => {
         setLoading(true)
-
-        
+        let confirmCnt = CardItem.confirmed ? CardItem.confirmed : 0;
+        if((state === 'continue') || (state ==='completed')){
+            confirmCnt = confirmCnt + 1;
+        }
         //change confirmation status
         db.collection("confirmation").doc(CardItem.uid).update({
-            state
+            state,
+            confirmed : confirmCnt,
         });
         let updateState = 1;
         if (state === 'completed') {
@@ -37,14 +52,9 @@ const HomeCardControl = ({ navigation }) => {
         else if (state === 'continue') {
             updateState = 5;
         }
-        db.collection("goals").where('cardName','==',CardItem.cardName).get().then(querySnapshot => {
-            let updateId;
-            querySnapshot.forEach((doc) => {
-                updateId = doc.id;
-            });
-            db.collection("goals").doc(updateId).update({state : updateState});
-        });
-
+        
+        db.collection("goals").doc(goalItem.id).update({state : updateState});
+        
         if (state === 'completed') {
             //increase coin
             let coin = user.coin ? (user.coin + 5) : 5
@@ -75,10 +85,17 @@ const HomeCardControl = ({ navigation }) => {
     }
 
     const renderContinueButton = () => {
+        if (!CardItem.repeatState || (CardItem.confirmed === (goalItem.totalConfirmCnt-1))){
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("complete")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>
+        }
         if(CardItem.repeatState){
             return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("continue")} borderRadius={100} w="100%" bg={"#00A1E0"} alignSelf="center">Continuar</Button>
         }
     }
+
+    useEffect(() => {
+        getGoal();
+    })
 
 
     return (
@@ -95,15 +112,15 @@ const HomeCardControl = ({ navigation }) => {
                 </TouchableOpacity>
             </Box>
             {CardItem.type == 'image'?
-                <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:`${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`}} resizeMode="contain" alignSelf="center" />:
+                <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:CardItem.photo[ClickedPhotoIndex]}} resizeMode="contain" alignSelf="center" />:
                   <Video           
                     source={{
-                      uri: `${ROOT.PAYMENT_URL}img/${CardItem.photo[ClickedPhotoIndex]}`,
+                      uri: CardItem.photo[ClickedPhotoIndex],
                     }}
                     useNativeControls
                     resizeMode="contain"
                     isLooping
-                    style={{height:500,width:"100%"}}  
+                    style={{height:400,width:"100%"}}  
                   />
             }       
             <Text color="#FFB61D" fontSize="2xl" textAlign="center">{CardItem.cardName}</Text>
@@ -111,7 +128,6 @@ const HomeCardControl = ({ navigation }) => {
                 CardItem.state === "completed" ?
                     <Text color="white" fontSize="3xl" mt={70} textAlign="center">{"Terminada"}</Text> :
                     <Stack space={3} mt={5}>
-                        <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#22c55e"} alignSelf="center">Completa</Button>
                         {
                             renderContinueButton()
                         }

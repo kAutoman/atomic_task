@@ -53,7 +53,7 @@ const QuestionsScreeen = ({ navigation }) => {
         setLoading(false);
       
         return await snapshot.ref.getDownloadURL();
-      }
+    }
 
 
     const openImagePickerAsync = async () => {
@@ -75,8 +75,10 @@ const QuestionsScreeen = ({ navigation }) => {
             quality: 1,
         });
 
-        const imageUrl = await uploadImageAsync(pickerResult.uri);
-        setImage({uri : imageUrl});
+        if(!result.cancelled){
+            const imageUrl = await uploadImageAsync(pickerResult.uri);
+            setImage({uri : imageUrl});
+        }
     }
 
     const toggleSwitch = () => {

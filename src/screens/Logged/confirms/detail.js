@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     container: {
       display:"flex",
       marginTop:10,
+      marginBottom:100
     },
     scrollView: {
         backgroundColor: 'pink',
@@ -48,6 +49,7 @@ const HomeCardDetail = ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const { user } = useSelector(store => store.auth);
     const [confirms, setConfirms] = useState([]);
+    const video = React.useRef(null);
     const CardItem = navigation.state.params;
     const LoadConfirms = () => {
         db.collection("confirmation").where('email','==',CardItem.email).where('state','==',CardItem.state).get().then((querySnapshot) => {
@@ -66,20 +68,43 @@ const HomeCardDetail = ({ navigation }) => {
 
 
     const renderImages = (confirmItem) => {
-        var result = [];
+        let result = [];
         if (!confirmItem.repeatState) {
-            result.push(
-                <TouchableOpacity  key={generateUUID(10)} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
-                    <Image size="100%" height={400} style={{margin:5}} source={{ uri: `${ROOT.PAYMENT_URL}img/${confirmItem.photo[0]}` }} resizeMode="contain" alignSelf="center" />
-                </TouchableOpacity>);
+            if (confirmItem.type === 'image') {
+                result.push(
+                    <TouchableOpacity key={generateUUID(10)} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
+                        <Image size="100%" height={400} style={{margin:5}} source={{ uri: confirmItem.photo[0] }} resizeMode="contain" alignSelf="center" />
+                    </TouchableOpacity>);
+            }
+            else {
+                result.push(
+                    <TouchableOpacity key={generateUUID(10)} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx:0})}>
+                           <Video
+                                ref={video}
+                                style={{
+                                    height: 380,
+                                    marginBottom: 20,
+                                    alignSelf: "center",
+                                    width: "80%",
+                                    maxWidth: "80%",
+                                    marginTop: 0,
+                                    borderRadius: 15
+                                }}
+                                source={{ uri: confirmItem.photo[0] }}
+                                useNativeControls
+                                resizeMode="contain"
+                                isLooping
+                            />
+                    </TouchableOpacity>
+                );
+            }
         }
         else {
             let photoArr = [];
-        
-            console.log(confirmItem.photo);
+    
             confirmItem.photo.forEach((temp,index)=> {
                 let tmp = {};
-                tmp.uri = `${ROOT.PAYMENT_URL}img/${temp}`;
+                tmp.uri = temp;
                 tmp.idx = index;
                 if (!confirmItem.confirmedTasks || (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1)) {
                     photoArr.push(tmp);
@@ -96,14 +121,14 @@ const HomeCardDetail = ({ navigation }) => {
                     let tempIdx = item.idx;
                     if (confirmItem.type === 'image') {
                         return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
-                                    <Image width="100%" style={styles.GridViewBlockStyle} key={tempIdx} source={{ uri: tempUri }} resizeMode="contain" />
+                                    <Image width="100%" key={generateUUID(10)} style={styles.GridViewBlockStyle} source={{ uri: tempUri }} resizeMode="contain" />
                                 </TouchableOpacity>    
                     }
                     else {
                         return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
                                     <Video
                                         style={styles.GridViewBlockStyle}
-                                        key={tempIdx} 
+                                        key={generateUUID(10)} 
                                         source={{ uri: tempUri }}
                                         useNativeControls
                                         resizeMode="cover"

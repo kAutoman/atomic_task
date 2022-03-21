@@ -31,12 +31,9 @@ const CreateTaskScreen = ({ navigation }) => {
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();    
 
-    const mode = navigation.state.params; 
-    console.log(mode);
+    const mode = navigation.state.params;
     // let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
     
-
-
     useEffect(() => {        
         console.log("CreateTaskScreen::::::" + JSON.stringify(repeatDays));        
     });
@@ -52,7 +49,25 @@ const CreateTaskScreen = ({ navigation }) => {
       }
     }
 
-    const SaveHandle = async () => {        
+    const getTotalConfirmCnt = () => {
+        const start = new Date().setHours(0,0,0);
+        const end = new Date(time).setHours(23,59,59);
+        let loop = new Date(start);
+        //include today and last day
+        let totalCnt = 0;
+        while (loop <= end) {
+            let temp = loop.getDay()+1;
+            if(repeatDays.indexOf(temp) > -1){
+                totalCnt++;
+            }
+            
+            let newDate = loop.setDate(loop.getDate() + 1);
+            loop = new Date(newDate);
+        }
+        return totalCnt;
+    }
+
+    const SaveHandle = async () => {
         //validate repeat days
         let noSelected = true;
         if(repeatDays.length > 0){
@@ -66,6 +81,10 @@ const CreateTaskScreen = ({ navigation }) => {
             const timeStamp = Math.floor(Date.now() / 1000);
             const insertKey = "_" + timeStamp;
             setLoading(true);
+            let totalConfirmCnt = 1;
+            if(repeatState === true){
+                totalConfirmCnt = getTotalConfirmCnt();
+            }
             let insertRecord = {
                     user: user.email,
                     time,
@@ -73,11 +92,13 @@ const CreateTaskScreen = ({ navigation }) => {
                     deadline: new Date(time),
                     repeatState,
                     repeatDays,
+                    lastConfirmDay : -1,
                     payment: 0,
                     state: 1,
+                    totalConfirmCnt,
                     fullName: "Personalizada", 
                     cardName: title
-                };
+            };
             if(mode === 'bonusMode'){
                 await db.collection('goals').doc(insertKey).set(insertRecord);
                 navigation.navigate("HomeScreen", insertRecord);

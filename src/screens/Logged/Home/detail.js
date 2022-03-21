@@ -9,6 +9,7 @@ import {useEffect} from 'react';
 import {Video} from 'expo-av';
 import {style} from 'styled-system';
 import moment from 'moment';
+import firebase from 'firebase';
 
 
 const HomeCardDetail = ({navigation}) => {
@@ -20,51 +21,60 @@ const HomeCardDetail = ({navigation}) => {
     const [confirmed, setConfirmed] = useState(false);
     const video = React.useRef(null);
     const [isRepeat, setRepeatStatus] = useState(false);
+    const [expired, setExpired] = useState(false);
     const [deadline, setDeadLine] = useState('');
     const [totalDeadline, setTotalDeadLine] = useState('');
     let intervalInstance;
 
-    const checkCard = () => {
-        db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
+    const checkCard = async () => {
+        await db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
             let tempCards = null;
             querySnapshot.forEach((doc) => {
                 tempCards = doc.data();
             });
-            
-            setConfirmed(tempCards);
+            if(!tempCards){
+                setRepeatStatus(false);
+            }
+            else {
+                if(tempCards && (tempCards.state !== 'continue')){
+                    setConfirmed(tempCards);
+                    if(tempCards){
+                        if(!isDelaying(tempCards)){
+                            setConfirmed(false);
+                        }
+                        calcDeadLine(tempCards);            
+                    }
+                }
+                else {
+                    setConfirmed(false);
+                    setRepeatStatus(true);
+                }
+        
+            }
+        
             setLoading(false);
         });
     }
 
     useEffect(() => {
+    
         if (!isExpired()){
             checkCard();
         }
         else{
+            setConfirmed(false);
             setLoading(false);
         }
-        calcDeadLine();
+        
         return () => {
             clearInterval(intervalInstance);
         }
     }, [navigation])
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 4],
-            quality: 1,
-        });
-        if (!result.cancelled) {
-            setConfirmed(false);
-            return setPhoto({
-                photo: result,
-            });
+    const pickImage = async (repeating = false) => {
+        if(repeating) {
+            setRepeatStatus(true);
         }
-    };
-    const repeatHandler = async () => {
-        setRepeatStatus(true);
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -73,39 +83,96 @@ const HomeCardDetail = ({navigation}) => {
         });
         if (!result.cancelled) {
             setConfirmed(false);
+            let temp = result.uri.split(/\//g);
+            let tempName = temp[temp.length-1];
+            let tempExtArr = tempName.split(/\./g);
+            let resultExt = tempExtArr[tempExtArr.length-1];
+            const imageUrl = await uploadImageAsync(result.uri,resultExt);
             return setPhoto({
-                photo: result,
+                uri: imageUrl,
+                type : result.type
             });
         }
     };
 
-    const getImages = (para) => {
-        const array = [];
-        for (let i in para) {
-            const uri = para[i].uri;
-            const name = uri.split("/").pop();
-            const match = /\.(\w+)$/.exec(name);
-            const type = match ? `image/${match[1]}` : `image`;
-            array.push({
-                uri, name, type
-            });
-        }
-        return array;
+
+    const uploadImageAsync = async (uri,extension) => {
+        // Why are we using XMLHttpRequest? See:
+        // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+        const blob = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.onload = function() {
+            resolve(xhr.response);
+          };
+          xhr.onerror = function(e) {
+            console.log(e);
+            reject(new TypeError('Network request failed'));
+          };
+          xhr.responseType = 'blob';
+          xhr.open('GET', uri, true);
+          xhr.send(null);
+        });
+
+        setLoading(true);
+
+        const timeStamp = Math.floor(Date.now() / 1000);
+        const insertKey = "_" + timeStamp;
+      
+        const ref = firebase
+          .storage()
+          .ref()
+          .child(`tasks/${insertKey}.${extension}`);
+        const snapshot = await ref.put(blob);
+      
+        // We're done with the blob, close and release it
+        blob.close();
+
+        setLoading(false);
+      
+        return await snapshot.ref.getDownloadURL();
     }
 
+
+
     const renderPhotos = () => {
-        let temp = [];
-        let i = 0;
-        console.log(confirmed)
         if (confirmed) {
-            let length = confirmed.photo.length;
-            return <Image size="100%" h={400} mt={70} key={i} source={Images.DelayImage} resizeMode="contain"
+            return <Image size="100%" h={400} mt={70} source={Images.DelayImage} resizeMode="contain"
                           alignSelf="center"/>;
         } else {
-            return <Image size="100%" h={500} borderRadius={15} key={i} mt={50} source={photo.photo}
+            return <Image size="100%" h={500} borderRadius={15} mt={50} source={{uri:photo.uri}}
                           resizeMode="contain" alignSelf="center"/>
         }
+    }
 
+    const isDelaying = (confirm) => {
+        const todayWeekIndex =  moment().day()+1;
+    
+        if(confirm){
+            if(todayWeekIndex === confirm.lastConfirmDay){
+                return true;
+            }
+        }
+        let dayArr = [];
+        for(let tmp of confirm.day){
+            if(tmp >= todayWeekIndex){
+                dayArr.push(tmp);
+            }
+        }
+        
+        
+        dayArr.sort(function(a, b){return a - b});
+
+        if (confirm.lastConfirmDay <= todayWeekIndex){
+            setExpired(true);
+            setRepeatStatus(true);
+            setTimeout(function(){
+                return false;
+            },1000);
+        }
+        else {
+            return true;
+        }
+           
     }
 
     const isExpired = () => {
@@ -115,11 +182,6 @@ const HomeCardDetail = ({navigation}) => {
             return false;
         }
         
-        //when 
-        if (CardItem.repeatState && (moment(CardItem.created_at.toDate()).add(1,'days').set({hour:0,minute:0,second:0,millisecond:0}) < moment())) {
-          return true;
-        }
-
         if(CardItem.deadline){
             if(new Date() > new Date(CardItem.deadline.toDate())){
                 return true;
@@ -131,10 +193,8 @@ const HomeCardDetail = ({navigation}) => {
         
     }
 
-    const getDeadLine = () => {
-        let todayWeekDayIdx = moment().day()+1;
-
-    
+    const getDiffDay = () => {
+        const todayWeekDayIdx =  moment().day()+1;
         let nextDayIndex=-1;
         let newDays = [];
 
@@ -165,7 +225,17 @@ const HomeCardDetail = ({navigation}) => {
          else {
             diffDays = 7 - todayWeekDayIdx + nextDayIndex;
          }
-        
+
+         return diffDays;
+    }
+
+    const getDeadLine = (confirm) => {
+
+        if(!isDelaying(confirm)){
+            return setConfirmed(false);
+        }
+      
+        let diffDays = getDiffDay();
         let date1 = moment(moment().add(diffDays, 'days').format('YYYY-MM-DD 00:00:00'));
         let date2 = moment();
         let diff = moment.duration(date1.diff(date2));
@@ -182,107 +252,81 @@ const HomeCardDetail = ({navigation}) => {
         setDeadLine(dayDiff + 'd ' + diff1.get("hours") + "h " + diff1.get("minutes") + "m " + diff1.get("seconds") + 's ');
     }
 
-    const calcDeadLine = () => {
-        intervalInstance = setInterval(getDeadLine, 1000)
+    const calcDeadLine = (temp) => {
+        intervalInstance = setInterval(() => getDeadLine(temp), 1000)
     }
 
-    const Save = () => {
+    const Save = async () => {
         if (photo) {
             setLoading(true);
-            const xhr = new XMLHttpRequest();
-            const formData = new FormData();
-            if (typeof (photo.photo) === 'object') {
-                const photos = getImages(photo)
-                for (let i = 0; i < photos.length; i++) {
-                    formData.append("photo", photos[i]);
-                }
-            }
-            xhr.open("POST", `${ROOT.PAYMENT_URL}api/v1/confirmation-photo`);
-            xhr.setRequestHeader("Content-Type", "multipart/form-data");
-            xhr.onload = async function () {
-                if (xhr.status === 200) {
-                    let response = JSON.parse(xhr.response);
-                    if (response.err) {
-                        return Toast.show({title: response.data, placement: 'bottom', status: 'error', w: 400})
-                    } else {
-                        await db.collection("users").where("email", "==", user.email).get().then(async (querySnapshot) => {
-                            const timeStamp = Math.floor(Date.now() / 1000);
-                            const insertKey = "_" + timeStamp;
-                            let userInfo = "";
-                            querySnapshot.forEach((doc) => {
-                                userInfo = doc.data();
-                            });
+            await db.collection("users").where("email", "==", user.email).get().then(async (querySnapshot) => {
+                const timeStamp = Math.floor(Date.now() / 1000);
+                const insertKey = "_" + timeStamp;
+                let userInfo = "";
+                querySnapshot.forEach((doc) => {
+                    userInfo = doc.data();
+                });
 
-                            if (isRepeat) { //when repeat button has clicked
+                if (isRepeat) { //when repeat button has clicked
 
-                                db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
-                                    let tempCards = null;
-                                    querySnapshot.forEach((doc) => {
-                                        tempCards = doc.data();
-                                        tempCards.uid = doc.id
-                                    });
-                                    if (tempCards.state === 'continue') {
-                                        //push photo
-                                        tempCards.photo.push(response.data);
-                                    } else {
-                                        //replace last photo
-                                        tempCards.photo[tempCards.photo.length - 1] = response.data;
-                                    }
-
-                                    tempCards.type = photo.photo.type,
-                                        tempCards.state = "requested";
-                                    db.collection("confirmation").doc(tempCards.uid).update(tempCards);
-                                    setConfirmed(tempCards);
-                                });
-                            } else {
-                                let saveData;
-                                if (CardItem.repeatState) {
-                                    let day = [];
-
-                                    Object.entries(CardItem.repeatDays).forEach((value) => {
-                                        day.push(value[1]);
-                                    });
-
-                                    saveData = {
-                                        email: user.email,
-                                        username: userInfo.name,
-                                        photo: [response.data],
-                                        type: photo.photo.type,
-                                        cardId: CardItem.uid,
-                                        cardName: CardItem.cardName,
-                                        amount: CardItem.amount,
-                                        day,
-                                        state: "requested",
-                                        repeatState: true,
-                                        created_at: new Date()
-                                    }
-                                } else {
-                                    saveData = {
-                                        email: user.email,
-                                        username: userInfo.name,
-                                        photo: [response.data],
-                                        type: photo.photo.type,
-                                        cardId: CardItem.uid,
-                                        cardName: CardItem.cardName,
-                                        amount: CardItem.amount,
-                                        state: "requested",
-                                        created_at: new Date(),
-                                        repeatState: false,
-                                    }
-                                }
-                                await db.collection('confirmation').doc(insertKey).set(saveData);
-                                setConfirmed(saveData);
-                            }
+                    db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
+                        let tempCards = null;
+                        querySnapshot.forEach((doc) => {
+                            tempCards = doc.data();
+                            tempCards.uid = doc.id
                         });
-                    }
-                    setLoading(false)
-                }
-            }
+                        
+                        if(!tempCards){ 
+                            tempCards.photo.push(photo.uri);
+                        }
+                        else {
+                            if ((tempCards.state === 'continue') || expired) {
+                                //push photo
+                                tempCards.photo.push(photo.uri);
+                            } else {
+                                //replace last photo
+                                tempCards.photo[tempCards.photo.length - 1] = photo.uri;
+                            }
+                        }
+                        
+                        let todayWeekDayIdx = moment().day()+1;
+                        tempCards.lastConfirmDay = todayWeekDayIdx;
 
-            xhr.send(formData);
-        } else {
-            return Toast.show({title: "Please select Photo.", placement: 'bottom', status: 'error', w: 400})
+                        tempCards.type = photo.type,
+                        tempCards.state = "requested";
+                        db.collection("confirmation").doc(tempCards.uid).update(tempCards);
+                        
+                        db.collection("goals").doc(CardItem.uid).update({state:1});
+                        navigation.navigate("HomeScreen",123);
+                    });
+                } else {
+                    let day = [];
+                    if (CardItem.repeatState) {
+                        Object.entries(CardItem.repeatDays).forEach((value) => {
+                            day.push(value[1]);
+                        });   
+                    }
+                    let todayWeekDayIdx = moment().day()+1;
+                    let saveData = {
+                        email: user.email,
+                        username: userInfo.name,
+                        photo: [photo.uri],
+                        type: photo.type,
+                        cardId: CardItem.uid,
+                        cardName: CardItem.cardName,
+                        amount: CardItem.amount,
+                        day,
+                        state: "requested",
+                        lastConfirmDay : todayWeekDayIdx,
+                        repeatState: CardItem.repeatState,
+                        created_at: new Date()
+                    }
+                    await db.collection('confirmation').doc(insertKey).set(saveData);
+                    navigation.navigate("HomeScreen",123);
+                }
+            });
         }
+        setLoading(false)       
     }
 
     return (
@@ -301,35 +345,15 @@ const HomeCardDetail = ({navigation}) => {
                     {
                         (confirmed ?
                             <>
-
                                 {
-
-                                    confirmed.type === "video" ?
-                                        <Video
-                                            ref={video}
-                                            style={{
-                                                height: 380,
-                                                marginBottom: 20,
-                                                alignSelf: "center",
-                                                width: "80%",
-                                                maxWidth: "80%",
-                                                marginTop: 100,
-                                                borderRadius: 15
-                                            }}
-                                            source={{uri: `${ROOT.PAYMENT_URL}img/${confirmed.photo}`}}
-                                            useNativeControls
-                                            resizeMode="contain"
-                                            isLooping
-                                        />
-                                        :
-                                        renderPhotos()
+                                    renderPhotos()
                                 }
 
 
                                 <Text color="#000" fontSize="3xl" textAlign="center"
                                       style={{lineHeight: 50, marginTop: 40}} bold>{(() => {
                                     if ((CardItem.state === 1) && !CardItem.repeatState) {
-                                        return "Espera para iniciar la confirmación";
+                                        return "La tarea esta en revision espera el resultado";
                                     } else if (CardItem.state === 3) {
                                         return "La tarea se repite";
                                     } else if (CardItem.state === 5) {
@@ -354,20 +378,21 @@ const HomeCardDetail = ({navigation}) => {
 
                                 {
                                     CardItem.state === 3 ?
-                                        <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler}
+                                        <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={()=>pickImage(true)}
                                                 borderRadius={100} bg={"#FFB61D"}
                                                 alignSelf="center">Reenviar</Button> : null
                                 }
                                 {
                                     CardItem.state === 5 ?
-                                        <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={repeatHandler}
+                                        <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={()=>pickImage(true)}
                                                 borderRadius={100} bg={"#00A1E0"}
                                                 alignSelf="center">Continuar</Button> : null
                                 }
                             </> :
                             photo ? <>
                                     {
-                                        photo.photo.type === "video" ?
+                                        
+                                        photo.type === "video" ?
                                             <Video
                                                 ref={video}
                                                 style={{
@@ -378,7 +403,7 @@ const HomeCardDetail = ({navigation}) => {
                                                     marginTop: 100,
                                                     borderRadius: 15
                                                 }}
-                                                source={photo.photo}
+                                                source={{uri:photo.uri}}
                                                 useNativeControls
                                                 resizeMode="contain"
                                                 isLooping
@@ -386,7 +411,7 @@ const HomeCardDetail = ({navigation}) => {
                                             : renderPhotos()
                                     }
                                     <HStack flex={1} justifyContent="space-between">
-                                        <Button w="48%" _text={Styles.WelcomeButton} onPress={pickImage} borderRadius={100}
+                                        <Button w="48%" _text={Styles.WelcomeButton} onPress={()=>pickImage(false)} borderRadius={100}
                                                 bg={"#FFB61D"} alignSelf="center">Reiniciar</Button>
                                         <Button w="48%" _text={Styles.WelcomeButton} onPress={Save} borderRadius={100}
                                                 bg={"#FFB61D"} alignSelf="center">Enviar</Button>
@@ -397,7 +422,7 @@ const HomeCardDetail = ({navigation}) => {
                                     <Text color="white" fontSize="2xl" textAlign="center">Solo envia la confirmacion cuando
                                         termines la tarea y recuerda que algunas tareas tienen tiempo limite.. </Text>
                                     <Stack flex={1} justifyContent="center">
-                                        <Button _text={Styles.WelcomeButton} onPress={pickImage} borderRadius={100}
+                                        <Button _text={Styles.WelcomeButton} onPress={()=>pickImage(false)} borderRadius={100}
                                                 bg={"#FFB61D"} alignSelf="center">Enviar confirmación</Button>
                                     </Stack>
                                 </>)
