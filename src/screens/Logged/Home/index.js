@@ -37,21 +37,24 @@ const HomeScreen = ({ navigation }) => {
         db.collection("users").doc(user.email).get().then((snapshot)=>{
             let tempUser = snapshot.data();
             db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
+
                 let oppotunity = 0;
                 let currentBond = 0;
                 
                 querySnapshot.forEach((doc) => {
-                    if(doc.data().state !== 'deny'){
+                    console.log(doc.data())
+                    if(doc.data().state !== 4){
+                        
                         currentBond += doc.data().amount ? doc.data().amount : 0;
                     }
                     else {
                         currentBond -= doc.data().amount ? doc.data().amount : 0;
                     }
                 
-                    if(doc.data().state === 2){
+                    if((doc.data().state === 2) && (doc.data().amount > 0)){
                         oppotunity++;
                     }
-                    else if(!doc.data().amount){
+                    if(doc.data().amount === 0 || !doc.data().amount){
                         oppotunity--;
                     }
                 });
@@ -67,34 +70,13 @@ const HomeScreen = ({ navigation }) => {
 
     const deleteGoal = (item) => {
         db.collection("goals").doc(item.uid).delete();
-        db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                doc.ref.delete();
-            });
-            LoadExchangeInfo();
-        });
-    }
-
-    const determineDetail = (item) => {
-        let todayDayIndex = parseInt(moment().format('d'))+1;
-        // let isGoalDay = false;
-        // if (item.repeatDays.indexOf(todayDayIndex) > -1) {
-        //     isGoalDay = true;
-        // }
-        if (item.repeatState && (moment(item.created_at.toDate()).add(1,'days').set({hour:0,minute:0,second:0,millisecond:0}) < moment())) {
-          return 'outdated';
-        }
-
-
-        if(new Date() > new Date(item.deadline.toDate())){
-            return 'outdated';
-        }
-        // else if(!isGoalDay) {
-        //     return 'outdated';
-        // }
-        else {
-            return 'normal';
-        }
+        // db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {
+        //     querySnapshot.forEach((doc) => {
+        //         doc.ref.delete();
+        //     });
+        // LoadExchangeInfo();
+        // });
+        LoadExchangeInfo();
     }
 
     useEffect(() => {

@@ -5,9 +5,10 @@ import { TouchableOpacity } from 'react-native'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
 import { FontAwesome, AntDesign } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 // import WeekdayPicker from "react-native-weekday-picker"
 import { DayPicker } from 'react-native-picker-weekday';
+import { setUserInfo } from '../../../redux/actions/authActions';
 
 
 const CreateTaskScreen = ({ navigation }) => {
@@ -30,6 +31,7 @@ const CreateTaskScreen = ({ navigation }) => {
     const [loading, setLoading] = useState(false)
     const { user } = useSelector((store) => store.auth);
     const Toast = useToast();    
+    const dispatch = useDispatch();
 
     const mode = navigation.state.params;
     // let repeatDays = { 0:1, 1:1, 2:1 , 3:1 , 4:1 , 5:0, 6:0 };
@@ -37,9 +39,9 @@ const CreateTaskScreen = ({ navigation }) => {
     useEffect(() => {        
         console.log("CreateTaskScreen::::::" + JSON.stringify(repeatDays));        
     });
+    console.log(user.email)
     
     const RepeatDaysHandle = (repeatDays) => {
-        console.log(repeatDays);
         setWeekDays(repeatDays);
     }
 
@@ -101,6 +103,7 @@ const CreateTaskScreen = ({ navigation }) => {
             };
             if(mode === 'bonusMode'){
                 await db.collection('goals').doc(insertKey).set(insertRecord);
+                 
                 navigation.navigate("HomeScreen", insertRecord);
             }
             else {

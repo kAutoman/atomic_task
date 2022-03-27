@@ -162,7 +162,7 @@ const HomeCardDetail = ({navigation}) => {
         
         dayArr.sort(function(a, b){return a - b});
 
-        if (confirm.lastConfirmDay <= todayWeekIndex){
+        if (confirm.lastConfirmDay + getDiffDay(confirm.lastConfirmDay) <= todayWeekIndex){
             setExpired(true);
             setRepeatStatus(true);
             setTimeout(function(){
@@ -193,8 +193,14 @@ const HomeCardDetail = ({navigation}) => {
         
     }
 
-    const getDiffDay = () => {
-        const todayWeekDayIdx =  moment().day()+1;
+    const getDiffDay = (startDay) => {
+        let todayWeekDayIdx;
+        if (startDay) {
+            todayWeekDayIdx = startDay;
+        }
+        else {
+            todayWeekDayIdx =  moment().day()+1;
+        }
         let nextDayIndex=-1;
         let newDays = [];
 
@@ -253,7 +259,9 @@ const HomeCardDetail = ({navigation}) => {
     }
 
     const calcDeadLine = (temp) => {
-        intervalInstance = setInterval(() => getDeadLine(temp), 1000)
+        if(temp.repeatState){
+            intervalInstance = setInterval(() => getDeadLine(temp), 1000)
+        }
     }
 
     const Save = async () => {
@@ -314,11 +322,11 @@ const HomeCardDetail = ({navigation}) => {
                         type: photo.type,
                         cardId: CardItem.uid,
                         cardName: CardItem.cardName,
-                        amount: CardItem.amount,
+                        amount: CardItem.amount ? CardItem.amount : 0,
                         day,
                         state: "requested",
                         lastConfirmDay : todayWeekDayIdx,
-                        repeatState: CardItem.repeatState,
+                        repeatState: CardItem.repeatState?CardItem.repeatState : false,
                         created_at: new Date()
                     }
                     await db.collection('confirmation').doc(insertKey).set(saveData);
@@ -352,38 +360,38 @@ const HomeCardDetail = ({navigation}) => {
 
                                 <Text color="#000" fontSize="3xl" textAlign="center"
                                       style={{lineHeight: 50, marginTop: 40}} bold>{(() => {
-                                    if ((CardItem.state === 1) && !CardItem.repeatState) {
+                                    if ((confirmed.state === 'requested') && !confirmed.repeatState) {
                                         return "La tarea esta en revision espera el resultado";
-                                    } else if (CardItem.state === 3) {
+                                    } else if (confirmed.state === 'repeat') {
                                         return "La tarea se repite";
-                                    } else if (CardItem.state === 5) {
+                                    } else if (confirmed.state === 'continue') {
                                         return "La tarea se continúa";
-                                    } else if (CardItem.state === 4) {
+                                    } else if (confirmed.state === 'deny') {
                                         return "la tarea fue denegada";
-                                    } else if (CardItem.state === 2) {
+                                    } else if (confirmed.state === 'completed') {
                                         return "La tarea se completó";
                                     }
                                 })()}</Text>
                                 {
-                                    ((CardItem.state === 1) && CardItem.repeatState) ?
+                                    ((confirmed.state === 'requested') && confirmed.repeatState) ?
                                         <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight: 50}}
                                               bold>Fetcha de expiracion {'\n' + deadline} </Text> : null
                                 }
 
                                 {
-                                    ((CardItem.state === 1) && CardItem.repeatState) ?
+                                    ((confirmed.state === 'requested') && confirmed.repeatState) ?
                                         <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight: 50}}
                                               bold>Siguiente confirmacion {'\n' + totalDeadline} </Text> : null
                                 }
 
                                 {
-                                    CardItem.state === 3 ?
+                                    confirmed.state === 'repeat' ?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={()=>pickImage(true)}
                                                 borderRadius={100} bg={"#FFB61D"}
                                                 alignSelf="center">Reenviar</Button> : null
                                 }
                                 {
-                                    CardItem.state === 5 ?
+                                    confirmed.state === 'continue' ?
                                         <Button w="48%" mt={5} _text={Styles.WelcomeButton} onPress={()=>pickImage(true)}
                                                 borderRadius={100} bg={"#00A1E0"}
                                                 alignSelf="center">Continuar</Button> : null

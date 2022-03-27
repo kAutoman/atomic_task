@@ -142,7 +142,7 @@ const ChatScreen = ({ navigation }) => {
                     <ScrollView showsVerticalScrollIndicator={false}>
                         {
                             userList.map((item, i) => {
-                                // if ((user.email !== LAYOUT.adminInfo.email) || latestMessage[item.email]) {
+                                if (latestMessage[item.email] && latestMessage[item.email].state === false) {
                                     let offSet = moment().utcOffset() * 4;
                                     let latestMsgTime;
                                     if (latestMessage[item.email]) {
@@ -192,8 +192,117 @@ const ChatScreen = ({ navigation }) => {
                                                     </Stack>
                                                 </HStack>
                                             </TouchableOpacity>   
+                                }
+                            })
+                        }
+                        {
+                            userList.map((item, i) => {
+                                if (latestMessage[item.email] && latestMessage[item.email].state !== false) {
+                                    let offSet = moment().utcOffset() * 4;
+                                    let latestMsgTime;
+                                    if (latestMessage[item.email]) {
+                                        latestMsgTime = moment(moment(latestMessage[item.email].time).format('YYYY-MM-DD HH:mm')).utc(offSet);
+                                    }else {
+                                        latestMsgTime = moment(moment().format('YYYY-MM-DD HH:mm')).utc(offSet);
+                                    }
+                                    const diff = moment.duration(moment().diff(latestMsgTime)).asHours();
                                     
-                                // }
+                                    return <TouchableOpacity key={i} onPress={() => {
+                                                    if(latestMessage[item.email] && !latestMessage[item.email].state){
+                                                        database.ref(`private-message`).child(latestMessage[item.email].key).update({ state: true });
+                                                    }
+                                                    navigation.navigate("ChatRoomScreen", item);
+                                                }}>
+                                                <HStack p={5} display={item.name.toLowerCase().search(SearchKey.toLowerCase()) === -1 && SearchKey !== '' ? "none" : "flex"} bg={i % 2 ? "#F7F7F8" : "#F7F7F8"}>
+                                                    <Avatar source={Images.SampleAvatar3} w={"14%"}>
+                                                        AK
+                                                    </Avatar>
+                                                    <Stack w="80%" ml="5%">
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text bold w={'70%'} numberOfLines={1}>
+                                                                {item.name}
+                                                            </Text>
+                                                            <Text fontSize="xxs" right={10}>{latestMessage[item.email] ? latestMsgTime.fromNow() : null}</Text>
+                                                            
+                                                        </HStack>
+                                                        <Text numberOfLines={1} w="80%" color={latestMessage[item.email] ? latestMessage[item.email].state === false ? "black" : "dark.300" : "dark.300"} fontWeight={latestMessage[item.email] ? latestMessage[item.email].state === false ? "700" : "normal" : "normal"}>
+                                                            {latestMessage[item.email] ? latestMessage[item.email].message : null}
+                                                        </Text>
+                                                        {
+                                                            latestMessage[item.email] && !latestMessage[item.email].state &&
+                                                            <View pos="absolute" alignItems='flex-start' w={8} right={0} zIndex={10}>
+                                                                <Image size="xs" source={Images.WarningIcon} resizeMode="contain" />    
+                                                            </View>
+                                                        }
+                                                        
+                                                        {
+                                                            (user.email === LAYOUT.adminInfo.email) && (latestMessage[item.email] && diff > 1) && 
+                                                            <View pos="absolute" alignItems='flex-start' w={8} right={0} zIndex={10}>
+                                                                <TouchableOpacity onPress={() => _handleDelete(item.email)}>
+                                                                    <Image size="xs" source={Images.TrashFillIcon} resizeMode="contain" />
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        }
+                                                        
+                                                    </Stack>
+                                                </HStack>
+                                            </TouchableOpacity>   
+                                }
+                            })
+                        }
+                        {
+                            userList.map((item, i) => {
+                                if (!latestMessage[item.email]) {
+                                    let offSet = moment().utcOffset() * 4;
+                                    let latestMsgTime;
+                                    if (latestMessage[item.email]) {
+                                        latestMsgTime = moment(moment(latestMessage[item.email].time).format('YYYY-MM-DD HH:mm')).utc(offSet);
+                                    }else {
+                                        latestMsgTime = moment(moment().format('YYYY-MM-DD HH:mm')).utc(offSet);
+                                    }
+                                    const diff = moment.duration(moment().diff(latestMsgTime)).asHours();
+                                    
+                                    return <TouchableOpacity key={i} onPress={() => {
+                                                    if(latestMessage[item.email] && !latestMessage[item.email].state){
+                                                        database.ref(`private-message`).child(latestMessage[item.email].key).update({ state: true });
+                                                    }
+                                                    navigation.navigate("ChatRoomScreen", item);
+                                                }}>
+                                                <HStack p={5} display={item.name.toLowerCase().search(SearchKey.toLowerCase()) === -1 && SearchKey !== '' ? "none" : "flex"} bg={i % 2 ? "#F7F7F8" : "#F7F7F8"}>
+                                                    <Avatar source={Images.SampleAvatar3} w={"14%"}>
+                                                        AK
+                                                    </Avatar>
+                                                    <Stack w="80%" ml="5%">
+                                                        <HStack justifyContent="space-between" alignItems="center">
+                                                            <Text bold w={'70%'} numberOfLines={1}>
+                                                                {item.name}
+                                                            </Text>
+                                                            <Text fontSize="xxs" right={10}>{latestMessage[item.email] ? latestMsgTime.fromNow() : null}</Text>
+                                                            
+                                                        </HStack>
+                                                        <Text numberOfLines={1} w="80%" color={latestMessage[item.email] ? latestMessage[item.email].state === false ? "black" : "dark.300" : "dark.300"} fontWeight={latestMessage[item.email] ? latestMessage[item.email].state === false ? "700" : "normal" : "normal"}>
+                                                            {latestMessage[item.email] ? latestMessage[item.email].message : null}
+                                                        </Text>
+                                                        {
+                                                            latestMessage[item.email] && !latestMessage[item.email].state &&
+                                                            <View pos="absolute" alignItems='flex-start' w={8} right={0} zIndex={10}>
+                                                                <Image size="xs" source={Images.WarningIcon} resizeMode="contain" />    
+                                                            </View>
+                                                        }
+                                                        
+                                                        {
+                                                            (user.email === LAYOUT.adminInfo.email) && (latestMessage[item.email] && diff > 1) && 
+                                                            <View pos="absolute" alignItems='flex-start' w={8} right={0} zIndex={10}>
+                                                                <TouchableOpacity onPress={() => _handleDelete(item.email)}>
+                                                                    <Image size="xs" source={Images.TrashFillIcon} resizeMode="contain" />
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        }
+                                                        
+                                                    </Stack>
+                                                </HStack>
+                                            </TouchableOpacity>   
+                                }
                             })
                         }
                     </ScrollView>

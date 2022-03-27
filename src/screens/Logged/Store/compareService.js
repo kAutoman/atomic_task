@@ -33,6 +33,11 @@ const CompareServicesScreen = ({ navigation }) => {
 
     const _handlePurchase = () => {
         if(confirmBtnStatus === 'confirm'){
+            if (!StoreItem.codes.length){
+                setMsg("inventario insuficiente");
+                setConfirmBtnStatus('return');
+                return;
+            }
             const myCoin = user.coin;
             if (StoreItem.price > myCoin) {
                 setMsg("Saldo insuficiente");
@@ -51,7 +56,9 @@ const CompareServicesScreen = ({ navigation }) => {
                             dispatch(setUserInfo(tempUser));
                         });
 
-                        let insertKey = generateUUID(10);
+                        let insertKey = StoreItem.codes.pop();
+
+                        // let insertKey = generateUUID(10);
                     
                         db.collection('purchaseHistory').doc(insertKey).set({
                             title: StoreItem.title,
@@ -62,6 +69,7 @@ const CompareServicesScreen = ({ navigation }) => {
                             type : StoreItem.type,
                             email : user.email,
                         }).then(() => {
+                            db.collection('Stocks').doc(StoreItem.uid).update({codes:StoreItem.codes});
                             setLoading(false);
                             setModalStatus(false);
                             navigation.navigate("ShopHistoryScreen",1);

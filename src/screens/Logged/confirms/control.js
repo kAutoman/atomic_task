@@ -32,10 +32,10 @@ const HomeCardControl = ({ navigation }) => {
         setLoading(true)
         let confirmCnt = CardItem.confirmed ? CardItem.confirmed : 0;
         if((state === 'continue') || (state ==='completed')){
-            confirmCnt = confirmCnt + 1;
+            confirmCnt++;
         }
-        //change confirmation status
-        db.collection("confirmation").doc(CardItem.uid).update({
+         //change confirmation status
+         db.collection("confirmation").doc(CardItem.uid).update({
             state,
             confirmed : confirmCnt,
         });
@@ -52,8 +52,9 @@ const HomeCardControl = ({ navigation }) => {
         else if (state === 'continue') {
             updateState = 5;
         }
-        
-        db.collection("goals").doc(goalItem.id).update({state : updateState});
+        if(goalItem){
+            db.collection("goals").doc(goalItem.id).update({state : updateState});
+        }
         
         if (state === 'completed') {
             //increase coin
@@ -82,11 +83,15 @@ const HomeCardControl = ({ navigation }) => {
         setLoading(false)
         //goto confirms list
         navigation.navigate("ConfirmsScreen", 321)
+        
     }
 
     const renderContinueButton = () => {
-        if (!CardItem.repeatState || (CardItem.confirmed === (goalItem.totalConfirmCnt-1))){
-            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("complete")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>
+        if (!CardItem.repeatState){
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>
+        }
+        if(goalItem && (CardItem.confirmed === (goalItem.totalConfirmCnt-1))){
+            return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>   
         }
         if(CardItem.repeatState){
             return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("continue")} borderRadius={100} w="100%" bg={"#00A1E0"} alignSelf="center">Continuar</Button>

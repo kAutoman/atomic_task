@@ -71,12 +71,11 @@ const ShopHistoryScreen = ({ navigation }) => {
                                                 <Image source={item.image} 
                                                 style={{backgroundColor:"#F2C94C", width:111, height:120}}
                                                 onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) } resizeMode='cover' borderWidth={1} borderColor="black" borderRadius={16} />
-                                                <Stack ml={12} width="60%">
-                                                    <Text color="#474A57" fontSize={15} textAlign="left" >{item.title}</Text>
-                                                    <Text color="black" fontSize={18} textAlign="left" numberOfLines={2} bold>{item.subtitle}</Text>
-                                                    <Stack justifyContent={"flex-end"}>
-                                                        <Text color="black" fontSize={20} position="absolute" right={2} top={10} textAlign="left" bold>{item.price}</Text>
-                                                    </Stack>
+                                                <Stack ml={5} width="60%">
+                                                    <Text color="black" fontSize={18} textAlign="left" bold>{item.title}</Text>
+                                                    <Text color="#474A57" fontSize={15} textAlign="left" numberOfLines={2} >{item.subtitle}</Text>
+                                                    <Text color="#474A57" fontSize={15} textAlign="left" bold>{item.price} catd</Text>
+                                                    
                                                 </Stack>
                                                 
                                             </HStack>

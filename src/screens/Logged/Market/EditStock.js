@@ -6,17 +6,21 @@ import { COLOR, db, Images, storage } from '../../../constants'
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import firebase from 'firebase';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 const QuestionsScreeen = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState();
+    const [rerender, setRerender] = useState(false);
     const [subtitle, setSubtitle] = useState();
     const [brand, setBrand] = useState();
     const [price, setPrice] = useState();
     const [image, setImage] = useState(Images.NoImage);
     const [type, setType] = useState('digital');
-    const [item, setItem] = useState(navigation.state.params)
+    const [item, setItem] = useState(navigation.state.params);
+    const [codes, setCodes] = useState([]);
+    const [code, setCode] = useState();
     const { user } = useSelector((store) => store.auth)
 
     const uploadImageAsync = async (uri) => {
@@ -55,19 +59,17 @@ const QuestionsScreeen = ({ navigation }) => {
         return await snapshot.ref.getDownloadURL();
     }
 
+    const trashHandler = (index) => {
+        if(index !== undefined){
+            let temp = codes;
+            temp.splice(index,1);
+            setCodes(temp);
+            setRerender(!rerender);
+        }
+    }
+
 
     const openImagePickerAsync = async () => {
-        // let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-        // if (permissionResult.granted === false) {
-        //   alert("Permission to access camera roll is required!");
-        //   return;
-        // }
-        // Pick the photo
-        // const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        //     allowsEditing: true,
-        //     aspect: [1, 1]
-        // });
         let pickerResult = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: true,
@@ -75,15 +77,11 @@ const QuestionsScreeen = ({ navigation }) => {
             quality: 1,
         });
 
-        if(!result.cancelled){
+        if(!pickerResult.cancelled){
             const imageUrl = await uploadImageAsync(pickerResult.uri);
             setImage({uri : imageUrl});
         }
     }
-
-    const toggleSwitch = () => {
-        setChecked(!checked);
-    };
 
     const LoadExchangeInfo = () => {
         if(item){
@@ -92,6 +90,16 @@ const QuestionsScreeen = ({ navigation }) => {
             setBrand(item.brand);
             setPrice(item.price);
             setImage(item.image);
+            setCodes(item.codes);
+        }
+    }
+
+    const pushCodes = () => {
+        if(code){
+            let temp = codes;
+            temp.push(code);
+            setCodes(temp);
+            setCode('');
         }
     }
 
@@ -125,6 +133,7 @@ const QuestionsScreeen = ({ navigation }) => {
                 price,
                 image,
                 type,
+                codes,
             }).then(() => {
                 setLoading(false);
                 navigation.navigate("MarketManageScreen",1);
@@ -138,6 +147,7 @@ const QuestionsScreeen = ({ navigation }) => {
                 price,
                 image,
                 type,
+                codes,
             }).then(() => {
                 setLoading(false);
                 navigation.navigate("MarketManageScreen",1);
@@ -148,9 +158,47 @@ const QuestionsScreeen = ({ navigation }) => {
         return;
     }
 
+    const renderCodes = () => {
+        let result = [];
+        for (let index in codes){
+            result.push(
+                <Stack my={3} key={Math.random()} style={{borderRadius:10}}>
+                    <HStack alignItems="center">
+                            <Input 
+                                mx={3} 
+                                placeholder="" 
+                                w="95%" 
+                                isReadOnly
+                                value={codes[index]}
+                                InputRightElement={
+                                    <TouchableOpacity 
+                                        onPress={(e) => trashHandler(index)}
+                                        >
+                                        <Icon
+                                            as={<Ionicons name="trash-bin-outline" />}
+                                            size="md"
+                                            mr={4}
+                                            _light={{
+                                                color: "gray.500",
+                                            }}
+                                            _dark={{
+                                                color: "gray.500",
+                                            }}
+                                        />
+                                    </TouchableOpacity>
+                                }
+                            />
+                    
+                    </HStack>
+                </Stack>
+            )
+        }
+        return result;
+    }
+
     useEffect(() => {
         LoadExchangeInfo()
-    }, [navigation])
+    })
 
     return (
         <Box flex={1} bg={COLOR.white} w='100%' pt={0}>
@@ -215,6 +263,44 @@ const QuestionsScreeen = ({ navigation }) => {
                                 <Input mx={3} placeholder="" onChangeText={(e) => setPrice(e)} w="95%" value={price}/>
                             </HStack>
                         </Stack>
+                        <Stack my={3} style={{borderRadius:10}}>
+                            <Text color="black" fontSize="3xl" flex={1} p={3} bold>Codes</Text>
+                            <HStack alignItems="center">
+                                <Input 
+                                    mx={3} 
+                                    placeholder="" 
+                                    onChangeText={(e) => setCode(e)} 
+                                    w="95%" 
+                                    value={code}
+                                    InputRightElement={
+                                        <TouchableOpacity 
+                                            onPress={(e) => {
+                                                pushCodes();
+                                            }}
+                                        >
+                                            <Icon
+                                                as={<Ionicons name="add-outline" />}
+                                                size="md"
+                                                mr={4}
+                                                borderWidth={2}
+                                                borderRadius={20}
+                                                _light={{
+                                                    color: "gray.500",
+                                                }}
+                                                _dark={{
+                                                    color: "gray.500",
+                                                }}
+                                                
+                                            />
+                                        </TouchableOpacity>
+                                    }
+                                />
+                            </HStack>
+                        </Stack>
+
+                        {
+                            renderCodes()
+                        }
                         
                     </ScrollView>
                 </Stack>
