@@ -4,7 +4,9 @@ import { COLOR, db, Images, LAYOUT, ROOT } from '../../../constants'
 import { TouchableOpacity } from 'react-native'
 import { useStripe, initStripe } from '@stripe/stripe-react-native';
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
+// import { setUserInfo } from '../../../redux/actions/authActions';
+
 
 const PaymentScreen = ({ navigation }) => {
     const { initPaymentSheet, presentPaymentSheet, retrievePaymentIntent } = useStripe();
@@ -63,6 +65,10 @@ const PaymentScreen = ({ navigation }) => {
                                         cardId: cardInfo.id,
                                     });
                                 }
+                                let currentBond = user.currentBond ? (user.currentBond + cardInfo.amount) : cardInfo.amount
+                                db.collection("users").doc(user.email).update({
+                                    currentBond
+                                });
                                 setConnectState(false);
                                 navigation.navigate("PaymentSettingScreen")
                                 console.log('Success', 'The payment was confirmed successfully');

@@ -39,7 +39,6 @@ const CreateTaskScreen = ({ navigation }) => {
     useEffect(() => {        
         console.log("CreateTaskScreen::::::" + JSON.stringify(repeatDays));        
     });
-    console.log(user.email)
     
     const RepeatDaysHandle = (repeatDays) => {
         setWeekDays(repeatDays);
@@ -103,6 +102,20 @@ const CreateTaskScreen = ({ navigation }) => {
             };
             if(mode === 'bonusMode'){
                 await db.collection('goals').doc(insertKey).set(insertRecord);
+                //decrease coin
+                db.collection("users").doc(user.email).get().then((snapshot)=>{
+                        let tempUser = snapshot.data();
+                        let oppotunity = tempUser.oppotunity ? (tempUser.oppotunity - 1) : 0
+                        db.collection("users").doc(user.email).update({
+                            oppotunity
+                        }).then(()=>{
+                            db.collection("users").doc(user.email).get().then((snapshot)=>{
+                                let tempUser = snapshot.data();
+                                tempUser.oppotunity = oppotunity;
+                                dispatch(setUserInfo(tempUser));
+                            })
+                        });
+                });
                  
                 navigation.navigate("HomeScreen", insertRecord);
             }

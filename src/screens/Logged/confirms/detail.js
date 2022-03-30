@@ -51,12 +51,14 @@ const HomeCardDetail = ({ navigation }) => {
     const [confirms, setConfirms] = useState([]);
     const video = React.useRef(null);
     const CardItem = navigation.state.params;
+    console.log(CardItem);
     const LoadConfirms = () => {
-        db.collection("confirmation").where('email','==',CardItem.email).where('state','==',CardItem.state).get().then((querySnapshot) => {
+        db.collection("confirmation").where('email','==',CardItem.email).get().then((querySnapshot) => {
             let temp = [];
             querySnapshot.forEach((doc) => {
                 temp.push({ ...doc.data(), uid: doc.id });
             });
+            console.log(temp);
             setConfirms(temp);
         });
     }
@@ -147,12 +149,14 @@ const HomeCardDetail = ({ navigation }) => {
     const getConfirmDetails = () => {
         let result = [];
         for(let temp of confirms) {
-            result.push(<Text color="#000" key={generateUUID(10)} fontSize="2xl" textAlign="center">{temp.cardName}</Text>);
-            result.push(
-                 <View style={styles.container} key={generateUUID(10)}>
-                        {renderImages(temp)}
-                 </View>
-             );
+            if (temp.state !== 'completed' && temp.state !== 'deny'){
+                result.push(<Text color="#000" key={generateUUID(10)} fontSize="2xl" textAlign="center">{temp.cardName}</Text>);
+                result.push(
+                     <View style={styles.container} key={generateUUID(10)}>
+                            {renderImages(temp)}
+                     </View>
+                 );
+            }
         }
         return result;
     }

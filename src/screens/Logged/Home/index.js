@@ -32,37 +32,11 @@ const HomeScreen = ({ navigation }) => {
             setLoading(false)
         });
 
-        //calculate bond and update to db
+        
 
         db.collection("users").doc(user.email).get().then((snapshot)=>{
             let tempUser = snapshot.data();
-            db.collection("goals").where("user", "==", user.email).get().then((querySnapshot) => {
-
-                let oppotunity = 0;
-                let currentBond = 0;
-                
-                querySnapshot.forEach((doc) => {
-                    console.log(doc.data())
-                    if(doc.data().state !== 4){
-                        
-                        currentBond += doc.data().amount ? doc.data().amount : 0;
-                    }
-                    else {
-                        currentBond -= doc.data().amount ? doc.data().amount : 0;
-                    }
-                
-                    if((doc.data().state === 2) && (doc.data().amount > 0)){
-                        oppotunity++;
-                    }
-                    if(doc.data().amount === 0 || !doc.data().amount){
-                        oppotunity--;
-                    }
-                });
-                tempUser.oppotunity = oppotunity;
-                tempUser.currentBond = currentBond;
-                db.collection("users").doc(user.email).update(tempUser);
-                dispatch(setUserInfo(tempUser));
-            });
+            dispatch(setUserInfo(tempUser));
         })
 
     }
@@ -70,12 +44,6 @@ const HomeScreen = ({ navigation }) => {
 
     const deleteGoal = (item) => {
         db.collection("goals").doc(item.uid).delete();
-        // db.collection("confirmation").where("cardName",'==', item.cardName).get().then((querySnapshot) => {
-        //     querySnapshot.forEach((doc) => {
-        //         doc.ref.delete();
-        //     });
-        // LoadExchangeInfo();
-        // });
         LoadExchangeInfo();
     }
 
@@ -124,14 +92,14 @@ const HomeScreen = ({ navigation }) => {
 
                             // if(item.state == 0 || item.state == 1){
                                 return <Stack key={i}><Stack bg={COLOR.white} mt="5" borderRadius={16}>
-                                    <TouchableOpacity onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                    <TouchableOpacity onPress={() => { new Date() < new Date(item.deadline.toDate().setHours(23,59,59))? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Image source={Images.Custom_Image} resizeMode="contain" />
-                                        <Button mb={5} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold"}} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
+                                        <Button mb={5} onPress={() => { new Date() < new Date(item.deadline.toDate().setHours(23,59,59))? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }} colorScheme="blue" bg="#00160A" minW={40} _text={{ fontWeight: "bold"}} alignSelf="center" borderRadius={100}>{item.cardName}</Button>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={{zIndex:1,position:"absolute",top:10,right:10}} onPress={() => {deleteGoal(item)}}>
-                                        <Image mb={3} width={30} height={30} style={((new Date() < new Date(item.deadline.toDate())) && (item.state !== 4)) && {display:"none"}} source={Images.TrashImage} resizeMode="contain" />
+                                        <Image mb={3} width={30} height={30} style={((new Date() < new Date(item.deadline.toDate().setHours(23,59,59))) && (item.state !== 4)) && {display:"none"}} source={Images.TrashImage} resizeMode="contain" />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={Styles.ComprarButton} onPress={() => { new Date() < new Date(item.deadline.toDate())? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
+                                    <TouchableOpacity style={Styles.ComprarButton} onPress={() => { new Date() < new Date(item.deadline.toDate().setHours(23,59,59))? navigation.navigate("HomeCardDetailScreen", item):navigation.navigate("DeadlineScreen", item) }}>
                                         <Text mb={3} color="white" textAlign="center" bold>{item.deadline && new Date(item.deadline.seconds * 1000).toDateString()}</Text>
                                     </TouchableOpacity>
 

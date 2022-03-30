@@ -34,6 +34,10 @@ const HomeCardControl = ({ navigation }) => {
         if((state === 'continue') || (state ==='completed')){
             confirmCnt++;
         }
+
+        if (CardItem.repeatState && CardItem.photo.length !== CardItem.totalConfirmCnt) {
+            state = CardItem.state
+        }
          //change confirmation status
          db.collection("confirmation").doc(CardItem.uid).update({
             state,
@@ -53,21 +57,65 @@ const HomeCardControl = ({ navigation }) => {
             updateState = 5;
         }
         if(goalItem){
-            db.collection("goals").doc(goalItem.id).update({state : updateState});
+            if(CardItem.repeatState){
+                if (CardItem.photo.length !== CardItem.totalConfirmCnt) {
+                    db.collection("goals").doc(goalItem.id).update({state : updateState});
+                }
+            }else {
+                db.collection("goals").doc(goalItem.id).update({state : updateState});  
+            }
         }
         
         if (state === 'completed') {
             //increase coin
-            let coin = user.coin ? (user.coin + 5) : 5
-            db.collection("users").doc(CardItem.email).update({
-                coin
-            }).then(()=>{
-                db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
                     let tempUser = snapshot.data();
-                    tempUser.coin = coin;
-                    dispatch(setUserInfo(tempUser));
-                })
-            });    
+                    let coin = tempUser.coin;
+                    let oppotunity = tempUser.oppotunity;
+                    if(CardItem.amount > 0){ //if not bonus mode.
+                        oppotunity = tempUser.oppotunity ? (tempUser.oppotunity + 1) : 1
+                        coin = tempUser.coin ? (tempUser.coin + 5) : 5;
+                    }
+                    db.collection("users").doc(CardItem.email).update({
+                        coin,
+                        oppotunity
+                    }).then(()=>{
+                        if(CardItem.email === user.email) {
+                            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                                let tempUser = snapshot.data();
+                                tempUser.coin = coin;
+                                tempUser.oppotunity = oppotunity;
+                                dispatch(setUserInfo(tempUser));
+                            })
+                        }
+                    });
+            });
+            
+        }
+
+        if (state === 'deny') {
+            //increase coin
+            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                    let tempUser = snapshot.data();
+                    let currentBond = tempUser.currentBond;
+                    console.log(currentBond);
+                    console.log(CardItem.amount);
+                    if(CardItem.amount > 0){
+                        currentBond = tempUser.currentBond ? (tempUser.currentBond - CardItem.amount) : -CardItem.amount;
+                    }
+                    db.collection("users").doc(CardItem.email).update({
+                        currentBond
+                    }).then(()=>{
+                        if(CardItem.email === user.email) {
+                            db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
+                                let tempUser = snapshot.data();
+                                tempUser.currentBond = currentBond;
+                                dispatch(setUserInfo(tempUser));
+                            })
+                        }
+                    });
+            });
+            
         }
 
         if (state === 'continue') {
@@ -87,10 +135,13 @@ const HomeCardControl = ({ navigation }) => {
     }
 
     const renderContinueButton = () => {
+        if (CardItem.repeatState && !CardItem.confirmed){
+            CardItem.confirmed = 0;
+        }
         if (!CardItem.repeatState){
             return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>
         }
-        if(goalItem && (CardItem.confirmed === (goalItem.totalConfirmCnt-1))){
+        if(CardItem.confirmed === (CardItem.totalConfirmCnt-1)){
             return <Button _text={Styles.WelcomeButton} onPress={() => _handleComplete("completed")} borderRadius={100} w="100%" bg={"#34C759"} alignSelf="center">Complete</Button>   
         }
         if(CardItem.repeatState){

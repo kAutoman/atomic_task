@@ -24,6 +24,7 @@ const HomeCardDetail = ({navigation}) => {
     const [expired, setExpired] = useState(false);
     const [deadline, setDeadLine] = useState('');
     const [totalDeadline, setTotalDeadLine] = useState('');
+    const [isConfirmDay, setConfirmDay] = useState(true);
     let intervalInstance;
 
     const checkCard = async () => {
@@ -32,29 +33,46 @@ const HomeCardDetail = ({navigation}) => {
             querySnapshot.forEach((doc) => {
                 tempCards = doc.data();
             });
+
             if(!tempCards){
+                //can't send  until start confirmday.
+                let todayWeekDayIdx =  moment().day()+1;
+                let nextDayIndex = getNextDayIndex(todayWeekDayIdx,true);
+                //validate today is first confirm day
+                if(todayWeekDayIdx !== nextDayIndex){
+                    setConfirmDay(false);
+                }
+                else {
+                    setConfirmDay(true);
+                }
                 setRepeatStatus(false);
             }
             else {
-                if(tempCards && (tempCards.state !== 'continue')){
+                if(tempCards  && (tempCards.state === 'continue') && (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD'))){
+                    tempCards.state = 'requested';
                     setConfirmed(tempCards);
-                    if(tempCards){
-                        if(!isDelaying(tempCards)){
-                            setConfirmed(false);
-                        }
-                        calcDeadLine(tempCards);            
+                    if(!isDelaying(tempCards)){
+                        setConfirmed(false);
                     }
+                    calcDeadLine(tempCards);
+                }    
+                if(tempCards && (tempCards.state === 'requested') && (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD'))){
+                    setConfirmed(tempCards);
+                    if(!isDelaying(tempCards)){
+                        setConfirmed(false);
+                    }
+                    calcDeadLine(tempCards);
                 }
                 else {
                     setConfirmed(false);
                     setRepeatStatus(true);
                 }
-        
             }
         
             setLoading(false);
         });
     }
+
 
     useEffect(() => {
     
@@ -149,7 +167,15 @@ const HomeCardDetail = ({navigation}) => {
     
         if(confirm){
             if(todayWeekIndex === confirm.lastConfirmDay){
-                return true;
+
+                if (moment().format('YYYY-MM-DD') === moment(confirm.updated_at.toDate()).format('YYYY-MM-DD')){
+                    return true;
+                }
+                
+                // else {
+                //     return true;
+                // }
+                return false;
             }
         }
         let dayArr = [];
@@ -175,6 +201,7 @@ const HomeCardDetail = ({navigation}) => {
            
     }
 
+
     const isExpired = () => {
 
         //when task status is denied show denied screen
@@ -183,7 +210,8 @@ const HomeCardDetail = ({navigation}) => {
         }
         
         if(CardItem.deadline){
-            if(new Date() > new Date(CardItem.deadline.toDate())){
+          
+            if(new Date() > new Date(CardItem.deadline.toDate().setHours(23,59,59))){
                 return true;
             }
         }
@@ -191,6 +219,43 @@ const HomeCardDetail = ({navigation}) => {
        
         return false;
         
+    }
+
+    const getNextDayIndex = (todayWeekDayIdx,isInitial) => {
+        let nextDayIndex=todayWeekDayIdx;
+        let newDays = [];
+        if (CardItem.repeatDays){
+            if(isInitial){
+                for(let repeatDay of CardItem.repeatDays){
+                    if (repeatDay >= todayWeekDayIdx) {
+                        newDays.push(repeatDay);
+                    }
+                }
+            }
+            else {
+                for(let repeatDay of CardItem.repeatDays){
+                    if (repeatDay > todayWeekDayIdx) {
+                        newDays.push(repeatDay);
+                    }
+                }    
+            }
+            
+            newDays.sort(function(a, b){return a - b});
+            if (newDays.length > 0) {
+                nextDayIndex = newDays[0];
+            }
+        
+            //if the end of week
+            if (nextDayIndex === -1) {
+                //get first day index of next week
+                let temp=-1;
+                CardItem.repeatDays.sort(function(a, b){return a - b});
+                nextDayIndex = CardItem.repeatDays[0];
+            }
+    
+        }
+        
+        return nextDayIndex;
     }
 
     const getDiffDay = (startDay) => {
@@ -201,27 +266,8 @@ const HomeCardDetail = ({navigation}) => {
         else {
             todayWeekDayIdx =  moment().day()+1;
         }
-        let nextDayIndex=-1;
-        let newDays = [];
-
-        for(let repeatDay of CardItem.repeatDays){
-            if (repeatDay > todayWeekDayIdx) {
-                newDays.push(repeatDay);
-            }
-        }
         
-        newDays.sort(function(a, b){return a - b});
-        if (newDays.length > 0) {
-            nextDayIndex = newDays[0];
-        }
-    
-        //if the end of week
-        if (nextDayIndex === -1) {
-            //get first day index of next week
-            let temp=-1;
-            CardItem.repeatDays.sort(function(a, b){return a - b});
-            nextDayIndex = CardItem.repeatDays[0];
-        }
+        let nextDayIndex = getNextDayIndex(todayWeekDayIdx);
 
          //get diff days
          let diffDays = -1;
@@ -234,6 +280,8 @@ const HomeCardDetail = ({navigation}) => {
 
          return diffDays;
     }
+
+    
 
     const getDeadLine = (confirm) => {
 
@@ -302,6 +350,7 @@ const HomeCardDetail = ({navigation}) => {
 
                         tempCards.type = photo.type,
                         tempCards.state = "requested";
+                        tempCards.updated_at = new Date();
                         db.collection("confirmation").doc(tempCards.uid).update(tempCards);
                         
                         db.collection("goals").doc(CardItem.uid).update({state:1});
@@ -323,12 +372,15 @@ const HomeCardDetail = ({navigation}) => {
                         cardId: CardItem.uid,
                         cardName: CardItem.cardName,
                         amount: CardItem.amount ? CardItem.amount : 0,
+                        totalConfirmCnt:CardItem.totalConfirmCnt ? CardItem.totalConfirmCnt : 0,
                         day,
                         state: "requested",
                         lastConfirmDay : todayWeekDayIdx,
                         repeatState: CardItem.repeatState?CardItem.repeatState : false,
-                        created_at: new Date()
+                        created_at: new Date(),
+                        updated_at: new Date(),
                     }
+                
                     await db.collection('confirmation').doc(insertKey).set(saveData);
                     navigation.navigate("HomeScreen",123);
                 }
@@ -430,8 +482,12 @@ const HomeCardDetail = ({navigation}) => {
                                     <Text color="white" fontSize="2xl" textAlign="center">Solo envia la confirmacion cuando
                                         termines la tarea y recuerda que algunas tareas tienen tiempo limite.. </Text>
                                     <Stack flex={1} justifyContent="center">
+                                    {
+                                        isConfirmDay ?
                                         <Button _text={Styles.WelcomeButton} onPress={()=>pickImage(false)} borderRadius={100}
                                                 bg={"#FFB61D"} alignSelf="center">Enviar confirmación</Button>
+                                        :<Text color="white" fontSize="2xl" textAlign="center">Por favor espere hasta el día de confirmación</Text>
+                                    }
                                     </Stack>
                                 </>)
                     }
