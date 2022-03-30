@@ -48,20 +48,27 @@ const HomeCardDetail = ({navigation}) => {
                 setRepeatStatus(false);
             }
             else {
-                if(tempCards  && (tempCards.state === 'continue') && (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD'))){
+                if(tempCards && (tempCards.state !== 'continue')){
+                    if(tempCards){
+                        if(isDelaying(tempCards)){
+                            setConfirmed(tempCards);
+                            calcDeadLine(tempCards);
+                        }
+                        else {
+                            if (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD')){
+                                tempCards.repeatState = false;
+                                setConfirmed(tempCards);
+                            }
+                            else {
+                                setConfirmed(false);   
+                            }
+                        }
+                    }
+                }
+                else if(tempCards && (tempCards.totalConfirmCnt === tempCards.photo.length)){
+                    tempCards.repeatState = false;
                     tempCards.state = 'requested';
                     setConfirmed(tempCards);
-                    if(!isDelaying(tempCards)){
-                        setConfirmed(false);
-                    }
-                    calcDeadLine(tempCards);
-                }    
-                if(tempCards && (tempCards.state === 'requested') && (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD'))){
-                    setConfirmed(tempCards);
-                    if(!isDelaying(tempCards)){
-                        setConfirmed(false);
-                    }
-                    calcDeadLine(tempCards);
                 }
                 else {
                     setConfirmed(false);
@@ -166,16 +173,18 @@ const HomeCardDetail = ({navigation}) => {
         const todayWeekIndex =  moment().day()+1;
     
         if(confirm){
+            if(confirm.totalConfirmCnt === confirm.photo.length){
+                return false;
+            }
             if(todayWeekIndex === confirm.lastConfirmDay){
-
                 if (moment().format('YYYY-MM-DD') === moment(confirm.updated_at.toDate()).format('YYYY-MM-DD')){
                     return true;
                 }
-                
-                // else {
-                //     return true;
-                // }
-                return false;
+                else {
+                    setRepeatStatus(true);
+                    setExpired(true);
+                    return false;
+                }
             }
         }
         let dayArr = [];
@@ -196,9 +205,14 @@ const HomeCardDetail = ({navigation}) => {
             },1000);
         }
         else {
+            if(dayArr.indexOf(todayWeekIndex) > -1 ){
+                setExpired(true);
+                setRepeatStatus(true);
+                return false;
+            }
+
             return true;
         }
-           
     }
 
 
@@ -286,7 +300,8 @@ const HomeCardDetail = ({navigation}) => {
     const getDeadLine = (confirm) => {
 
         if(!isDelaying(confirm)){
-            return setConfirmed(false);
+            setRepeatStatus(false);
+            return setConfirmed(confirm);
         }
       
         let diffDays = getDiffDay();
