@@ -149,10 +149,18 @@ const HomeCardControl = ({ navigation }) => {
         }
     }
 
+    const getMediaType = () => {
+        if (CardItem.photo[ClickedPhotoIndex].indexOf('mp4') > -1 ){
+            return 'video';
+        }
+        else {
+            return 'image';
+        }
+    }
+
     useEffect(() => {
         getGoal();
-    })
-
+    },[]);
 
     return (
         <Stack
@@ -167,7 +175,7 @@ const HomeCardControl = ({ navigation }) => {
                     <Image source={Images.ExitImage} resizeMode="contain" />
                 </TouchableOpacity>
             </Box>
-            {CardItem.type == 'image'?
+            {getMediaType() == 'image'?
                 <Image size="100%" h={80} style={{marginTop:60}} borderRadius={15} source={{uri:CardItem.photo[ClickedPhotoIndex]}} resizeMode="contain" alignSelf="center" />:
                   <Video           
                     source={{

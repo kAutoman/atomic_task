@@ -68,6 +68,15 @@ const HomeCardDetail = ({ navigation }) => {
 
     const {width, height} = Dimensions.get("window");
 
+    const getMediaType = (uri) => {
+        if (uri.indexOf('mp4') > -1 ){
+            return 'video';
+        }
+        else {
+            return 'image';
+        }
+    }
+
 
     const renderImages = (confirmItem) => {
         let result = [];
@@ -121,7 +130,7 @@ const HomeCardDetail = ({ navigation }) => {
                  renderItem={({item,index}) => {
                     let tempUri = item.uri;
                     let tempIdx = item.idx;
-                    if (confirmItem.type === 'image') {
+                    if (getMediaType(tempUri) === 'image') {
                         return <TouchableOpacity key={generateUUID(10)} style={styles.GridViewBlockStyle} onPress={() => navigation.navigate("ConfirmControlScreen",{item:confirmItem,tempIdx})}>
                                     <Image width="100%" key={generateUUID(10)} style={styles.GridViewBlockStyle} source={{ uri: tempUri }} resizeMode="contain" />
                                 </TouchableOpacity>    
