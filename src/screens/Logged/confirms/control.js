@@ -98,8 +98,6 @@ const HomeCardControl = ({ navigation }) => {
             db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
                     let tempUser = snapshot.data();
                     let currentBond = tempUser.currentBond;
-                    console.log(currentBond);
-                    console.log(CardItem.amount);
                     if(CardItem.amount > 0){
                         currentBond = tempUser.currentBond ? (tempUser.currentBond - CardItem.amount) : -CardItem.amount;
                     }

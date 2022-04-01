@@ -117,7 +117,7 @@ const HomeCardDetail = ({ navigation }) => {
                 let tmp = {};
                 tmp.uri = temp;
                 tmp.idx = index;
-                if (!confirmItem.confirmedTasks || (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1)) {
+                if ((!confirmItem.confirmedTasks || (confirmItem.confirmedTasks.indexOf(parseInt(index)) === -1))) {
                     photoArr.push(tmp);
                 }
             });
