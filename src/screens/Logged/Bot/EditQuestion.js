@@ -25,7 +25,6 @@ const QuestionsScreeen = ({ navigation }) => {
     }
 
     const _handleSave = async () => {
-        console.log(question);
          if (question) {
             const timeStamp = Math.floor(Date.now() / 1000);
             const insertKey = "_" + timeStamp;

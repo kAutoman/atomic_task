@@ -42,7 +42,6 @@ const PaymentScreen = ({ navigation }) => {
                 const result = await initPaymentSheet(initData)
                 if (result.error) {
                     setConnectState(false);
-                    console.log(result.error)
                 } else {
                     setLoading(false);
                     if (data.paymentIntentClientSecret) {
@@ -70,8 +69,8 @@ const PaymentScreen = ({ navigation }) => {
                                     currentBond
                                 });
                                 setConnectState(false);
-                                navigation.navigate("PaymentSettingScreen")
-                                console.log('Success', 'The payment was confirmed successfully');
+                                // navigation.navigate("PaymentSettingScreen")
+                                navigation.navigate("HomeScreen",1234)
                             }
                         })
                     }

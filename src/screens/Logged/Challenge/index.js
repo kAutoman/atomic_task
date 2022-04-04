@@ -20,8 +20,7 @@ const ChallengeScreen = ({ navigation }) => {
         
     }
 
-    const SelectedDay = () => {         
-        console.log('Checkbox test');        
+    const SelectedDay = () => {             
         setIsPress(true);
     }
 

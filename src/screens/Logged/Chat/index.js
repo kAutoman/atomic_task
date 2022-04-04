@@ -36,7 +36,6 @@ const ChatScreen = ({ navigation }) => {
             if (snapshot.val()) {
                 let message = snapshot.val();
                 for(let key in message) {
-                    // console.log(`private-message/${key}`);
                     database.ref(`private-message/${key}`).remove();
                 }
 
@@ -46,7 +45,6 @@ const ChatScreen = ({ navigation }) => {
             if (snapshot.val()) {
                 let message = snapshot.val();
                 for(let key in message) {
-                    // console.log(`private-message/${key}`);
                     database.ref(`private-message/${key}`).remove();
                 }
 

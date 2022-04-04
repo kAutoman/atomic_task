@@ -53,7 +53,9 @@ const HomeCardDetail = ({navigation}) => {
                     setRepeatStatus(false);
                 }
                 else {
+                    
                     if(tempCards && (tempCards.state !== 'continue')){
+                        
                         if(tempCards){
                             if(isDelaying(tempCards)){
                                 setConfirmed(tempCards);
@@ -74,6 +76,19 @@ const HomeCardDetail = ({navigation}) => {
                         tempCards.repeatState = false;
                         tempCards.state = 'requested';
                         setConfirmed(tempCards);
+                    }
+                    else if (tempCards.state === 'continue'){
+                        //already send confirmation
+                        if (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD')){
+                            tempCards.repeatState = true;
+                            tempCards.state = 'requested'
+                            setConfirmed(tempCards);
+                            calcDeadLine(tempCards);
+                        }
+                        else {
+                            setConfirmed(false);
+                            setRepeatStatus(true); 
+                        }
                     }
                     else {
                         setConfirmed(false);

@@ -51,14 +51,12 @@ const HomeCardDetail = ({ navigation }) => {
     const [confirms, setConfirms] = useState([]);
     const video = React.useRef(null);
     const CardItem = navigation.state.params;
-    console.log(CardItem);
     const LoadConfirms = () => {
         db.collection("confirmation").where('email','==',CardItem.email).get().then((querySnapshot) => {
             let temp = [];
             querySnapshot.forEach((doc) => {
                 temp.push({ ...doc.data(), uid: doc.id });
             });
-            console.log(temp);
             setConfirms(temp);
         });
     }

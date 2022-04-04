@@ -141,7 +141,7 @@ export const LAYOUT = {
 		{ navLink: "HomeScreen", title: "Tareas" },
 		{ navLink: "PerfilScreen", title: "Perfil" },
 		{ navLink: "DescubreScreen", title: "Descubre" },
-		{ navLink: "AlarmsScreen", title: "Alarmas" },
+		// { navLink: "AlarmsScreen", title: "Alarmas" },
 		// { navLink: "ChatBotScreen", title: "Chat" },
 		{ navLink: "StoreScreen", title: "Tienda" },
 		// { navLink: "BlogScreen", title: "Blog" },
