@@ -2,7 +2,7 @@
   "expo": {
     "name": "Atomic Task",
     "slug": "att",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "scheme": "atomic",
     "icon": "./src/assets/icons.png",

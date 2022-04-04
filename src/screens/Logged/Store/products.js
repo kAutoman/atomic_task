@@ -109,7 +109,7 @@ const ProductsScreen = ({ navigation }) => {
                                                         <Text color="black" fontSize={32} textAlign="left" bold>{item.price} catd</Text>
                                                     </View>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareProductsScreen")}>
+                                                <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareProductsScreen",item)}>
                                                     <Text mb={6} mt={6} color="white" fontSize={35} textAlign="center" bold>Comprar</Text>
                                                 </TouchableOpacity>
                                             </Stack>

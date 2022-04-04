@@ -518,7 +518,7 @@ const HomeCardDetail = ({navigation}) => {
                                 {
                                     ((confirmed.state === 'requested') && confirmed.repeatState) ?
                                         <Text color="#000" fontSize="3xl" textAlign="center" style={{lineHeight: 50}}
-                                              bold>Fetcha de expiracion {'\n' + deadline} </Text> : null
+                                              bold>Fecha de expiracion {'\n' + deadline} </Text> : null
                                 }
 
                                 {

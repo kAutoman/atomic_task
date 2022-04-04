@@ -114,9 +114,9 @@ const CompareServicesScreen = ({ navigation }) => {
                             <Text color="white" fontSize="40px" textAlign="center" bold>{StoreItem.title}</Text>    
                             <Text color="white" fontSize="28px" textAlign="center" height={200}>{StoreItem.subtitle}</Text>                                      
                             <HStack style={{marginTop:50,marginLeft:20,alignItems:"center"}}>
-                                <Text color="white" flex={1} fontSize="40px" textAlign="left" bold>{StoreItem.price}catd</Text>    
+                                <Text color="white" flex={1} fontSize="30px" textAlign="left" bold>{StoreItem.price}catd</Text>    
                                 <TouchableOpacity>
-                                    <Button size="sm" w={200} h={60} borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
+                                    <Button size="sm" w={170} h={60} borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
                                         <Text fontSize="28px" color="white" bold>Comprar &gt;</Text>
                                     </Button>
                                 </TouchableOpacity>

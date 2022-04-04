@@ -13,9 +13,9 @@ const Signature = ({ navigation }) => {
             p={10}
         >
             <Stack>
-                <Text style={Styles.WelcomeText}>Cual es mayor incentivo para ser mas productivo?</Text>
+                <Text style={Styles.WelcomeText}>La incertidumbre y perder lo actual</Text>
             </Stack>
-            <Button pr={7} onPress={()=>navigation.navigate("Signature1Screen")} borderRadius={16} _text={Styles.WelcomeButton} w={"70%"} bg={COLOR.base} alignSelf="center">Siguiente <Icon style={{ position: "absolute", right: -30 }} color={COLOR.white} as={<Entypo name="chevron-right" />} /></Button>
+            <Button pr={7} onPress={()=>navigation.navigate("Signature2Screen")} borderRadius={16} _text={Styles.WelcomeButton} w={"70%"} bg={COLOR.base} alignSelf="center">Siguiente <Icon style={{ position: "absolute", right: -30 }} color={COLOR.white} as={<Entypo name="chevron-right" />} /></Button>
         </Stack>
     )
 }

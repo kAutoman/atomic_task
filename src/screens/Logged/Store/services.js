@@ -108,7 +108,7 @@ const ServicesScreen = ({ navigation }) => {
                                                         <Text color="black" fontSize={32} textAlign="left" bold>{item.price} catd</Text>
                                                     </View>
                                                 </TouchableOpacity>
-                                                <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareServiceScreen")}>
+                                                <TouchableOpacity style={Styles.ComprarButton} onPress={()=>navigation.navigate("CompareServiceScreen",item)}>
                                                     <Text mb={6} mt={6} color="white" fontSize={35} textAlign="center" bold>Comprar</Text>
                                                 </TouchableOpacity>
                                             </Stack>

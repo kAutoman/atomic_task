@@ -3,6 +3,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import SignIn from '../screens/Guest/SignIn'
 import Welcome from '../screens/Guest/Welcome'
 import Signature from '../screens/Guest/Signature'
+import Signature1 from '../screens/Guest/Signature_1'
 import Signature2 from '../screens/Guest/Signature_2'
 import Signature3 from '../screens/Guest/Signature_3'
 import Signature4 from '../screens/Guest/Signature_4'
@@ -26,6 +27,10 @@ const Navigator = createStackNavigator(
 		},
 		SignatureScreen: {
 			screen: Signature,
+			navigationOptions: { headerShown: false },
+		},
+		Signature1Screen: {
+			screen: Signature1,
 			navigationOptions: { headerShown: false },
 		},
 		Signature2Screen: {
