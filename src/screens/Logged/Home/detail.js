@@ -28,56 +28,114 @@ const HomeCardDetail = ({navigation}) => {
     let intervalInstance;
 
     const checkCard = async () => {
-        await db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
-            let tempCards = null;
-            querySnapshot.forEach((doc) => {
-                tempCards = doc.data();
-            });
+        if (await checkDeny() === true) {
+            navigation.navigate("HomeScreen",123);
+            navigation.navigate("DenyScreen");
+        }
+        else {
+            await db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
+                let tempCards = null;
+                querySnapshot.forEach((doc) => {
+                    tempCards = doc.data();
+                });
 
-            if(!tempCards){
-                //can't send  until start confirmday.
-                let todayWeekDayIdx =  moment().day()+1;
-                let nextDayIndex = getNextDayIndex(todayWeekDayIdx,true);
-                //validate today is first confirm day
-                if(todayWeekDayIdx !== nextDayIndex){
-                    setConfirmDay(false);
+                if(!tempCards){
+                    //can't send  until start confirmday.
+                    let todayWeekDayIdx =  moment().day()+1;
+                    let nextDayIndex = getNextDayIndex(todayWeekDayIdx,true);
+                    //validate today is first confirm day
+                    if(todayWeekDayIdx !== nextDayIndex){
+                        setConfirmDay(false);
+                    }
+                    else {
+                        setConfirmDay(true);
+                    }
+                    setRepeatStatus(false);
                 }
                 else {
-                    setConfirmDay(true);
-                }
-                setRepeatStatus(false);
-            }
-            else {
-                if(tempCards && (tempCards.state !== 'continue')){
-                    if(tempCards){
-                        if(isDelaying(tempCards)){
-                            setConfirmed(tempCards);
-                            calcDeadLine(tempCards);
-                        }
-                        else {
-                            if (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD')){
-                                tempCards.repeatState = false;
+                    if(tempCards && (tempCards.state !== 'continue')){
+                        if(tempCards){
+                            if(isDelaying(tempCards)){
                                 setConfirmed(tempCards);
+                                calcDeadLine(tempCards);
                             }
                             else {
-                                setConfirmed(false);   
+                                if (moment().format('YYYY-MM-DD') === moment(tempCards.updated_at.toDate()).format('YYYY-MM-DD')){
+                                    tempCards.repeatState = false;
+                                    setConfirmed(tempCards);
+                                }
+                                else {
+                                    setConfirmed(false);   
+                                }
                             }
                         }
                     }
+                    else if(tempCards && (tempCards.totalConfirmCnt === tempCards.photo.length)){
+                        tempCards.repeatState = false;
+                        tempCards.state = 'requested';
+                        setConfirmed(tempCards);
+                    }
+                    else {
+                        setConfirmed(false);
+                        setRepeatStatus(true);
+                    }
                 }
-                else if(tempCards && (tempCards.totalConfirmCnt === tempCards.photo.length)){
-                    tempCards.repeatState = false;
-                    tempCards.state = 'requested';
-                    setConfirmed(tempCards);
-                }
-                else {
-                    setConfirmed(false);
-                    setRepeatStatus(true);
-                }
-            }
+    
+                setLoading(false);
+            });
+        }
         
-            setLoading(false);
-        });
+    }
+
+    const checkDeny = async () => {
+    
+        let start;
+        if ( CardItem.updated_at) {
+            start =  CardItem.updated_at.toDate().setHours(0,0,0);
+        }
+        else {
+            start = CardItem.created_at.toDate().setHours(0,0,0);
+        }
+        const end = new Date().setHours(0,0,0);
+        
+            
+        let loop = new Date(start);
+        //include today and last day
+        let checkCnt = 2;
+        let todayIndex = loop.getDay()+1;
+        //if today is confirm day
+        if(CardItem.repeatDays.indexOf(todayIndex) > -1){
+            checkCnt = 3;
+        }
+        let totalCnt = 0;
+        while (loop <= end) {
+            
+            let temp = loop.getDay()+1;
+            if(CardItem.repeatDays.indexOf(temp) > -1){
+                totalCnt++;
+            }
+            //if didn't send on day.
+            
+            if(totalCnt >= checkCnt){
+                await db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
+                    let tempCards = null;
+                    querySnapshot.forEach((doc) => {
+                        tempCards = doc.data();
+                        tempCards.uid = doc.id
+                    });
+                    if(tempCards){
+                        db.collection("confirmation").doc(tempCards.uid).update({state:'deny'});
+                    }
+                });
+                await db.collection("goals").doc(CardItem.uid).update({state:4});
+                return true;
+            }
+            
+            let newDate = loop.setDate(loop.getDate() + 1);
+            loop = new Date(newDate);
+        }
+        
+        return false;
     }
 
 
@@ -130,7 +188,7 @@ const HomeCardDetail = ({navigation}) => {
             resolve(xhr.response);
           };
           xhr.onerror = function(e) {
-            console.log(e);
+            console.error(e);
             reject(new TypeError('Network request failed'));
           };
           xhr.responseType = 'blob';
@@ -220,6 +278,8 @@ const HomeCardDetail = ({navigation}) => {
 
         //when task status is denied show denied screen
         if(CardItem.state === 4) {
+            navigation.navigate("HomeScreen",123);
+            navigation.navigate("DenyScreen");
             return false;
         }
         
@@ -368,7 +428,7 @@ const HomeCardDetail = ({navigation}) => {
                         tempCards.updated_at = new Date();
                         db.collection("confirmation").doc(tempCards.uid).update(tempCards);
                         
-                        db.collection("goals").doc(CardItem.uid).update({state:1});
+                        db.collection("goals").doc(CardItem.uid).update({state:1,updated_at : new Date()});
                         navigation.navigate("HomeScreen",123);
                     });
                 } else {
@@ -397,6 +457,7 @@ const HomeCardDetail = ({navigation}) => {
                     }
                 
                     await db.collection('confirmation').doc(insertKey).set(saveData);
+                    await db.collection("goals").doc(CardItem.uid).update({updated_at : new Date()});
                     navigation.navigate("HomeScreen",123);
                 }
             });

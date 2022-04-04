@@ -35,9 +35,9 @@ const HomeCardControl = ({ navigation }) => {
             confirmCnt++;
         }
 
-        if (CardItem.repeatState && CardItem.photo.length !== CardItem.totalConfirmCnt) {
-            state = CardItem.state
-        }
+        // if (CardItem.repeatState && CardItem.photo.length !== CardItem.totalConfirmCnt) {
+        //     state = CardItem.state
+        // }
          //change confirmation status
          db.collection("confirmation").doc(CardItem.uid).update({
             state,
@@ -115,6 +115,7 @@ const HomeCardControl = ({ navigation }) => {
             });
             
         }
+
 
         if (state === 'continue') {
             let confirmedTasks = CardItem.confirmedTasks ? CardItem.confirmedTasks : [];

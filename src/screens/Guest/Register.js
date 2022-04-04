@@ -115,7 +115,6 @@ export default function Register({ navigation }) {
             dispatch(setUserInfo(user.user));
             setLoading(false);
         } catch (error) {
-            console.log(error);
             setLoading(false);
             return Toast.show({ title: error.message, placement: 'bottom', status: 'error', w: 400 })
         }
@@ -211,7 +210,6 @@ export default function Register({ navigation }) {
                                     );
                                     setVerificationId('');
                                     setVerificationCode('');
-                                    console.log(credential);
                                     setCurrentPage(3)
                                 } catch (err) {
                                     console.log(err);

@@ -36,7 +36,6 @@ const AddalarmScreen = ({ navigation }) => {
                 }).then(() => {
                     setLoading(false);
                     navigation.navigate("AlarmsScreen", 123);
-                    console.log("Data updated")
                 }).catch(e => console.log(e))
             } else {
                 await db.collection('Malarms').doc(insertKey).set({
@@ -50,7 +49,6 @@ const AddalarmScreen = ({ navigation }) => {
                 }).then(() => {
                     setLoading(false);
                     navigation.navigate("AlarmsScreen", 123);
-                    console.log("Data updated")
                 }).catch(e => console.log(e))
             }
         } else {

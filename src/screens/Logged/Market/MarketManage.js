@@ -26,7 +26,6 @@ const MarketManageScreen = ({ navigation }) => {
     }
 
     const _handleDelete = (id) => {
-        console.log(id);
         setServiceItems([]);
         db.collection("Stocks").doc(id).delete();
         LoadExchangeInfo();

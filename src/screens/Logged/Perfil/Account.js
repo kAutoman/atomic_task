@@ -16,7 +16,6 @@ const ChangePassScreen = ({ navigation }) => {
             phoneNumber: phone,
         }).then(function () {
             auth.user
-            console.log(auth)
         }, function (error) {
             console.log(error)
         });
