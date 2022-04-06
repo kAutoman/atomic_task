@@ -97,20 +97,20 @@ const CompareServicesScreen = ({ navigation }) => {
             <Stack>
                 <Stack borderRadius={16}>
                     
-                        <View style={{padding:15,height:100}}> 
+                        <ScrollView style={{padding:15}}> 
                             <Image source={StoreItem.image} 
                                     style={{width:"100%", height:300}}
                                     onError={({ nativeEvent: {error} }) => console.log("error-----------------" + error) }
                                     resizeMode='contain' 
                                     borderRadius={16} 
                             />
-                            <Text color="white" fontSize="40px" textAlign="center" bold>{StoreItem.title}</Text>    
-                            <Text color="white" fontSize="28px" textAlign="center" height={200}>{StoreItem.subtitle}</Text>                                      
-                            <HStack style={{marginTop:50,marginLeft:20,alignItems:"center"}}>
-                                <Text color="white" flex={1} fontSize="40px" textAlign="left" bold>{StoreItem.price}catd</Text>    
+                            <Text color="white" fontSize="4xl" textAlign="center" bold>{StoreItem.title}</Text>    
+                            <Text color="white" fontSize="3xl" textAlign="center" height={200}>{StoreItem.subtitle}</Text>                                      
+                            <HStack style={{marginTop:50,marginLeft:20,marginBottom:200,alignItems:"center"}}>
+                                <Text color="white" flex={1} fontSize="30px" textAlign="left" bold>{StoreItem.price}catd</Text>    
                                 <TouchableOpacity>
-                                    <Button size="sm" w={200} h={60} borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
-                                        <Text fontSize="28px" color="white" bold>Comprar &gt;</Text>
+                                    <Button size="sm" w={190} h={60} borderRadius={16} onPress={()=>_handleConfirm()}  variant="solid" backgroundColor="black">
+                                        <Text fontSize="27px" color="white" bold>Comprar &gt;</Text>
                                     </Button>
                                 </TouchableOpacity>
                             </HStack>
@@ -133,7 +133,7 @@ const CompareServicesScreen = ({ navigation }) => {
                                 ) :
                                 <></>
                             }
-                        </View>
+                        </ScrollView>
                 
                 </Stack>
             </Stack>

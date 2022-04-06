@@ -4,11 +4,12 @@ import {db, Images, ROOT, Styles} from '../../../constants'
 import {TouchableOpacity} from 'react-native'
 import * as ImagePicker from "expo-image-picker";
 import {Loading} from '../../../components';
-import {useSelector} from 'react-redux';
+import {useSelector,useDispatch} from 'react-redux';
 import {useEffect} from 'react';
 import {Video} from 'expo-av';
 import {style} from 'styled-system';
 import moment from 'moment';
+import { setUserInfo } from '../../../redux/actions/authActions';
 import firebase from 'firebase';
 
 
@@ -25,6 +26,7 @@ const HomeCardDetail = ({navigation}) => {
     const [deadline, setDeadLine] = useState('');
     const [totalDeadline, setTotalDeadLine] = useState('');
     const [isConfirmDay, setConfirmDay] = useState(true);
+    const dispatch = useDispatch();
     let intervalInstance;
 
     const checkCard = async () => {
@@ -122,17 +124,23 @@ const HomeCardDetail = ({navigation}) => {
         if(CardItem.repeatDays.indexOf(todayIndex) > -1){
             checkCnt = 3;
         }
+        if(!CardItem.updated_at){
+            checkCnt = 2;
+        }
+
         let totalCnt = 0;
-        while (loop <= end) {
+        do {
             
             let temp = loop.getDay()+1;
             if(CardItem.repeatDays.indexOf(temp) > -1){
                 totalCnt++;
             }
-            //if didn't send on day.
             
+            //if didn't send on day.
+        
             if(totalCnt >= checkCnt){
-                await db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
+                
+                db.collection("confirmation").where("email", "==", user.email).where("cardId", "==", CardItem.uid).get().then((querySnapshot) => {
                     let tempCards = null;
                     querySnapshot.forEach((doc) => {
                         tempCards = doc.data();
@@ -142,20 +150,39 @@ const HomeCardDetail = ({navigation}) => {
                         db.collection("confirmation").doc(tempCards.uid).update({state:'deny'});
                     }
                 });
-                await db.collection("goals").doc(CardItem.uid).update({state:4});
+                db.collection("goals").doc(CardItem.uid).update({state:4});
+                //decrease coin
+                db.collection("users").doc(CardItem.user).get().then((snapshot)=>{
+                    let tempUser = snapshot.data();
+                    let currentBond = tempUser.currentBond;
+                    if(CardItem.amount > 0){
+                        currentBond = tempUser.currentBond ? (tempUser.currentBond - CardItem.amount) : -CardItem.amount;
+                    }
+                    db.collection("users").doc(CardItem.user).update({
+                        currentBond
+                    }).then(()=>{
+                        if(CardItem.user === user.email) {
+                            db.collection("users").doc(CardItem.user).get().then((snapshot)=>{
+                                let tempUser = snapshot.data();
+                                tempUser.currentBond = currentBond;
+                                dispatch(setUserInfo(tempUser));
+                            })
+                        }
+                    });
+                });
                 return true;
             }
             
             let newDate = loop.setDate(loop.getDate() + 1);
             loop = new Date(newDate);
         }
+        while (loop <= end) 
         
         return false;
     }
 
 
     useEffect(() => {
-    
         if (!isExpired()){
             checkCard();
         }
@@ -295,7 +322,7 @@ const HomeCardDetail = ({navigation}) => {
         if(CardItem.state === 4) {
             navigation.navigate("HomeScreen",123);
             navigation.navigate("DenyScreen");
-            return false;
+            return true;
         }
         
         if(CardItem.deadline){

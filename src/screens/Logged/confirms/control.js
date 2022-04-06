@@ -94,7 +94,7 @@ const HomeCardControl = ({ navigation }) => {
         }
 
         if (state === 'deny') {
-            //increase coin
+            //decrease coin
             db.collection("users").doc(CardItem.email).get().then((snapshot)=>{
                     let tempUser = snapshot.data();
                     let currentBond = tempUser.currentBond;
